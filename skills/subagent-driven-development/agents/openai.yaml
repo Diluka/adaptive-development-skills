@@ -1,0 +1,4 @@
+interface:
+  display_name: "Subagent-Driven Development"
+  short_description: "在显著节约根代理上下文时委派实现，并区分必需的独立评审"
+  default_prompt: "使用 $subagent-driven-development 判断委派是否能显著节约根代理上下文，并区分可选实现子代理与开发任务必需的独立评审子代理。"

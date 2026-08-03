@@ -1,0 +1,4 @@
+interface:
+  display_name: "Technical Spike"
+  short_description: "用可丢弃临时产物调查未知问题，决定保留时转换为开发任务"
+  default_prompt: "使用 $technical-spike 以可丢弃试验调查这个未知问题；保持临时产物隔离，决定保留时先转换为开发任务。"

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Project Documentation"
+  short_description: "按开发任务流程维护版本控制的正式需求、设计和接口文档"
+  default_prompt: "使用 $project-documentation 按项目规范维护正式文档，并完成开发计划、验证和最终独立评审。"

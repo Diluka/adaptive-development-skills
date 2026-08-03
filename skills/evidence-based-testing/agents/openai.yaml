@@ -1,0 +1,4 @@
+interface:
+  display_name: "Evidence-Based Testing"
+  short_description: "根据需求、真实调用方和依赖契约选择有效且稳定的测试证据"
+  default_prompt: "使用 $evidence-based-testing 为这个改动选择正确证据和测试接缝。"

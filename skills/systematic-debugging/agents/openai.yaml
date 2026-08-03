@@ -1,0 +1,4 @@
+interface:
+  display_name: "Systematic Debugging"
+  short_description: "从运行时证据、真实调用链和依赖契约系统定位失败根因"
+  default_prompt: "使用 $systematic-debugging 从证据出发调查这个失败的根因。"

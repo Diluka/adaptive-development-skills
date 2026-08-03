@@ -1,0 +1,4 @@
+interface:
+  display_name: "Technical Terminology"
+  short_description: "统一常见软件开发术语的中英文表达和英文标识保留边界"
+  default_prompt: "使用 $technical-terminology 统一这份工程文档中的中英文技术术语。"

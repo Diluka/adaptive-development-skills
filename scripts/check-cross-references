@@ -1,0 +1,50 @@
+#!/usr/bin/env python3
+import argparse
+import sys
+
+from repository_tools import (
+    ValidationError,
+    collect_invalid_internal_references,
+    collect_internal_references,
+    repository_root,
+    skill_files,
+)
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description="Check relative links between local skills")
+    parser.add_argument("root", nargs="?", help="repository root; defaults to this checkout")
+    arguments = parser.parse_args()
+    root = repository_root(arguments.root, __file__)
+
+    try:
+        files = skill_files(root)
+        references = [
+            (skill_file, raw_path, target)
+            for skill_file in files
+            for raw_path, target in collect_internal_references(skill_file)
+        ]
+        errors = [
+            f"{skill_file}: invalid internal skill reference {raw_path}"
+            for skill_file in files
+            for raw_path in collect_invalid_internal_references(skill_file)
+        ] + [
+            f"{skill_file}: missing internal skill reference {raw_path}"
+            for skill_file, raw_path, target in references
+            if not target.is_file()
+        ]
+    except ValidationError as error:
+        print(error, file=sys.stderr)
+        return 1
+    if errors:
+        print("\n".join(errors), file=sys.stderr)
+        return 1
+    print(
+        f"Checked {len(references)} internal skill reference"
+        f"{'s' if len(references) != 1 else ''}."
+    )
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

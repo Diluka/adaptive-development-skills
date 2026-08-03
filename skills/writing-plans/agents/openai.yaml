@@ -1,0 +1,4 @@
+interface:
+  display_name: "Writing Plans"
+  short_description: "按交付意图识别开发任务，并编写含验证和最终独立评审的共享计划"
+  default_prompt: "使用 $writing-plans 先按交付意图确认任务类型，再为开发任务写入包含验证和最终独立评审安排的计划。"

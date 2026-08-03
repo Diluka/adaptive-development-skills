@@ -1,0 +1,4 @@
+interface:
+  display_name: "Requesting Code Review"
+  short_description: "为所有开发任务准备独立子代理评审，并按风险调整评审深度"
+  default_prompt: "使用 $requesting-code-review 为这个开发任务准备完整无偏的证据，并派发未参与实现的独立评审子代理。"

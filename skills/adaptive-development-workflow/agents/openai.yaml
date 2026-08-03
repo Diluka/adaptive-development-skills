@@ -1,0 +1,4 @@
+interface:
+  display_name: "Adaptive Development Workflow"
+  short_description: "按交付意图识别开发任务，选择工作单元方法并完成计划、验证和独立评审"
+  default_prompt: "使用 $adaptive-development-workflow 先按最终交付意图判断任务类型，再拆分工作单元；开发任务写计划并在交付前完成独立评审。"
