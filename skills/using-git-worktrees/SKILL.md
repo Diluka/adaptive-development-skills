@@ -31,6 +31,7 @@ git rev-parse --git-dir
 git rev-parse --git-common-dir
 git rev-parse --show-superproject-working-tree
 git rev-parse --verify HEAD
+git rev-list --all --max-count=1
 git branch --show-current
 git status --short
 git worktree list --porcelain
@@ -38,7 +39,7 @@ git worktree list --porcelain
 
 Git 目录与公共目录不同时，当前工作区通常已是关联工作树。结合分支、状态、计划和任务目标判断它是否属于当前任务；不要复用其他任务的工作树。需要创建新工作树时，不得把目标放在当前关联工作树目录内，并用 `git worktree list --porcelain` 确认目标分支未在其他位置检出。
 
-`git rev-parse --verify HEAD` 失败表示仓库没有初始提交，是进入未出生分支处理的明确判据。先通过已安装 Git 的帮助确认是否支持 `--orphan`；支持且任务不依赖根工作区中的未跟踪内容时，使用 `git worktree add --orphan -b <new-branch> <path>` 创建未出生分支的关联工作树。不支持或任务依赖这些内容时说明限制并等待用户决定，不为创建工作树自动生成提交、复制其他任务内容或静默降级为在根工作区开发。
+`git rev-parse --verify HEAD` 失败只表示当前工作树的 `HEAD` 无法解析，不证明仓库没有提交。先核实任务目标分支或提交，并用 `git rev-list --all --max-count=1` 检查现有引用是否仍有提交；存在可用任务基点时从该基点创建工作树。只有确认没有可用提交基点后，才通过已安装 Git 的帮助检查 `--orphan`；支持且任务不依赖根工作区中的未跟踪内容时，使用 `git worktree add --orphan -b <new-branch> <path>` 创建未出生分支的关联工作树。不支持或任务依赖这些内容时说明限制并等待用户决定，不为创建工作树自动生成提交、复制其他任务内容或静默降级为在根工作区开发。
 
 确认任务基点和目标分支，不从当前目录或硬编码分支名猜测。根工作区中的未提交改动不会进入新工作树；任务依赖这些改动时停止创建并说明依赖，不复制、暂存或提交其他任务的内容。
 
@@ -53,6 +54,8 @@ git check-ignore -q --no-index .worktrees/
 ```
 
 未被忽略时，只有仓库配置属于当前范围才添加精确规则，不静默提交。优先使用执行环境的原生工作树能力；否则以明确分支和解析后的路径运行 `git worktree add`，不从未检查变量或宽泛路径推导目标。
+
+任何工作树创建或创建后验证失败都停止并报告确切限制，等待用户决定；不得改用根工作区继续实施，也不得通过强制检出、删除其他工作树或修改其他任务状态来绕过失败。
 
 ## 创建后
 
