@@ -1,4 +1,4 @@
 interface:
   display_name: "Using Git Worktrees"
-  short_description: "默认在任务专属工作树中开发，并隔离并行版本与高风险 Git 工作"
-  default_prompt: "使用 $using-git-worktrees 为开发任务确认或建立专属工作树；只有用户明确要求时才直接在根工作区操作。"
+  short_description: "让开发分支默认绑定工作树，并判断只读分支访问等隔离例外"
+  default_prompt: "使用 $using-git-worktrees 为会产生改动的开发分支建立独立工作树，并判断只读分支访问能否安全使用根路径。"

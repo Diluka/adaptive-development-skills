@@ -1,6 +1,6 @@
 # Adaptive Development Skills
 
-自用的自适应开发工作流技能包：按最终是否保留项目产物识别开发任务，把需求具体化为工作单元，用共享计划对齐执行，并按结果确定性与证据形态选择 TDD、直接实现、行为基线、快照、评估或专项调查。开发任务默认在任务专属工作树中实施并在完成前统一独立评审；临时调研代码不自动进入开发流程，子代理按上下文或独立证据收益选择。
+自用的自适应开发工作流技能包：按最终是否保留项目产物识别开发任务，把需求具体化为工作单元，用共享计划对齐执行，并按结果确定性与证据形态选择 TDD、直接实现、行为基线、快照、评估或专项调查。开发任务完成前统一独立评审；临时调研代码不自动进入开发流程，子代理按上下文或独立证据收益选择。
 
 ## 技能清单
 
@@ -19,7 +19,7 @@
 | `executing-plans` | 执行并同步计划，衔接验证、独立评审与必要复审 |
 | `systematic-debugging` | 从运行时证据、调用方与契约追踪根因 |
 | `test-driven-development` | 只对具有独立稳定判据、真实接缝和具体回归风险的确定性行为使用 TDD |
-| `using-git-worktrees` | 为开发任务默认建立专属工作树，并隔离并行版本与高风险 Git 工作 |
+| `using-git-worktrees` | 让会产生改动的开发分支默认绑定独立工作树，并判断只读访问等隔离例外 |
 | `dispatching-parallel-agents` | 为吞吐或独立对照并行可安全隔离的工作单元 |
 | `subagent-driven-development` | 为上下文收益或独立证据委派工作单元，禁止嵌套派发 |
 | `receiving-code-review` | 先核验审查意见，再决定是否和如何修改 |
@@ -29,12 +29,15 @@
 
 ## 本地验证
 
-校验脚本使用 Python 3 和 `requirements.txt` 中声明的 PyYAML。在已激活的隔离 Python 环境中安装依赖后运行：
+使用当前 `skill-creator` 技能内置的 `scripts/quick_validate.py` 逐个校验 `skills/*`，再运行仓库特有的技能间引用检查：
 
 ```bash
-python3 -m pip install -r requirements.txt
-scripts/validate-skills
-scripts/check-cross-references
+skill_creator_dir="${CODEX_HOME:-$HOME/.codex}/skills/.system/skill-creator"
+for skill_dir in skills/*; do
+  python3 "$skill_creator_dir/scripts/quick_validate.py" "$skill_dir" || exit 1
+done
+deno check scripts/check-cross-references.ts
+scripts/check-cross-references.ts
 ```
 
 ## 思想来源
