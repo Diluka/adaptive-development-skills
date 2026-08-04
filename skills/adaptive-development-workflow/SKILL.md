@@ -9,7 +9,7 @@ description: Use when 请求可能产生需要项目保留、集成、提交或�
 
 把需求具体化为可验证的工作单元，再根据每个单元的主要不确定性、风险、真实调用方、结果确定性和证据来源选择最合适的主要方法。能写出失败测试只说明某种输入输出可被断言，不代表 TDD 比直接实现、行为基线、快照、评估或独立审查更有效。整个需求可以组合多种方法，但不要强迫所有单元使用同一种流程。
 
-所有开发任务在正式实现前都必须通过 [writing-plans](../writing-plans/SKILL.md) 落盘一份可长可短的计划，最终版本完成前都必须通过 [requesting-code-review](../requesting-code-review/SKILL.md) 接受独立子代理评审。风险只决定评审深度；TDD、实现子代理、工作树、PR/MR 和提交仍按实际收益、风险与授权选择。
+所有开发任务默认先通过 [using-git-worktrees](../using-git-worktrees/SKILL.md) 进入任务专属关联工作树；只有用户明确要求时才直接在根工作区实施。正式实现前必须通过 [writing-plans](../writing-plans/SKILL.md) 落盘一份可长可短的计划，最终版本完成前必须通过 [requesting-code-review](../requesting-code-review/SKILL.md) 接受独立子代理评审。风险只决定评审深度；TDD、实现子代理、PR/MR 和提交仍按实际收益、风险与授权选择。
 
 ## 判断任务类型
 
@@ -70,6 +70,7 @@ description: Use when 请求可能产生需要项目保留、集成、提交或�
 |---|---|
 | 关键歧义仍会改变方案 | [brainstorming](../brainstorming/SKILL.md) |
 | 需要长期维护正式项目文档 | [project-documentation](../project-documentation/SKILL.md) |
+| 开发任务尚未进入当前任务专属工作树 | [using-git-worktrees](../using-git-worktrees/SKILL.md) |
 | 已有计划需要执行或修正 | [executing-plans](../executing-plans/SKILL.md) |
 | 边界清晰的单元可显著节约上下文，或独立视角能提高模糊结果的证据可信度 | [subagent-driven-development](../subagent-driven-development/SKILL.md) |
 | 至少两个单元可安全隔离，且并行吞吐或独立对照有收益 | [dispatching-parallel-agents](../dispatching-parallel-agents/SKILL.md) |
@@ -79,12 +80,13 @@ description: Use when 请求可能产生需要项目保留、集成、提交或�
 ## 执行生命周期
 
 1. 按最终交付意图判断任务类型，澄清会改变方案的关键歧义。
-2. 拆分工作单元，为每个单元选择主要方法。
-3. 开发任务写计划，并按 [writing-plans](../writing-plans/SKILL.md) 的用户确认边界决定直接执行或等待确认。
-4. 按依赖顺序调查、实现并同步计划；只在上下文收益或独立证据收益高于交接成本时委派。
-5. 验证各单元及组合链路；新证据推翻假设时更新计划并重新选法。
-6. 由未参与当前任务的实现、证据设计或相关项目差异修改的独立子代理评审最终完整差异；实质修复后重新验证并复审。
-7. 按授权完成 PR/MR、集成与交接，说明未完成事项和剩余风险。
+2. 开发任务通过 [using-git-worktrees](../using-git-worktrees/SKILL.md) 进入任务专属工作树；用户明确要求根工作区时记录例外。
+3. 拆分工作单元，为每个单元选择主要方法。
+4. 开发任务写计划，并按 [writing-plans](../writing-plans/SKILL.md) 的用户确认边界决定直接执行或等待确认。
+5. 按依赖顺序调查、实现并同步计划；只在上下文收益或独立证据收益高于交接成本时委派。
+6. 验证各单元及组合链路；新证据推翻假设时更新计划并重新选法。
+7. 由未参与当前任务的实现、证据设计或相关项目差异修改的独立子代理评审最终完整差异；实质修复后重新验证并复审。
+8. 按授权完成 PR/MR、集成与交接，说明未完成事项和剩余风险。
 
 非开发任务不强制计划或独立评审。复杂功能调研可在独立检查能实质提高目标覆盖或结论准确性时选择评审代理；其他未明确强制的步骤也只按任务完整性和准确性的实际收益选择。
 

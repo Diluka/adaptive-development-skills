@@ -1,4 +1,4 @@
 interface:
   display_name: "Executing Plans"
-  short_description: "执行并同步开发计划，完成验证、独立评审以及实质修复后的复审"
-  default_prompt: "使用 $executing-plans 执行并同步这个开发计划，在验证后派发独立评审，实质修复后重新验证并复审。"
+  short_description: "在任务工作树中执行并同步计划，完成验证、独立评审与必要复审"
+  default_prompt: "使用 $executing-plans 先处理用户明确要求的根工作区例外，否则确认任务专属工作树；再执行和同步计划，验证后完成独立评审与必要复审。"
