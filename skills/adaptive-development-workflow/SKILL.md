@@ -9,7 +9,7 @@ description: Use when 请求可能产生需要项目保留、集成、提交或�
 
 把需求具体化为可验证的工作单元，再根据每个单元的主要不确定性、风险、真实调用方、结果确定性和证据来源选择最合适的主要方法。能写出失败测试只说明某种输入输出可被断言，不代表 TDD 比直接实现、行为基线、快照、评估或独立审查更有效。整个需求可以组合多种方法，但不要强迫所有单元使用同一种流程。
 
-所有开发任务在正式实现前都必须通过 [writing-plans](../writing-plans/SKILL.md) 落盘一份可长可短的计划，最终版本完成前都必须通过 [requesting-code-review](../requesting-code-review/SKILL.md) 接受独立子代理评审。风险只决定评审深度；TDD、实现子代理、工作树、PR/MR 和提交仍按实际收益、风险与授权选择。
+所有开发任务在正式实现前都必须通过 [writing-plans](../writing-plans/SKILL.md) 落盘一份可长可短的计划，最终版本完成前都必须通过 [requesting-code-review](../requesting-code-review/SKILL.md) 接受独立子代理评审。风险只决定评审深度；是否创建开发分支、TDD、实现子代理、PR/MR 和提交仍按实际收益、风险与授权选择。一旦为可能产生项目改动的工作创建或检出开发分支，且用户没有指定其他安排，默认通过 [using-git-worktrees](../using-git-worktrees/SKILL.md) 在独立工作树中进行。临时纯只读分支审查可在能安全保持或恢复干净默认基线时，由执行者选择使用根路径或工作树。
 
 ## 判断任务类型
 
@@ -71,6 +71,7 @@ description: Use when 请求可能产生需要项目保留、集成、提交或�
 | 关键歧义仍会改变方案 | [brainstorming](../brainstorming/SKILL.md) |
 | 需要长期维护正式项目文档 | [project-documentation](../project-documentation/SKILL.md) |
 | 已有计划需要执行或修正 | [executing-plans](../executing-plans/SKILL.md) |
+| 为项目改动创建或检出开发分支，或需判断只读分支访问、版本与改动隔离方式 | [using-git-worktrees](../using-git-worktrees/SKILL.md) |
 | 边界清晰的单元可显著节约上下文，或独立视角能提高模糊结果的证据可信度 | [subagent-driven-development](../subagent-driven-development/SKILL.md) |
 | 至少两个单元可安全隔离，且并行吞吐或独立对照有收益 | [dispatching-parallel-agents](../dispatching-parallel-agents/SKILL.md) |
 | 即将声明完成 | [verification-before-completion](../verification-before-completion/SKILL.md) |
