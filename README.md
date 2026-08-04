@@ -19,7 +19,7 @@
 | `executing-plans` | 执行并同步计划，衔接验证、独立评审与必要复审 |
 | `systematic-debugging` | 从运行时证据、调用方与契约追踪根因 |
 | `test-driven-development` | 只对具有独立稳定判据、真实接缝和具体回归风险的确定性行为使用 TDD |
-| `using-git-worktrees` | 为高风险、并行版本或与现有改动重叠的 Git 工作提供隔离 |
+| `using-git-worktrees` | 让会产生改动的开发分支默认绑定独立工作树，并判断只读访问等隔离例外 |
 | `dispatching-parallel-agents` | 为吞吐或独立对照并行可安全隔离的工作单元 |
 | `subagent-driven-development` | 为上下文收益或独立证据委派工作单元，禁止嵌套派发 |
 | `receiving-code-review` | 先核验审查意见，再决定是否和如何修改 |

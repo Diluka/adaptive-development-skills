@@ -1,4 +1,4 @@
 interface:
   display_name: "Using Git Worktrees"
-  short_description: "为高风险、并行版本或与现有改动重叠的 Git 工作建立隔离工作树"
-  default_prompt: "使用 $using-git-worktrees 判断具体 Git、版本或改动重叠风险是否需要隔离工作树。"
+  short_description: "让开发分支默认绑定工作树，并判断只读分支访问等隔离例外"
+  default_prompt: "使用 $using-git-worktrees 为会产生改动的开发分支建立独立工作树，并判断只读分支访问能否安全使用根路径。"
