@@ -29,12 +29,15 @@
 
 ## 本地验证
 
-校验脚本使用 Python 3 和 `requirements.txt` 中声明的 PyYAML。在已激活的隔离 Python 环境中安装依赖后运行：
+使用当前 `skill-creator` 技能内置的 `scripts/quick_validate.py` 逐个校验 `skills/*`，再运行仓库特有的技能间引用检查：
 
 ```bash
-python3 -m pip install -r requirements.txt
-scripts/validate-skills
-scripts/check-cross-references
+skill_creator_dir="${CODEX_HOME:-$HOME/.codex}/skills/.system/skill-creator"
+for skill_dir in skills/*; do
+  python3 "$skill_creator_dir/scripts/quick_validate.py" "$skill_dir" || exit 1
+done
+deno check scripts/check-cross-references.ts
+scripts/check-cross-references.ts
 ```
 
 ## 思想来源
