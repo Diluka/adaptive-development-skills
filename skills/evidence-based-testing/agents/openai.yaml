@@ -1,4 +1,4 @@
 interface:
   display_name: "Evidence-Based Testing"
-  short_description: "根据需求、真实调用方和依赖契约选择有效且稳定的测试证据"
-  default_prompt: "使用 $evidence-based-testing 核验这个问题的测试证据，并选择真实、稳定的测试接缝。"
+  short_description: "根据结果确定性与证据形态选择测试、快照、评估或观测方式"
+  default_prompt: "使用 $evidence-based-testing 核验这个问题的证据目标，并在真实测试、快照、评估或观测之间选择足够且有效的方式。"

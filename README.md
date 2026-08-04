@@ -1,13 +1,13 @@
 # Adaptive Development Skills
 
-自用的自适应开发工作流技能包：按最终是否保留项目产物识别开发任务，把需求具体化为工作单元，用共享计划对齐执行，并为每个单元选择最合适的方法。开发任务完成前统一独立评审；临时调研代码不自动进入开发流程，实现子代理按上下文收益选择。
+自用的自适应开发工作流技能包：按最终是否保留项目产物识别开发任务，把需求具体化为工作单元，用共享计划对齐执行，并按结果确定性与证据形态选择 TDD、直接实现、行为基线、快照、评估或专项调查。开发任务完成前统一独立评审；临时调研代码不自动进入开发流程，子代理按上下文或独立证据收益选择。
 
 ## 技能清单
 
 | 技能 | 用途 |
 |---|---|
 | `adaptive-development-workflow` | 将需求具体化为工作单元，并自适应选择最合适的方法 |
-| `evidence-based-testing` | 选择真实测试接缝，并处理测试与需求冲突 |
+| `evidence-based-testing` | 在测试、快照、评估和观测之间选择足够且有效的证据 |
 | `contract-verification` | 核验 SDK、协议、框架与依赖的真实契约 |
 | `caller-driven-cleanup` | 依据真实调用方、导出和运行时加载完成删除清理 |
 | `technical-spike` | 用可丢弃试验回答未知可行性，决定保留时转入开发任务 |
@@ -18,10 +18,10 @@
 | `writing-plans` | 为每个开发任务写入可长可短、可修正的共享计划 |
 | `executing-plans` | 执行并同步计划，衔接验证、独立评审与必要复审 |
 | `systematic-debugging` | 从运行时证据、调用方与契约追踪根因 |
-| `test-driven-development` | 只对明确行为和稳定真实接缝使用 TDD |
+| `test-driven-development` | 只对具有独立稳定判据、真实接缝和具体回归风险的确定性行为使用 TDD |
 | `using-git-worktrees` | 为高风险、并行版本或与现有改动重叠的 Git 工作提供隔离 |
-| `dispatching-parallel-agents` | 只并行确有收益且互不冲突的工作单元 |
-| `subagent-driven-development` | 在显著节约根代理上下文时委派工作单元，禁止嵌套派发 |
+| `dispatching-parallel-agents` | 为吞吐或独立对照并行可安全隔离的工作单元 |
+| `subagent-driven-development` | 为上下文收益或独立证据委派工作单元，禁止嵌套派发 |
 | `receiving-code-review` | 先核验审查意见，再决定是否和如何修改 |
 | `requesting-code-review` | 为所有开发任务准备独立评审，按风险调整深度 |
 | `verification-before-completion` | 用最新验证和独立评审证据支撑完成声明 |

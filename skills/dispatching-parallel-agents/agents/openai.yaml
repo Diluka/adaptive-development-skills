@@ -1,4 +1,4 @@
 interface:
   display_name: "Dispatching Parallel Agents"
-  short_description: "只并行处理真正独立且不共享文件、状态或决策的工作单元"
-  default_prompt: "使用 $dispatching-parallel-agents 判断并行是否确有收益；只派发真正独立的单元，也允许选择顺序执行。"
+  short_description: "为吞吐或独立对照并行可安全隔离且不共享可变状态的工作单元"
+  default_prompt: "使用 $dispatching-parallel-agents 判断并行吞吐或独立对照是否确有收益；只派发可安全隔离的单元，也允许选择顺序协作。"

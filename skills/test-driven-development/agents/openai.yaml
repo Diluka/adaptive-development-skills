@@ -1,4 +1,4 @@
 interface:
   display_name: "Test-Driven Development"
-  short_description: "只对行为明确且具有稳定真实测试接缝的代码改动使用 TDD"
-  default_prompt: "使用 $test-driven-development 通过符合生产调用方式的测试接缝实现这个明确行为。"
+  short_description: "只对具有独立稳定判据、真实接缝和具体回归风险的确定性行为使用 TDD"
+  default_prompt: "使用 $test-driven-development 先确认独立行为判据和具体回归风险，再通过符合生产调用方式的测试接缝实现这个确定性行为。"
