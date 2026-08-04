@@ -57,13 +57,18 @@
 - 优先写简洁决策规则。统一门禁仅限开发任务必须落盘计划并完成最终独立评审，以及用于项目改动的开发分支在没有额外要求时默认绑定独立工作树；是否创建分支、只读访问位置、用户审批、TDD、实现子代理、PR/MR 和提交仍按工作单元、风险与授权决定。
 - 本仓库只收录通用开发方法，不增加生态、框架、产品或具体业务领域的操作手册。
 - PR/MR 可作为通用 Git 工作流术语，但不要加入某个托管平台的专用 CLI、API 或字段说明。
-- 本地技能依赖使用相对 Markdown 链接，确保 `scripts/check-cross-references` 可以检查。
+- 创建或修改技能后，使用当前 `skill-creator` 技能内置的 `scripts/quick_validate.py` 逐个校验；不要在本仓库重复实现基础格式校验。
+- 本地技能依赖使用相对 Markdown 链接，并通过 `scripts/check-cross-references.ts` 检查技能间引用。
 - 只在 `README.md` 说明思想来源；本仓库不跟踪、不同步上游版本，也不承担上游兼容义务。
 
 ## 完成检查
 
 ```bash
-scripts/validate-skills
-scripts/check-cross-references
+skill_creator_dir="${CODEX_HOME:-$HOME/.codex}/skills/.system/skill-creator"
+for skill_dir in skills/*; do
+  python3 "$skill_creator_dir/scripts/quick_validate.py" "$skill_dir" || exit 1
+done
+deno check scripts/check-cross-references.ts
+scripts/check-cross-references.ts
 git diff --check
 ```
