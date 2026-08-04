@@ -7,7 +7,7 @@ description: Use when 请求可能产生需要项目保留、集成、提交或�
 
 ## 核心原则
 
-把需求具体化为可验证的工作单元，再根据每个单元的主要不确定性、风险、真实调用方和证据来源选择最合适的主要方法。整个需求可以组合多种方法，但不要强迫所有单元使用同一种流程。
+把需求具体化为可验证的工作单元，再根据每个单元的主要不确定性、风险、真实调用方、结果确定性和证据来源选择最合适的主要方法。能写出失败测试只说明某种输入输出可被断言，不代表 TDD 比直接实现、行为基线、快照、评估或独立审查更有效。整个需求可以组合多种方法，但不要强迫所有单元使用同一种流程。
 
 所有开发任务在正式实现前都必须通过 [writing-plans](../writing-plans/SKILL.md) 落盘一份可长可短的计划，最终版本完成前都必须通过 [requesting-code-review](../requesting-code-review/SKILL.md) 接受独立子代理评审。风险只决定评审深度；TDD、实现子代理、工作树、PR/MR 和提交仍按实际收益、风险与授权选择。
 
@@ -35,7 +35,7 @@ description: Use when 请求可能产生需要项目保留、集成、提交或�
 4. 实现与测试；
 5. 计划、检查清单与方法偏好。
 
-测试是证据，不是最高权威；计划是可修正的工作假设，不能覆盖当前系统事实。
+测试是证据，不是最高权威；计划是可修正的工作假设，不能覆盖当前系统事实。测试判据必须来自更高优先级的需求、真实调用方或契约，不能因为目标模糊就由测试自行发明业务行为。
 
 ## 重构前行为证据
 
@@ -50,14 +50,19 @@ description: Use when 请求可能产生需要项目保留、集成、提交或�
 | 可观察条件 | 主要方法 |
 |---|---|
 | 第三方 API、SDK、框架、协议或 CLI 边界不确定 | [contract-verification](../contract-verification/SKILL.md) |
-| 需要选择测试层级或接缝，或处理测试与实现冲突 | [evidence-based-testing](../evidence-based-testing/SKILL.md) |
+| 需要在测试、快照、评估或观测之间选择证据，或处理测试与实现冲突 | [evidence-based-testing](../evidence-based-testing/SKILL.md) |
 | 行为保持型重构缺少覆盖核心行为的测试或可比较观测 | [evidence-based-testing](../evidence-based-testing/SKILL.md)，先建立最小行为基线 |
-| 明确行为变更存在稳定真实接缝，且 TDD 能降低风险 | [test-driven-development](../test-driven-development/SKILL.md) |
+| 明确的确定性行为变更具有来自需求、真实调用方或契约而非普通字面量镜像的稳定判据、真实接缝与具体回归风险 | [test-driven-development](../test-driven-development/SKILL.md) |
+| 整体或局部真实输出可稳定复现，逐项断言成本高且需要发现非预期漂移 | [evidence-based-testing](../evidence-based-testing/SKILL.md)，使用行为基线或快照回归 |
+| 结果主要是已指定的提示词、文案、静态常量或声明式内容，且不改变确定性生成逻辑 | 直接实现并按影响验证，不复制目标字面量制造测试 |
+| 结果具有主观性、概率性或多种合理实现，但已有样例或评价标准 | [evidence-based-testing](../evidence-based-testing/SKILL.md)，按需组合独立评估、实验或冒烟 |
 | 需求、调用方式和契约已明确，且无需专项调查、技术探索或依赖变更 | 直接实现，并按影响选择验证 |
 | 删除适配器、依赖、导出项或无效路径 | [caller-driven-cleanup](../caller-driven-cleanup/SKILL.md) |
 | 根因未知或行为间歇出现 | [systematic-debugging](../systematic-debugging/SKILL.md) |
 | 技术可行性未知 | [technical-spike](../technical-spike/SKILL.md) |
 | 依赖或工具链版本变化 | [dependency-upgrade](../dependency-upgrade/SKILL.md) |
+
+可测试不等于适合 TDD。TDD 与直接实现同时表面匹配时默认直接实现；只有能说明判据的独立来源、失败测试可识别的合理错误实现和具体回归风险时，才选择 TDD。精确文本若本身属于协议、安全、合规或其他外部契约，可以按契约风险测试；不能把该例外扩展为普通内容修改的镜像断言。
 
 ## 组合生命周期支持
 
@@ -66,8 +71,8 @@ description: Use when 请求可能产生需要项目保留、集成、提交或�
 | 关键歧义仍会改变方案 | [brainstorming](../brainstorming/SKILL.md) |
 | 需要长期维护正式项目文档 | [project-documentation](../project-documentation/SKILL.md) |
 | 已有计划需要执行或修正 | [executing-plans](../executing-plans/SKILL.md) |
-| 边界清晰的单元可显著节约根代理上下文 | [subagent-driven-development](../subagent-driven-development/SKILL.md) |
-| 至少两个单元真正独立且并行有收益 | [dispatching-parallel-agents](../dispatching-parallel-agents/SKILL.md) |
+| 边界清晰的单元可显著节约上下文，或独立视角能提高模糊结果的证据可信度 | [subagent-driven-development](../subagent-driven-development/SKILL.md) |
+| 至少两个单元可安全隔离，且并行吞吐或独立对照有收益 | [dispatching-parallel-agents](../dispatching-parallel-agents/SKILL.md) |
 | 即将声明完成 | [verification-before-completion](../verification-before-completion/SKILL.md) |
 | 需要分支集成或交接 | [finishing-a-development-branch](../finishing-a-development-branch/SKILL.md) |
 
@@ -76,9 +81,9 @@ description: Use when 请求可能产生需要项目保留、集成、提交或�
 1. 按最终交付意图判断任务类型，澄清会改变方案的关键歧义。
 2. 拆分工作单元，为每个单元选择主要方法。
 3. 开发任务写计划，并按 [writing-plans](../writing-plans/SKILL.md) 的用户确认边界决定直接执行或等待确认。
-4. 按依赖顺序调查、实现并同步计划；仅在显著节约上下文时委派实现。
+4. 按依赖顺序调查、实现并同步计划；只在上下文收益或独立证据收益高于交接成本时委派。
 5. 验证各单元及组合链路；新证据推翻假设时更新计划并重新选法。
-6. 由未参与实现的独立子代理评审最终完整差异；实质修复后重新验证并复审。
+6. 由未参与当前任务的实现、证据设计或相关项目差异修改的独立子代理评审最终完整差异；实质修复后重新验证并复审。
 7. 按授权完成 PR/MR、集成与交接，说明未完成事项和剩余风险。
 
 非开发任务不强制计划或独立评审。复杂功能调研可在独立检查能实质提高目标覆盖或结论准确性时选择评审代理；其他未明确强制的步骤也只按任务完整性和准确性的实际收益选择。

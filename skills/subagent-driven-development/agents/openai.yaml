@@ -1,4 +1,4 @@
 interface:
   display_name: "Subagent-Driven Development"
-  short_description: "在显著节约根代理上下文时委派边界明确的调查、实现或定向验证"
-  default_prompt: "使用 $subagent-driven-development 判断这个工作单元是否适合委派，并定义清晰的读写、验证和停止边界。"
+  short_description: "为上下文收益或独立证据委派边界明确的实现、调查或验证"
+  default_prompt: "使用 $subagent-driven-development 判断委派能否节约上下文或提供独立证据，并定义清晰的角色产出、读写、验证和停止边界。"
