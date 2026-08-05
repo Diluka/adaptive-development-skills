@@ -1,4 +1,4 @@
 interface:
   display_name: "Receiving Code Review"
-  short_description: "核验评审意见，并在实质修复后重新验证和复审最终版本"
-  default_prompt: "使用 $receiving-code-review 根据真实需求和契约核验意见；实质修复后重新验证并安排独立复审。"
+  short_description: "核验评审意见的真实适用性，并按受影响风险决定修改、验证与复审"
+  default_prompt: "使用 $receiving-code-review 根据真实需求、调用方和契约核验意见，并只对适用结论实施修改、验证和必要复审。"

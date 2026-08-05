@@ -1,4 +1,4 @@
 interface:
   display_name: "Finishing a Development Branch"
-  short_description: "在验证和独立评审完成后安全交接分支、PR/MR 与集成操作"
-  default_prompt: "使用 $finishing-a-development-branch 核对最终验证和独立评审状态，再准备分支、PR/MR、合并或清理交接。"
+  short_description: "按当前集成增量核对验证、CI和适用评审，安全交接分支与集成操作"
+  default_prompt: "使用 $finishing-a-development-branch 按当前集成增量核对验证、CI 与适用评审，再安全准备分支、PR/MR、合并或清理交接。"

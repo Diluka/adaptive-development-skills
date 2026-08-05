@@ -1,4 +1,4 @@
 interface:
   display_name: "Executing Plans"
-  short_description: "执行并同步开发计划，完成验证、独立评审以及实质修复后的复审"
-  default_prompt: "使用 $executing-plans 执行并同步这个开发计划，在验证后派发独立评审，实质修复后重新验证并复审。"
+  short_description: "执行并修正已有开发计划，复用有效证据并衔接适用的验证与独立评审"
+  default_prompt: "使用 $executing-plans 执行并修正已有计划，复用仍有效证据，并只衔接当前任务需要的验证与评审。"

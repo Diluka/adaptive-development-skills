@@ -15,7 +15,7 @@ description: Use when 关键歧义、相互竞争的设计选择或不清晰的�
 2. 只有不同答案会改变公开行为、数据模型、架构、不可逆操作或实质范围时，才把它视为关键选择。
 3. 说明待决事项、已知证据和剩余不确定性；存在真实可行路径时给出权衡与推荐，不凑伪选项。
 4. 只询问最小缺失决策；紧密相关的问题一起提出更清楚时可以合并。
-5. 记录选定约束或成功标准，再通过 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md) 推进；开发任务把结论写入计划。
+5. 记录选定约束或成功标准，再通过 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md) 推进；有适用计划时把结论写入计划，否则保留在共享目标和约束中。
 
 ## 边界
 
