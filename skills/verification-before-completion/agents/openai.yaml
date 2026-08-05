@@ -1,4 +1,4 @@
 interface:
   display_name: "Verification Before Completion"
-  short_description: "为开发完成或调查结论匹配最新直接证据，并核对适用的独立评审状态"
-  default_prompt: "使用 $verification-before-completion 为每项完成声明匹配最新直接证据；若属于开发任务，再核对最终版本的独立评审。"
+  short_description: "复用仍有效的测试、CI、评审与观测，并为当前完成声明补足证据缺口"
+  default_prompt: "使用 $verification-before-completion 核对当前增量，复用仍有效的测试、CI、评审或观测，并只补完成声明的证据缺口。"

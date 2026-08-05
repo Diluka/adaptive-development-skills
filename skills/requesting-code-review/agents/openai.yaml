@@ -1,4 +1,4 @@
 interface:
   display_name: "Requesting Code Review"
-  short_description: "为开发任务或复杂调研准备独立评审，并按任务类型和风险调整深度"
-  default_prompt: "使用 $requesting-code-review 按任务类型准备无偏证据：开发任务评审完整最终差异，复杂非开发调研评审目标覆盖和结论准确性。"
+  short_description: "仅在独立视角能补充当前风险证据时准备和执行无偏的最终差异评审"
+  default_prompt: "使用 $requesting-code-review 判断独立评审是否能补充当前风险证据，并在适用时准备无偏的最终差异评审。"
