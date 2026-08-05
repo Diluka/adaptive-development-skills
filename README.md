@@ -29,19 +29,6 @@
 | `verification-before-completion` | 用最新验证和独立评审证据支撑完成声明 |
 | `finishing-a-development-branch` | 在验证和独立评审完成后交接分支与集成操作 |
 
-## 本地验证
-
-使用当前 `skill-creator` 技能内置的 `scripts/quick_validate.py` 逐个校验 `skills/*`，再运行仓库特有的技能间引用检查：
-
-```bash
-skill_creator_dir="${CODEX_HOME:-$HOME/.codex}/skills/.system/skill-creator"
-for skill_dir in skills/*; do
-  python3 "$skill_creator_dir/scripts/quick_validate.py" "$skill_dir" || exit 1
-done
-deno check scripts/check-cross-references.ts
-scripts/check-cross-references.ts
-```
-
 ## 思想来源
 
 最初的设计参考了 [obra/superpowers](https://github.com/obra/superpowers) 等项目，目前独立维护。
