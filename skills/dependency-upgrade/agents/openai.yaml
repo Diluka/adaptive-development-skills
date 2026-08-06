@@ -1,4 +1,0 @@
-interface:
-  display_name: "Dependency Upgrade"
-  short_description: "基于项目实际依赖图和工具链安全更新依赖解析结果并验证运行边界"
-  default_prompt: "使用 $dependency-upgrade 根据项目真实依赖图规划并验证最小依赖变更。"

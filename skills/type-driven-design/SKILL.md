@@ -62,7 +62,7 @@ description: Use when 开发工作单元的核心目标是把稳定领域状态�
 
 ### 7. 补足剩余运行时证据
 
-测试不可信边界能接受有效输入、拒绝无效输入并产生预期领域类型或错误。再通过 [evidence-based-testing](../evidence-based-testing/SKILL.md) 为类型系统无法证明的算法、真实副作用、跨进程兼容、并发、时间、性能和概率性结果选择证据。
+测试不可信边界能接受有效输入、拒绝无效输入并产生预期领域类型或错误。再通过 [evidence-management](../evidence-management/SKILL.md) 为类型系统无法证明的算法、真实副作用、跨进程兼容、并发、时间、性能和概率性结果选择证据。
 
 类型减少了可进入核心逻辑的非法状态，不代表合法状态上的所有行为都正确。把剩余风险显式列出，避免用一次成功编译外推整个工作单元正确。
 
@@ -89,7 +89,6 @@ description: Use when 开发工作单元的核心目标是把稳定领域状态�
 
 - [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md) 负责判断类型建模是否形成独立目标和证据边界；本技能不把普通声明升级为重型方法。
 - [spec-driven-development](../spec-driven-development/SKILL.md) 负责 Requirements → Design / Plan → Tasks → Implement / Evolve。规格可以派生类型建模单元，但两种方法不共同拥有同一工作单元。
-- [test-driven-development](../test-driven-development/SKILL.md) 用 Red → Green → Refactor 驱动确定性运行时行为，不为类型已经排除的非法状态制造重复红灯。只有类型 API 本身是可观察契约且有真实回归风险时，入口才另行判断少量编译通过或失败用例是否值得测试先行。
 - [property-based-testing](../property-based-testing/SKILL.md) 验证可信运行时值上的算法、解析器和状态机属性，不重复生成只会检查类型形状的值。
 - [behavior-driven-development](../behavior-driven-development/SKILL.md) 验证业务角色可观察的结果，不检查内部类型声明。
 - [consumer-driven-contract-testing](../consumer-driven-contract-testing/SKILL.md) 验证跨进程、跨版本的真实协议兼容；共享或本地类型不能替代提供方验证。

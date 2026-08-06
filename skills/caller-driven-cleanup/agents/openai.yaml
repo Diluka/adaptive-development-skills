@@ -1,4 +1,0 @@
-interface:
-  display_name: "Caller-Driven Cleanup"
-  short_description: "根据真实调用方和运行时加载证据安全删除完整无效路径"
-  default_prompt: "使用 $caller-driven-cleanup 证明这个仓库中哪些内容可以安全删除。"

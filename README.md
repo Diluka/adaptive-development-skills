@@ -1,8 +1,10 @@
 # Adaptive Development Skills
 
-这是一套按工作单元选择方法的通用开发技能。`adaptive-development-workflow` 是唯一入口：先按当前增量决定最低充分流程，再按独立目标与证据边界把请求拆成调查或开发单元；集成与交付方法、计划、文档、验证、评审、工作树和代理编排按需叠加，不与主要方法竞争。
+这是一套按工作单元选择方法的通用开发技能。`adaptive-development-workflow` 是共享分类与路由入口：先按当前增量决定最低充分流程，再按独立目标与证据边界把请求拆成调查或开发单元；用户明确调用独立方法时，该方法按自身触发条件核验适用性。集成与交付方法、计划、文档、验证、评审、工作树和代理编排按需叠加，不与主要方法竞争。
 
 调查方法只交付事实、根因、可行性或决策输入。调查结论一旦要转成项目长期保留的实现、测试、契约或文档，就返回入口重新选择开发方式。开发方式保持各自的行业标准流程；小而明确的增量仍可直接实现，不为形式强制 SDD、BDD 或 TDD。
+
+常规与复杂开发任务默认按“计划 → 实现 → 测试 → 评审 → 返工”的组合流程推进：这是对既有方法的编排组合，不是新的主要开发方式。除实现外各步骤可按任务级别省略；各步骤可由子代理推进以隔离会话步骤，评审只能由独立子代理进行或省略。完整定义与简化规则见 `adaptive-development-workflow`。
 
 ## 安装
 
@@ -41,62 +43,63 @@ Codex 当前不能把 `PreCompact` 的普通输出送给模型，所以 Hook 不
 
 | 技能 | 用途 |
 |---|---|
-| `adaptive-development-workflow` | 分级当前增量，拆分并分类工作单元，选择主要方法及正交支持 |
+| `adaptive-development-workflow` | 分级当前增量，拆分并分类工作单元，选择主要方法及正交支持；`resources/terminology.md` 提供术语对照 |
 
-### 开发方式
+### 工作节点技能
+
+| 技能 | 用途 |
+|---|---|
+| `writing-plans` | 为需要协调、恢复上下文或高风险控制的任务编写共享计划 |
+| `executing-plans` | 执行并同步已有计划，衔接适用验证、评审与必要复审 |
+| `requesting-code-review` | 在独立视角能补充风险证据时准备和执行评审 |
+| `receiving-code-review` | 先核验审查意见，再决定是否以及如何修改 |
+| `subagent-driven-development` | 在同一 Codex 任务内为上下文收益或独立证据委派工作单元 |
+| `dispatching-parallel-agents` | 判断工作单元能否安全并行以及并行是否有实际收益 |
+| `orchestrating-multi-session-work` | 按明确授权编排可恢复、隔离的独立 Codex 工作任务 |
+| `using-git-worktrees` | 为项目改动分支提供本地工作树隔离，并处理只读访问等例外 |
+| `finishing-a-development-branch` | 核对具体分支就绪状态，并按授权完成同步、交接或清理 |
+| `verification-before-completion` | 为当前完成声明匹配最新且直接的验证、CI、观测或评审证据 |
+| `choosing-tests` | 根据任务形状与优先级选择端到端、单元、属性或契约测试等方式 |
+| `evidence-management` | 判断证据充分性、复用既有证据并收敛长期证据组合 |
+| `brainstorming` | 只澄清会实质改变方案的关键歧义 |
+| `project-documentation` | 维护需要长期保存并版本控制的需求、设计、决策和其他正式项目文档 |
+
+### 方法技能
+
+#### 开发方法
 
 | 技能 | 用途 |
 |---|---|
 | `spec-driven-development` | 以可演进规格贯通 Requirements、Design / Plan、Tasks 与 Implement |
 | `behavior-driven-development` | 通过 Discovery、Formulation、Automation 和真实业务示例形成共享行为 |
-| `test-driven-development` | 对已选定的确定性行为执行标准 Red → Green → Refactor |
+| `test-driven-development` | 仅适用于定义精确、自包含的零件开发；需求模糊或大功能开发不适用 |
 | `type-driven-design` | 把稳定领域不变量编码为类型约束，在可信边界内排除非法表示 |
+| `maintenance-operations` | 安全执行清理死代码、依赖升级等不改变行为或只改变解析的维护变更 |
+
+#### 测试方法
+
+| 技能 | 用途 |
+|---|---|
 | `property-based-testing` | 以独立属性、生成器、执行、收缩和回归反例验证广泛输入空间 |
 | `consumer-driven-contract-testing` | 用真实使用方期望、版本化契约和提供方验证持续判断服务兼容 |
-| `characterization-testing` | 从真实执行建立 Characterization、Golden Master 与 Approval 基线并比较差异 |
-| `eval-driven-development` | 用代表任务、grader、重复 trial 和持续评估驱动概率性能力迭代 |
-| `caller-driven-cleanup` | 依据真实调用方、导出和运行时加载完成无行为变化的删除清理 |
-| `dependency-upgrade` | 基于实际依赖图与工具链安全更新依赖、运行时和锁文件 |
+| `baseline-and-eval-testing` | 以可审阅基线或代表任务评估验证复杂、旧行为或概率性主观输出 |
 
-目标、真实调用方和契约已经足以实施，且专项方法没有额外反馈或证据收益时，直接实现也是一等选择，不需要为它创建专用技能；现有证据是否存在不决定开发方式，真实缺口由 `evidence-based-testing` 另行选择普通定向证据。
-
-### 调查方法
+#### 调查方法
 
 | 技能 | 用途 |
 |---|---|
-| `source-repo-study` | 建立可追溯到当前源码、装配和历史的事实模型 |
-| `architecture-design-review` | 审查职责、所有权、生命周期、状态边界和架构不变量，交付决策依据 |
+| `system-understanding` | 理解现有系统的结构、运行路径、历史演进与架构决策 |
 | `contract-verification` | 核验确切版本下已安装或运行的 SDK、协议、框架与外部边界事实 |
 | `systematic-debugging` | 从已观察症状追踪到第一个错误状态和因果链 |
-| `technical-spike` | 用最小、受控、可丢弃试验回答明确可行性、性能或集成未知 |
-| `exploratory-testing` | 在受控探索会话中同步学习、设计、执行与解释，发现未知行为和风险 |
+| `unknown-exploration` | 以最小可丢弃试验或受控探索会话回答技术未知与行为风险 |
 
-### 集成与交付方法
-
-| 技能 | 用途 |
-|---|---|
-| `trunk-based-development` | 通过单一主干、短生命周期分支和小批次频繁集成降低延迟集成风险 |
-| `continuous-delivery` | 从版本控制到可追溯制品持续保持可按需发布 |
-| `progressive-delivery` | 对可发布候选版本受控暴露，以真实观测决定扩大、暂停或回退 |
-
-### 生命周期与证据支持
+#### 交付方法
 
 | 技能 | 用途 |
 |---|---|
-| `evidence-based-testing` | 在测试、契约、行为基线、评估、观测和 CI 之间选择、复用并收敛证据 |
-| `brainstorming` | 只澄清会实质改变方案的关键歧义 |
-| `writing-plans` | 为需要协调、恢复上下文或高风险控制的任务编写共享计划 |
-| `executing-plans` | 执行并同步已有计划，衔接适用验证、评审与必要复审 |
-| `project-documentation` | 维护需要长期保存并版本控制的需求、设计、决策和其他正式项目文档 |
-| `technical-terminology` | 统一通用开发术语的中英文表达与英文标识边界 |
-| `using-git-worktrees` | 为项目改动分支提供本地工作树隔离，并处理只读访问等例外 |
-| `dispatching-parallel-agents` | 判断工作单元能否安全并行以及并行是否有实际收益 |
-| `subagent-driven-development` | 在同一 Codex 任务内为上下文收益或独立证据委派工作单元 |
-| `orchestrating-multi-session-work` | 按明确授权编排可恢复、隔离的独立 Codex 工作任务 |
-| `receiving-code-review` | 先核验审查意见，再决定是否以及如何修改 |
-| `requesting-code-review` | 在独立视角能补充风险证据时准备和执行评审 |
-| `verification-before-completion` | 为当前完成声明匹配最新且直接的验证、CI、观测或评审证据 |
-| `finishing-a-development-branch` | 核对具体分支就绪状态，并按授权完成同步、交接或清理 |
+| `delivery` | 通过主干集成、持续保持可发布到正式环境受控暴露管理交付节奏 |
+
+目标、真实调用方和契约已经足以实施，且专项方法没有额外反馈或证据收益时，直接实现也是一等选择，不需要为它创建专用技能；现有证据是否存在不决定开发方式，真实缺口由 `evidence-management` 判断证据充分性并收敛。
 
 ## 方法来源
 

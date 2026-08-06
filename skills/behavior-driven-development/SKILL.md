@@ -37,11 +37,11 @@ Discovery 的结果是共享理解和仍待确认的问题，不是越多越好�
 ## Automation
 
 1. 一次选择一个已经达成共识且有长期回归价值的示例，连接到能够保留该业务行为的真实系统边界。
-2. 在行为尚未实现时确认检查因目标行为缺失而失败，再实现使示例成立的最小行为。
-3. 内部确定性规则具有独立目标、产物和反证边界时，返回 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md) 把它拆成实现与证据单元并重新选法；只有同时具备独立稳定判据、真实测试接缝、具体回归风险和 Red-first 额外反馈收益时才进入 [test-driven-development](../test-driven-development/SKILL.md)，否则可以直接实现并补最低充分证据。完成后再回到当前 Automation 验证业务结果。不能独立拆分时，低层测试只是 Automation 的辅助技术，不再执行第二套完整流程，也不能用内部单元测试替代验收行为。
+2. 依据已确认示例推进实现，并在相同真实边界自动化观察结果；自动化可以随当前小增量演进，但不能用未确认断言改写约定行为。
+3. 内部确定性规则具有独立目标、产物和反证边界时，返回 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md) 把它拆成实现与证据单元并重新选法。完成后再回到当前 Automation 验证业务结果。不能独立拆分时，低层测试只是 Automation 的辅助技术，不能用内部单元测试替代验收行为。
 4. 运行自动化示例并核对业务结果。出现新信息时返回 Discovery 或 Formulation，而不是让代码或测试单方面改写约定行为。
 
-稳定验收示例在实现前成为失败检查时具有 ATDD 的测试先行性质；BDD 还包含上游的 Discovery 与 Formulation，二者不能简单视为同义词。不要为同一组触发、流程和证据再套一层重复的 ATDD 仪式。
+BDD 由 Discovery、Formulation 与 Automation 共同组成。同一行为切片不叠加重复的需求发现、场景表述或自动化流程。
 
 ## 形成证据
 
@@ -56,7 +56,7 @@ Discovery 与 Formulation 证明团队对预期行为形成了可审查的共享
 
 - 不为已指定的静态内容、内部字面量、类型声明、私有结构或协作调用制造业务场景；精确内容本身属于外部契约时，在真实使用边界验证其效果。
 - 业务示例揭示出值得编码的稳定领域状态时，把类型建模拆成独立工作单元交给 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md)；BDD 继续拥有可观察业务结果，不检查内部类型形状。
-- 不自动化所有示例。通过 [evidence-based-testing](../evidence-based-testing/SKILL.md) 按回归风险、失败信号和维护成本选择长期证据。
+- 不自动化所有示例。通过 [evidence-management](../evidence-management/SKILL.md) 按回归风险、失败信号和维护成本选择长期证据。
 - 关键业务取舍尚未决定时使用 [brainstorming](../brainstorming/SKILL.md)；BDD 用示例揭示差异，但不替用户决定业务政策。
 - 复杂功能还需要需求、设计、任务和实现持续可追溯时，把规格链交给独立 [spec-driven-development](../spec-driven-development/SKILL.md) 单元；BDD 只拥有当前行为切片的 Discovery、Formulation 与 Automation，SDD 链接其场景和结果而不重复实现。
 - [writing-plans](../writing-plans/SKILL.md)、[executing-plans](../executing-plans/SKILL.md) 和 [project-documentation](../project-documentation/SKILL.md) 分别负责协调、执行状态和长期文档，不替代 Discovery、Formulation 与 Automation。
