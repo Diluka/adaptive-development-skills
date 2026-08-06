@@ -105,7 +105,7 @@ SDD 或 BDD 产生的具体实现目标应继续拆成实现与证据单元并�
 
 1. **计划**：用 [writing-plans](../writing-plans/SKILL.md) 落盘目标、范围、工作单元和验证方式。需要以文档描述功能开发步骤时，由 [spec-driven-development](../spec-driven-development/SKILL.md) 贯通 Requirements、Design / Plan、Tasks 与 Implement，文档写法不再赘述。
 2. **实现**：按计划执行工作单元，见 [executing-plans](../executing-plans/SKILL.md)；每个实现单元按自身证据形状在上文“选择开发方式”中选法。
-3. **测试**：是否需要测试步骤按任务级别与实现后的真实证据缺口决定；需要时，从计划所指向的需求或规格派生验收证据，在执行期根据现有代码、接缝和任务内容选择测试手段与强度，验证可观察结果。
+3. **测试**：是否需要测试步骤按任务级别与实现后的真实证据缺口决定；需要时，通过 [choosing-tests](../choosing-tests/SKILL.md) 选择测试方式与强度，从计划所指向的需求或规格派生验收证据并验证可观察结果。
 4. **评审**：任务级别要求时，由未参与实现、证据设计和差异修改的独立子代理评审完整差异，见 [requesting-code-review](../requesting-code-review/SKILL.md)。
 5. **返工**：按 [receiving-code-review](../receiving-code-review/SKILL.md) 核验意见并实施最小修复，重新验证后复审失效范围，直到评审同意或确认无需处理。
 
@@ -136,7 +136,8 @@ SDD 或 BDD 产生的具体实现目标应继续拆成实现与证据单元并�
 |---|---|
 | 关键歧义会实质改变方案 | [brainstorming](../brainstorming/SKILL.md) |
 | 需要协调、恢复上下文或高风险控制 | [writing-plans](../writing-plans/SKILL.md) 与 [executing-plans](../executing-plans/SKILL.md) |
-| 执行期需要选择测试手段、证据层级或复用收敛证据 | [evidence-based-testing](../evidence-based-testing/SKILL.md) |
+| 需要选择测试方式（端到端、单元、TDD、属性、契约等） | [choosing-tests](../choosing-tests/SKILL.md) |
+| 需要判断证据充分性、复用或收敛长期证据 | [evidence-based-testing](../evidence-based-testing/SKILL.md) |
 | 方法产物需要长期保存为正式项目文档 | [project-documentation](../project-documentation/SKILL.md) |
 | 分支、版本或并行改动需要本地隔离 | [using-git-worktrees](../using-git-worktrees/SKILL.md) |
 | 单元委派有上下文或独立证据收益 | [subagent-driven-development](../subagent-driven-development/SKILL.md) 与 [dispatching-parallel-agents](../dispatching-parallel-agents/SKILL.md) |
