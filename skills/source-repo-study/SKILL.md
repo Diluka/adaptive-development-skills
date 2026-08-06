@@ -1,6 +1,6 @@
 ---
 name: source-repo-study
-description: Use when 需要理解陌生或大型源码仓库的整体结构、某个机制的端到端实现或其历史演进，并要求结论可追溯到当前源码与版本证据
+description: Use when 需要调查当前源码仓库的整体结构、某个机制的真实运行路径或历史演进，并交付可追溯到当前源码、装配与版本证据的事实模型
 ---
 
 # Source Repo Study：源码仓库研究
@@ -45,7 +45,7 @@ description: Use when 需要理解陌生或大型源码仓库的整体结构、�
 2. 检查入口如何被装配：模块注册、依赖注入、路由、插件、生成代码、配置与功能开关可能决定哪个实现实际可达。
 3. 沿编排进入领域规则，记录关键输入、状态转换、不变量、错误与返回路径，以及职责由哪个模块或进程拥有。
 4. 继续追到持久化、事务、缓存、事件发布与消费、后台任务、重试和最终副作用；只展开与问题相关的分支。
-5. 标出外部服务、SDK、框架和协议边界及项目实际使用的版本。真实契约仍不确定时转用 [contract-verification](../contract-verification/SKILL.md)。
+5. 标出外部服务、SDK、框架和协议边界及项目实际使用的版本。真实契约仍不确定时，把该未知返回 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md)，拆成独立的 [contract-verification](../contract-verification/SKILL.md) 调查单元。
 6. 从可观察副作用、反向调用方、代表性测试或运行时产物交叉核对主路径，主动寻找能推翻当前模型的分支。
 
 动态分派、反射、代码生成、约定式加载和部署配置可能让静态调用图不完整。找不到直接调用者时先检查这些机制，不把静态不可见等同于不可达。
@@ -77,7 +77,9 @@ description: Use when 需要理解陌生或大型源码仓库的整体结构、�
 - 需要设计或审查目标架构时使用 [architecture-design-review](../architecture-design-review/SKILL.md)；同时需要现状与目标方案时，先完成源码研究，再把已确认模型作为架构审查输入。
 - 需要保留研究结果时使用 [project-documentation](../project-documentation/SKILL.md)，只整理有长期价值的内容，不把过程日志整体转成正式文档。
 
-若请求还包含修复或实现，把研究结论返回当前开发工作单元并遵守其范围与生命周期，不因发现相邻问题擅自扩展修改。
+以上边界需要继续调查时，结束当前研究单元并返回 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md)，由入口按新的事实与证据边界拆分工作单元并选择调查方法。
+
+若请求还包含正式修复或实现，研究到足以支撑决定时停止，把事实模型返回 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md)；入口按准备保留的增量重新分级并选择开发方式，本技能不继续实施，也不因发现相邻问题擅自扩大修改。
 
 ## 交付结论
 

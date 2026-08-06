@@ -30,11 +30,16 @@ description: Use when 需要统一通用软件开发术语的中英文表达、�
 | RFD | Reflected File Download | 反射型文件下载；Web 安全漏洞语境 |
 | DoR | Definition of Ready | 就绪定义 |
 | DoD | Definition of Done | 完成定义 |
+| TDD | Test-Driven Development | 测试驱动开发；本仓库不把 TDD 用作 Type-Driven Development 的缩写 |
+| SDD | Spec-Driven Development | 规格驱动开发；不要与单纯编写规格或实施计划混同 |
+| BDD | Behavior-Driven Development | 行为驱动开发；核心实践为 Discovery、Formulation、Automation |
 | ATDD | Acceptance Test-Driven Development | 验收测试驱动开发 |
+| PBT | Property-Based Testing | 属性测试；缩写没有上下文时优先写完整方法名 |
+| CDC | Consumer-Driven Contract Testing | 使用方驱动契约测试；也可能表示 Change Data Capture，必须结合语境判断 |
 | RCA | Root Cause Analysis | 根因分析 |
 | APM | Application Performance Monitoring / Application Performance Management | 应用性能监控 / 应用性能管理 |
 | APM | Actions Per Minute | 每分钟操作数；交互或游戏语境 |
-| CD | Continuous Delivery / Continuous Deployment | 持续交付 / 持续部署；同属持续产品化流程，区别通常在正式发布是否保留人工批准 |
+| CD | Continuous Delivery / Continuous Deployment | 持续交付 / 持续部署；前者保持可按需发布，后者把合格变化自动部署到正式环境，必须结合语境判断 |
 
 ## 需求、方法与证据
 
@@ -46,6 +51,9 @@ description: Use when 需要统一通用软件开发术语的中英文表达、�
 | temporary artifact | 临时产物 |
 | project artifact / deliverable | 项目产物 / 交付产物 |
 | work unit | 工作单元 |
+| development method | 开发方式；交付需要项目保留的正式变更 |
+| investigation method | 调查方法；交付事实、证据、根因或决策输入，不承接正式实现 |
+| lifecycle support | 生命周期支持；计划、文档、验证、评审、工作树、交接与代理编排等正交能力 |
 | invariant | 不变量 |
 | trade-off | 权衡 |
 | assumption / hypothesis | 假设；调试时可写“原因假设” |
@@ -57,6 +65,19 @@ description: Use when 需要统一通用软件开发术语的中英文表达、�
 | decision point | 决策点 |
 | acceptance criteria | 验收标准 |
 | non-goal | 非目标 |
+| spec-driven development | 规格驱动开发 |
+| behavior-driven development | 行为驱动开发 |
+| Type-Driven Design / Type-Driven Development | 类型驱动设计 / 类型驱动开发；技能名使用 `type-driven-design`，避免与测试驱动开发的 TDD 缩写冲突 |
+| property-based testing | 属性测试 |
+| consumer-driven contract testing | 使用方驱动契约测试 |
+| characterization testing | 特征测试；描述系统当前实际行为，不自动代表正确需求 |
+| Golden Master | 保留英文；指从真实执行产生并经审阅批准的行为基线 |
+| Approval Testing | 批准测试；通过 received / approved 差异审阅和显式批准维护基线 |
+| eval-driven development | 评估驱动开发 |
+| exploratory testing | 探索性测试 |
+| trunk-based development | 主干开发 |
+| continuous delivery / continuous deployment | 持续交付 / 持续部署 |
+| progressive delivery | 渐进式交付 |
 
 ## 实现、测试与运行
 
@@ -83,6 +104,19 @@ description: Use when 需要统一通用软件开发术语的中英文表达、�
 | instrumentation | 观测代码；强调机制时写“插桩” |
 | probe | 探测；契约验证语境可写“最小验证” |
 | span | 跟踪片段；作为 APM 字段名时保留 `span` |
+| property / generator / shrinking | 属性 / 生成器 / 收缩；属性测试语境 |
+| counterexample | 反例 |
+| algebraic data type / ADT | 代数数据类型；ADT 也可能表示抽象数据类型，需要结合语境判断 |
+| discriminated union / tagged union | 判别联合 / 带标签联合 |
+| opaque / branded / refinement type | 不透明类型 / 品牌类型 / 精化类型；作为语言构造名时保留项目原词 |
+| typestate | 类型状态；用类型表达协议或对象所处阶段 |
+| exhaustive matching | 穷尽匹配 |
+| parse, don't validate | 解析而非仅校验；把不可信输入解析为能够携带已验证约束的可信类型 |
+| grader / rubric | 评分器 / 评价量表；作为工具字段或类型名时保留英文 |
+| trial | 单次试验；评估中同一任务的一次运行 |
+| transcript / trace / trajectory | 执行记录 / 轨迹；作为产品字段或 API 名时保留英文 |
+| charter / session / debrief | 测试章程 / 探索会话 / 复盘；探索性测试与 SBTM 语境 |
+| canary release / blast radius | 金丝雀发布 / 爆炸半径 |
 
 ## Git、依赖与代理协作
 

@@ -1,4 +1,4 @@
 interface:
   display_name: "Evidence-Based Testing"
-  short_description: "根据当前增量复用并选择最小充分的测试、CI或评估证据"
-  default_prompt: "使用 $evidence-based-testing 根据当前增量复用仍有效证据，并只选择能覆盖真实风险缺口的测试、CI、评估或观测。"
+  short_description: "选择、复用并收敛测试、契约、基线、评估、观测与CI证据"
+  default_prompt: "使用 $evidence-based-testing 为当前开发单元选择并复用能推翻错误结论的最小充分证据组合。"

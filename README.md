@@ -1,38 +1,90 @@
 # Adaptive Development Skills
 
-这是一套自用的开发工作流技能。任务是否属于开发任务，取决于最终是否要保留项目产物。确定任务类型后，先按当前增量和真实风险选择最低充分流程，再拆分工作单元，并按结果确定性和可用证据选择 TDD、直接实现、行为基线、快照、评估或专项调查。
+这是一套按工作单元选择方法的通用开发技能。`adaptive-development-workflow` 是唯一入口：先按当前增量决定最低充分流程，再按独立目标与证据边界把请求拆成调查或开发单元；集成与交付方法、计划、文档、验证、评审、工作树和代理编排按需叠加，不与主要方法竞争。
 
-计划、验证、独立评审和交付节点可以相同，但必要性随任务级别变化：微小任务直接实现、检查和总结；常规任务按证据收益选择；复杂或高风险任务使用共享计划和独立评审。已有测试、评审和 CI 只在当前变化影响其结论时失效。临时调研代码不会自动进入开发流程；是否使用当前任务内的子代理或用户明确授权的独立工作任务，取决于单元粒度、隔离、恢复、上下文成本和独立证据价值。
+调查方法只交付事实、根因、可行性或决策输入。调查结论一旦要转成项目长期保留的实现、测试、契约或文档，就返回入口重新选择开发方式。开发方式保持各自的行业标准流程；小而明确的增量仍可直接实现，不为形式强制 SDD、BDD 或 TDD。
 
-## 技能清单
+## 技能体系
+
+### 共享入口
 
 | 技能 | 用途 |
 |---|---|
-| `adaptive-development-workflow` | 按当前增量分级，决定必要流程节点并为工作单元选择方法 |
-| `source-repo-study` | 用地图、专题或演进模式建立有源码依据的当前系统理解 |
-| `architecture-design-review` | 基于真实系统事实审查目标架构的职责、边界、不变量与风险 |
-| `evidence-based-testing` | 复用仍有效证据，在测试、CI、快照、评估和观测之间补足真实缺口 |
-| `contract-verification` | 核验 SDK、协议、框架与依赖的真实契约 |
-| `caller-driven-cleanup` | 依据真实调用方、导出和运行时加载完成删除清理 |
-| `technical-spike` | 用可丢弃试验回答未知可行性，决定保留时转入开发任务 |
-| `dependency-upgrade` | 基于实际依赖图与工具链规划升级 |
-| `technical-terminology` | 统一常见开发术语的中英文表达与英文标识边界 |
-| `project-documentation` | 按当前文档增量维护需要长期保存并版本控制的正式项目文档 |
+| `adaptive-development-workflow` | 分级当前增量，拆分并分类工作单元，选择主要方法及正交支持 |
+
+### 开发方式
+
+| 技能 | 用途 |
+|---|---|
+| `spec-driven-development` | 以可演进规格贯通 Requirements、Design / Plan、Tasks 与 Implement |
+| `behavior-driven-development` | 通过 Discovery、Formulation、Automation 和真实业务示例形成共享行为 |
+| `test-driven-development` | 对已选定的确定性行为执行标准 Red → Green → Refactor |
+| `type-driven-design` | 把稳定领域不变量编码为类型约束，在可信边界内排除非法表示 |
+| `property-based-testing` | 以独立属性、生成器、执行、收缩和回归反例验证广泛输入空间 |
+| `consumer-driven-contract-testing` | 用真实使用方期望、版本化契约和提供方验证持续判断服务兼容 |
+| `characterization-testing` | 从真实执行建立 Characterization、Golden Master 与 Approval 基线并比较差异 |
+| `eval-driven-development` | 用代表任务、grader、重复 trial 和持续评估驱动概率性能力迭代 |
+| `caller-driven-cleanup` | 依据真实调用方、导出和运行时加载完成无行为变化的删除清理 |
+| `dependency-upgrade` | 基于实际依赖图与工具链安全更新依赖、运行时和锁文件 |
+
+目标、真实调用方和契约已经足以实施，且专项方法没有额外反馈或证据收益时，直接实现也是一等选择，不需要为它创建专用技能；现有证据是否存在不决定开发方式，真实缺口由 `evidence-based-testing` 另行选择普通定向证据。
+
+### 调查方法
+
+| 技能 | 用途 |
+|---|---|
+| `source-repo-study` | 建立可追溯到当前源码、装配和历史的事实模型 |
+| `architecture-design-review` | 审查职责、所有权、生命周期、状态边界和架构不变量，交付决策依据 |
+| `contract-verification` | 核验确切版本下已安装或运行的 SDK、协议、框架与外部边界事实 |
+| `systematic-debugging` | 从已观察症状追踪到第一个错误状态和因果链 |
+| `technical-spike` | 用最小、受控、可丢弃试验回答明确可行性、性能或集成未知 |
+| `exploratory-testing` | 在受控探索会话中同步学习、设计、执行与解释，发现未知行为和风险 |
+
+### 集成与交付方法
+
+| 技能 | 用途 |
+|---|---|
+| `trunk-based-development` | 通过单一主干、短生命周期分支和小批次频繁集成降低延迟集成风险 |
+| `continuous-delivery` | 从版本控制到可追溯制品持续保持可按需发布 |
+| `progressive-delivery` | 对可发布候选版本受控暴露，以真实观测决定扩大、暂停或回退 |
+
+### 生命周期与证据支持
+
+| 技能 | 用途 |
+|---|---|
+| `evidence-based-testing` | 在测试、契约、行为基线、评估、观测和 CI 之间选择、复用并收敛证据 |
 | `brainstorming` | 只澄清会实质改变方案的关键歧义 |
 | `writing-plans` | 为需要协调、恢复上下文或高风险控制的任务编写共享计划 |
 | `executing-plans` | 执行并同步已有计划，衔接适用验证、评审与必要复审 |
-| `systematic-debugging` | 从运行时证据、调用方与契约追踪根因 |
-| `test-driven-development` | 只对具有独立稳定判据、真实接缝和具体回归风险的确定性行为使用 TDD |
-| `using-git-worktrees` | 让会产生改动的开发分支默认绑定独立工作树，并判断只读访问等隔离例外 |
-| `dispatching-parallel-agents` | 证明工作单元可安全并行，并选择当前任务内子代理或独立工作任务 |
+| `project-documentation` | 维护需要长期保存并版本控制的需求、设计、决策和其他正式项目文档 |
+| `technical-terminology` | 统一通用开发术语的中英文表达与英文标识边界 |
+| `using-git-worktrees` | 为项目改动分支提供本地工作树隔离，并处理只读访问等例外 |
+| `dispatching-parallel-agents` | 判断工作单元能否安全并行以及并行是否有实际收益 |
 | `subagent-driven-development` | 在同一 Codex 任务内为上下文收益或独立证据委派工作单元 |
-| `orchestrating-multi-session-work` | 按依赖编排可恢复、隔离的独立 Codex 工作任务并处理完成唤醒 |
-| `receiving-code-review` | 先核验审查意见，再决定是否和如何修改 |
-| `requesting-code-review` | 在独立视角能补充风险证据时准备评审，按任务级别调整深度 |
-| `verification-before-completion` | 复用仍有效证据，为当前完成声明补足验证、CI 或评审缺口 |
-| `finishing-a-development-branch` | 按当前集成增量核对证据并交接分支与集成操作 |
+| `orchestrating-multi-session-work` | 按明确授权编排可恢复、隔离的独立 Codex 工作任务 |
+| `receiving-code-review` | 先核验审查意见，再决定是否以及如何修改 |
+| `requesting-code-review` | 在独立视角能补充风险证据时准备和执行评审 |
+| `verification-before-completion` | 为当前完成声明匹配最新且直接的验证、CI、观测或评审证据 |
+| `finishing-a-development-branch` | 核对具体分支就绪状态，并按授权完成同步、交接或清理 |
 
-## 思想来源
+## 方法来源
+
+这些资料用于校准方法的标准术语、阶段和边界。本仓库不跟踪上游版本，也不承担对具体工具实现的兼容义务；工具专用命令和模板不会被泛化为通用方法要求。
+
+- **TDD**：Kent Beck, [Test-Driven Development: By Example](https://www.pearson.com/en-us/subject-catalog/p/test-driven-development-by-example/P200000009421/9780321146533)。
+- **SDD**：[GitHub Spec Kit](https://github.com/github/spec-kit)、[Spec-Driven Development methodology](https://github.com/github/spec-kit/blob/main/spec-driven.md)、[Evolving specifications](https://github.com/github/spec-kit/blob/main/docs/guides/evolving-specs.md) 与 [Kiro Specs](https://kiro.dev/docs/specs/)。
+- **BDD / ATDD 边界**：[Cucumber, Behaviour-Driven Development](https://cucumber.io/docs/bdd/)。
+- **Type-Driven Design**：[Edwin Brady, Type-Driven Development with Idris](https://www.manning.com/books/type-driven-development-with-idris)、[Scott Wlaschin, Making illegal states unrepresentable](https://fsharpforfunandprofit.com/posts/designing-with-types-making-illegal-states-unrepresentable/) 与 [Alexis King, Parse, don't validate](https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/)。语言能力边界参考 [Rust typestate](https://docs.rust-embedded.org/book/static-guarantees/typestate-programming.html)、[TypeScript discriminated unions](https://www.typescriptlang.org/docs/handbook/2/narrowing.html#discriminated-unions) 和 [Kotlin sealed classes](https://kotlinlang.org/docs/sealed-classes.html)。
+- **Property-Based Testing**：[Hypothesis introduction](https://hypothesis.readthedocs.io/en/latest/tutorial/introduction.html)、[Replaying failures](https://hypothesis.readthedocs.io/en/latest/tutorial/replaying-failures.html) 与 [QuickCheck API](https://hackage-content.haskell.org/package/QuickCheck-2.18.0.0/docs/Test-QuickCheck.html)。
+- **Consumer-Driven Contract Testing**：[Pact, How Pact works](https://docs.pact.io/getting_started/how_pact_works)、[When to use Pact](https://docs.pact.io/getting_started/what_is_pact_good_for) 与 [Can I Deploy](https://docs.pact.io/pact_broker/can_i_deploy)。
+- **Characterization / Golden Master / Approval Testing**：[Michael Feathers, Characterization Testing](https://michaelfeathers.silvrback.com/characterization-testing) 与 [ApprovalTests concepts](https://github.com/approvals/ApprovalTests.Documentation/blob/main/explanations/approval_testing.md)。
+- **Eval-Driven Development**：[Anthropic, Demystifying evals for AI agents](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents) 与 [Claude evaluation tool documentation](https://platform.claude.com/docs/en/test-and-evaluate/develop-tests)。
+- **Exploratory Testing**：[James Bach and Michael Bolton, Exploratory Testing 3.0](https://www.satisfice.com/blog/archives/1509)、[Exploratory Testing](https://www.satisfice.com/exploratory-testing) 与 [Session-Based Test Management](https://www.satisfice.com/download/session-based-test-management)。
+- **Trunk-Based Development**：[Trunk Based Development](https://trunkbaseddevelopment.com/)、[Short-Lived Feature Branches](https://trunkbaseddevelopment.com/short-lived-feature-branches/) 与 [DORA capability](https://dora.dev/capabilities/trunk-based-development/)。
+- **Continuous Delivery**：[DORA, Continuous delivery](https://dora.dev/capabilities/continuous-delivery/)。
+- **Progressive Delivery**：[James Governor, Towards Progressive Delivery](https://web.archive.org/web/20180807003203/https://redmonk.com/jgovernor/2018/08/06/towards-progressive-delivery/) 与 [Argo Rollouts](https://argo-rollouts.readthedocs.io/en/stable/)。
+
+## 其他思想来源
 
 - [obra/superpowers](https://github.com/obra/superpowers)
 - [lzj960515/codex-workbench](https://github.com/lzj960515/codex-workbench)

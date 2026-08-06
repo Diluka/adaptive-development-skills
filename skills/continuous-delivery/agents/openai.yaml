@@ -1,0 +1,4 @@
+interface:
+  display_name: "Continuous Delivery"
+  short_description: "持续保持软件可发布并建立低风险且可追溯的完整交付链路"
+  default_prompt: "使用 $continuous-delivery 评估并改进可按需发布、低风险且可追溯的交付链路。"

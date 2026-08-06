@@ -1,13 +1,13 @@
 ---
 name: architecture-design-review
-description: Use when 设计或审查公共 API、框架、核心基础设施或跨模块重设计，且职责、所有权、生命周期、状态边界或关键不变量不清
+description: Use when 公共 API、框架、核心基础设施或跨模块方案的职责、所有权、生命周期、状态边界或关键不变量存在不确定性，需要审查备选并交付架构决策依据
 ---
 
 # Architecture Design Review：架构设计审查
 
 ## 核心原则
 
-先还原真实系统，再提出或评价目标设计。架构建议必须能追溯到需求、真实调用方、已验证契约和运行证据；不用惯例、偏好或抽象程度代替具体问题。
+先还原真实系统，再提出或评价目标设计。架构建议必须能追溯到需求、真实调用方、已验证契约和运行证据；不用惯例、偏好或抽象程度代替具体问题。本技能只交付架构决策输入，不把推荐方案实现为项目差异。
 
 ## 建立事实基线
 
@@ -16,7 +16,7 @@ description: Use when 设计或审查公共 API、框架、核心基础设施或
 3. 核对真实运行行为、已实施契约、当前配置与既有设计决定；文档、类型和注释与运行证据冲突时，显式记录差异。
 4. 分开已确认事实、有证据的推断、待验证假设和真正未知；不把理想目标倒推为当前现状。
 
-外部 SDK、框架、协议或服务契约不确定时，使用 [contract-verification](../contract-verification/SKILL.md)；技术可行性或性能仍未知时，使用 [technical-spike](../technical-spike/SKILL.md) 获得最小证据。
+外部 SDK、框架、协议或服务契约不确定，或者技术可行性或性能仍未知时，把未知事项返回 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md)，分别拆成 [contract-verification](../contract-verification/SKILL.md) 或 [technical-spike](../technical-spike/SKILL.md) 调查单元，再把所得证据用于架构审查。
 
 ## 建模架构
 
@@ -59,4 +59,4 @@ description: Use when 设计或审查公共 API、框架、核心基础设施或
 - 不强制 `Config` / `Options` 命名、特定设计模式、新抽象或通用化；当前设计不需要它们时保持简单。
 - 默认只交付审查结论，不自动创建设计文档或实施代码；用户或项目规范要求长期保留时使用 [project-documentation](../project-documentation/SKILL.md)。
 - 不为了“完整”扩大需求、重设计相邻模块或预先解决未出现的规模问题。
-- 任务包含正式实施时，把结论返回 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md) 按当前增量推进；本审查不代替最终差异适用的 [requesting-code-review](../requesting-code-review/SKILL.md)。
+- 任务包含正式实施时，形成足以支撑决定的结论后停止审查，把结论返回 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md)，按准备保留的增量重新分级并选择开发方式；本技能不继续实施，也不代替最终差异适用的 [requesting-code-review](../requesting-code-review/SKILL.md)。
