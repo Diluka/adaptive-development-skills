@@ -1,4 +1,4 @@
 interface:
   display_name: "Test-Driven Development"
-  short_description: "对已选定的确定性行为执行标准Red→Green→Refactor循环"
+  short_description: "对已选定的确定性行为执行标准 Red → Green → Refactor 循环"
   default_prompt: "使用 $test-driven-development 对已选定的确定性行为执行标准 Red → Green → Refactor 循环。"
