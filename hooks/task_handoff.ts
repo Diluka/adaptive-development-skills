@@ -1,4 +1,8 @@
+import { execFile } from "node:child_process";
+import { readFileSync } from "node:fs";
+import { chmod, mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
+import process from "node:process";
 
 import {
   parseTaskHandoffCommandInput,
@@ -21,7 +25,6 @@ export const MAX_RECOVERY_CONTEXT_BYTES = 16_000;
 
 const SESSION_HASH_RE = /^[0-9a-f]{64}$/;
 const encoder = new TextEncoder();
-const decoder = new TextDecoder();
 const strictDecoder = new TextDecoder("utf-8", { fatal: true });
 
 export interface GitSnapshot {
@@ -85,33 +88,33 @@ function canonicalCwd(rawCwd: string): string {
 }
 
 async function runGit(cwd: string, ...args: string[]): Promise<string | null> {
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), GIT_COMMAND_TIMEOUT_MS);
   try {
-    const output = await new Deno.Command("git", {
-      args: [
-        "--no-optional-locks",
-        "-c",
-        "core.fsmonitor=false",
-        "-c",
-        "submodule.recurse=false",
-        "-C",
-        cwd,
-        ...args,
-      ],
-      stdin: "null",
-      stdout: "piped",
-      stderr: "null",
-      signal: controller.signal,
-    }).output();
-    if (!output.success) {
-      return null;
-    }
-    return decoder.decode(output.stdout).trimEnd();
+    return await new Promise((resolveOutput) => {
+      execFile(
+        "git",
+        [
+          "--no-optional-locks",
+          "-c",
+          "core.fsmonitor=false",
+          "-c",
+          "submodule.recurse=false",
+          "-C",
+          cwd,
+          ...args,
+        ],
+        {
+          encoding: "utf8",
+          env: {},
+          timeout: GIT_COMMAND_TIMEOUT_MS,
+          windowsHide: true,
+        },
+        (error, stdout) => {
+          resolveOutput(error === null ? stdout.trimEnd() : null);
+        },
+      );
+    });
   } catch {
     return null;
-  } finally {
-    clearTimeout(timeout);
   }
 }
 
@@ -264,7 +267,7 @@ export async function loadCheckpoint(
 ): Promise<Checkpoint> {
   let text: string;
   try {
-    text = await Deno.readTextFile(path);
+    text = await readFile(path, "utf8");
   } catch {
     throw new InvalidCheckpoint("checkpoint is unreadable");
   }
@@ -329,11 +332,11 @@ export async function loadCheckpoint(
 async function ensureStateDirectory(path: string): Promise<void> {
   const sessionDirectory = dirname(path);
   const handoffsDirectory = dirname(sessionDirectory);
-  await Deno.mkdir(handoffsDirectory, { recursive: true, mode: 0o700 });
-  await Deno.mkdir(sessionDirectory, { recursive: true, mode: 0o700 });
-  if (Deno.build.os !== "windows") {
-    await Deno.chmod(handoffsDirectory, 0o700);
-    await Deno.chmod(sessionDirectory, 0o700);
+  await mkdir(handoffsDirectory, { recursive: true, mode: 0o700 });
+  await mkdir(sessionDirectory, { recursive: true, mode: 0o700 });
+  if (process.platform !== "win32") {
+    await chmod(handoffsDirectory, 0o700);
+    await chmod(sessionDirectory, 0o700);
   }
 }
 
@@ -396,9 +399,9 @@ async function saveCheckpoint(
     lastAssistantMessage,
     lastEvent: eventLabel(event),
   });
-  await Deno.writeTextFile(path, text, { mode: 0o600 });
-  if (Deno.build.os !== "windows") {
-    await Deno.chmod(path, 0o600);
+  await writeFile(path, text, { encoding: "utf8", mode: 0o600 });
+  if (process.platform !== "win32") {
+    await chmod(path, 0o600);
   }
   return await loadCheckpoint(path, sessionId);
 }
@@ -566,17 +569,15 @@ export async function processEvent(
 
 async function main(): Promise<number> {
   try {
-    const pluginData = Deno.env.get("PLUGIN_DATA");
+    const pluginData = process.env.PLUGIN_DATA;
     if (!pluginData) {
       return 0;
     }
-    const rawInput = await new Response(Deno.stdin.readable).text();
+    const rawInput = readFileSync(0, "utf8");
     const event = parseTaskHandoffCommandInput(JSON.parse(rawInput));
     const output = await processEvent(event, pluginData);
     if (output !== null) {
-      await Deno.stdout.write(
-        encoder.encode(`${JSON.stringify(output)}\n`),
-      );
+      process.stdout.write(`${JSON.stringify(output)}\n`);
     }
   } catch {
     // Hook failures must not block the user's Codex turn or compaction.
@@ -586,5 +587,5 @@ async function main(): Promise<number> {
 }
 
 if (import.meta.main) {
-  Deno.exit(await main());
+  process.exitCode = await main();
 }

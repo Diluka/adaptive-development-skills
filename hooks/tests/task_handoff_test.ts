@@ -119,7 +119,7 @@ async function runHook(
       "--no-lock",
       "--no-npm",
       "--no-remote",
-      "--allow-env=PLUGIN_DATA",
+      "--allow-env=PLUGIN_DATA,NODE_V8_COVERAGE",
       `--allow-read=${fixture.pluginData}`,
       `--allow-write=${fixture.pluginData}`,
       "--allow-run=git",
