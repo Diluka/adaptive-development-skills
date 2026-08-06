@@ -132,7 +132,7 @@ SDD 或 BDD 产生的具体实现目标应继续拆成实现与证据单元并�
 |---|---|
 | 关键歧义会实质改变方案 | [brainstorming](../brainstorming/SKILL.md) |
 | 需要协调、恢复上下文或高风险控制 | [writing-plans](../writing-plans/SKILL.md) 与 [executing-plans](../executing-plans/SKILL.md) |
-| 需要选择测试方式（端到端、单元、TDD、属性、契约等） | [choosing-tests](../choosing-tests/SKILL.md) |
+| 需要选择测试方式（端到端、单元、属性、契约等） | [choosing-tests](../choosing-tests/SKILL.md) |
 | 需要判断证据充分性、复用或收敛长期证据 | [evidence-management](../evidence-management/SKILL.md) |
 | 方法产物需要长期保存为正式项目文档 | [project-documentation](../project-documentation/SKILL.md) |
 | 分支、版本或并行改动需要本地隔离 | [using-git-worktrees](../using-git-worktrees/SKILL.md) |

@@ -1,6 +1,6 @@
 ---
 name: choosing-tests
-description: Use when 需要为开发工作单元选择测试方式，判断端到端、单元测试、TDD、属性测试或契约测试等哪种手段最合适，或评估现有测试组合是否已覆盖当前风险
+description: Use when 需要为开发工作单元选择测试方式，判断端到端、单元测试、属性测试或契约测试等哪种手段最合适，或评估现有测试组合是否已覆盖当前风险
 ---
 
 # Choosing Tests：选择测试方式
@@ -20,7 +20,6 @@ description: Use when 需要为开发工作单元选择测试方式，判断端�
 | 开发内容 | 首选测试方式 |
 |---|---|
 | 接口、API 或完整用户流程 | 端到端测试为主：在真实入口验证可观察结果，是最直接的验收手段；单元测试只在端到端无法精确定位失败、存在独立稳定规则或不同失效面时补充 |
-| 定义精确、自包含的零件或组件（需求与契约完全明确） | [test-driven-development](../test-driven-development/SKILL.md)：适用场景狭窄，只在能写出准确描述需求的测试时使用；需求模糊或大功能开发不适用 |
 | 算法、解析器、状态机等广泛输入空间 | [property-based-testing](../property-based-testing/SKILL.md) |
 | 跨服务或跨版本的消费者与提供者 | [consumer-driven-contract-testing](../consumer-driven-contract-testing/SKILL.md) |
 | 遗留重构、重写、复杂稳定输出或 AI/Agent 等概率性、主观结果 | [baseline-and-eval-testing](../baseline-and-eval-testing/SKILL.md) |

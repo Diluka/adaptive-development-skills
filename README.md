@@ -28,7 +28,7 @@
 | `using-git-worktrees` | 为项目改动分支提供本地工作树隔离，并处理只读访问等例外 |
 | `finishing-a-development-branch` | 核对具体分支就绪状态，并按授权完成同步、交接或清理 |
 | `verification-before-completion` | 为当前完成声明匹配最新且直接的验证、CI、观测或评审证据 |
-| `choosing-tests` | 根据任务形状与优先级选择端到端、单元、TDD、属性或契约测试等方式 |
+| `choosing-tests` | 根据任务形状与优先级选择端到端、单元、属性或契约测试等方式 |
 | `evidence-management` | 判断证据充分性、复用既有证据并收敛长期证据组合 |
 | `brainstorming` | 只澄清会实质改变方案的关键歧义 |
 | `project-documentation` | 维护需要长期保存并版本控制的需求、设计、决策和其他正式项目文档 |
