@@ -233,7 +233,7 @@ jobs:
           if ($commands.Count -ne 4 -or ($commands | Select-Object -Unique).Count -ne 1) {
             throw "Configured Windows Hook commands are not identical"
           }
-          $commandWindows = $commands[0]
+          $commandWindows = $commands[0].Replace('${PLUGIN_ROOT}', $env:PLUGIN_ROOT)
           $startInfo = [Diagnostics.ProcessStartInfo]::new()
           $startInfo.FileName = (Get-Command pwsh.exe -CommandType Application).Source
           $startInfo.ArgumentList.Add("-NoProfile")

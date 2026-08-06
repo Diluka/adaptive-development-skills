@@ -7,7 +7,7 @@
           {
             "type": "command",
             "command": "\"${PLUGIN_ROOT}/hooks/run-task-handoff.sh\"",
-            "commandWindows": "cmd.exe /d /s /c call \"%PLUGIN_ROOT%\\hooks\\run-task-handoff.cmd\"",
+            "commandWindows": "cmd.exe /d /s /c call \"${PLUGIN_ROOT}\\hooks\\run-task-handoff.cmd\"",
             "timeout": 10,
             "additionalContextLimit": 0
           }
@@ -20,7 +20,7 @@
           {
             "type": "command",
             "command": "\"${PLUGIN_ROOT}/hooks/run-task-handoff.sh\"",
-            "commandWindows": "cmd.exe /d /s /c call \"%PLUGIN_ROOT%\\hooks\\run-task-handoff.cmd\"",
+            "commandWindows": "cmd.exe /d /s /c call \"${PLUGIN_ROOT}\\hooks\\run-task-handoff.cmd\"",
             "timeout": 10
           }
         ]
@@ -33,7 +33,7 @@
           {
             "type": "command",
             "command": "\"${PLUGIN_ROOT}/hooks/run-task-handoff.sh\"",
-            "commandWindows": "cmd.exe /d /s /c call \"%PLUGIN_ROOT%\\hooks\\run-task-handoff.cmd\"",
+            "commandWindows": "cmd.exe /d /s /c call \"${PLUGIN_ROOT}\\hooks\\run-task-handoff.cmd\"",
             "timeout": 10
           }
         ]
@@ -46,7 +46,7 @@
           {
             "type": "command",
             "command": "\"${PLUGIN_ROOT}/hooks/run-task-handoff.sh\"",
-            "commandWindows": "cmd.exe /d /s /c call \"%PLUGIN_ROOT%\\hooks\\run-task-handoff.cmd\"",
+            "commandWindows": "cmd.exe /d /s /c call \"${PLUGIN_ROOT}\\hooks\\run-task-handoff.cmd\"",
             "timeout": 10,
             "additionalContextLimit": 0
           }
