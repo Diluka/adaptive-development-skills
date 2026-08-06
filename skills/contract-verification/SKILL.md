@@ -31,7 +31,7 @@ description: Use when 需要调查实际安装或运行的 SDK、框架、协议
 3. 查看该版本的已安装源码、导出类型、生成客户端或 `COMMAND --help`。
 4. 用最小安全探测观察 HTTP、CLI、框架启动或集成行为。
 
-官方文档用于解释行为；与项目版本冲突时，以实际安装或部署产物为准。服务于 [technical-spike](../technical-spike/SKILL.md) 时，把版本和探测证据返回探索，不擅自进入正式实现。没有外部或框架边界时，结束本调查单元并返回 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md) 重新分类。
+官方文档用于解释行为；与项目版本冲突时，以实际安装或部署产物为准。服务于 [unknown-exploration](../unknown-exploration/SKILL.md) 时，把版本和探测证据返回探索，不擅自进入正式实现。没有外部或框架边界时，结束本调查单元并返回 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md) 重新分类。
 
 ## 方法边界与衔接
 

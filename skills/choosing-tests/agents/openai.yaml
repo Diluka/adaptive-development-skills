@@ -1,0 +1,4 @@
+interface:
+  display_name: "Choosing Tests"
+  short_description: "根据任务形状选择端到端、单元、TDD、属性或契约测试等方式与强度"
+  default_prompt: "使用 $choosing-tests 根据任务形状、现有代码与回归风险选择测试方式与强度。"

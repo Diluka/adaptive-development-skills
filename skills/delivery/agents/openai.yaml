@@ -1,0 +1,4 @@
+interface:
+  display_name: "Delivery"
+  short_description: "管理主干集成、持续交付与渐进式受控发布的交付节奏"
+  default_prompt: "使用 $delivery 按主干集成、持续交付与渐进式发布的节奏管理交付，并核对授权边界。"

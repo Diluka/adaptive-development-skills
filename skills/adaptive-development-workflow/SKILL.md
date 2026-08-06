@@ -11,9 +11,11 @@ description: Use when 开始任何项目开发、技术调查、集成或交付�
 
 ## 入口职责
 
-根代理把本技能作为项目任务的唯一方法入口。先判断最终交付意图和当前增量，再按独立目标与证据边界拆分工作单元；为每个单元选择一个主要调查方法或开发方式，并按需叠加集成与交付方法、生命周期支持。
+根代理把本技能作为项目任务的共享分类与路由入口。先判断最终交付意图和当前增量，再按独立目标与证据边界拆分工作单元；为每个单元选择一个主要调查方法或开发方式，并按需叠加集成与交付方法、生命周期支持。用户明确调用独立方法时，由对应技能自行核验触发条件和适用前提。
 
-本技能只负责分类、选择和转换，不内嵌下游标准方法的具体流程。新证据改变单元性质、判据或影响面时，返回本入口重新分级和选法。
+本技能只负责分类、选择和转换。新证据改变单元性质、判据或影响面时，返回本入口重新分级和选法。
+
+术语与中英对照见 `resources/terminology.md`。
 
 ## 判断整体交付意图
 
@@ -50,14 +52,12 @@ description: Use when 开始任何项目开发、技术调查、集成或交付�
 
 | 不确定性 | 主要调查方法 |
 |---|---|
-| 当前源码结构、真实运行路径或历史演进未知 | [source-repo-study](../source-repo-study/SKILL.md) |
-| 职责、所有权、生命周期、状态边界或架构不变量存在待决取舍 | [architecture-design-review](../architecture-design-review/SKILL.md) |
+| 当前源码结构、真实运行路径、历史演进或架构决策未知 | [system-understanding](../system-understanding/SKILL.md) |
 | 实际安装或运行的第三方 SDK、框架、协议、HTTP API 或 CLI 契约未知 | [contract-verification](../contract-verification/SKILL.md) |
 | 已观察症状，但第一个错误状态和因果链未知 | [systematic-debugging](../systematic-debugging/SKILL.md) |
-| 有明确的可行性、性能或集成问题，需要可丢弃试验回答 | [technical-spike](../technical-spike/SKILL.md) |
-| 可运行系统仍有重要未知行为、状态组合或用户风险，需要主动学习和发现 | [exploratory-testing](../exploratory-testing/SKILL.md) |
+| 有明确的技术可行性、依赖行为、性能或集成形态未知，或可运行系统仍有未知行为与风险 | [unknown-exploration](../unknown-exploration/SKILL.md) |
 
-这些方法可以形成有依赖关系的多个调查单元，但不要在一个单元内混成通用“研究流程”。例如探索发现稳定症状后，结束探索单元，再为根因建立系统化调试单元。
+这些方法可以形成有依赖关系的多个调查单元。例如探索发现稳定症状后，结束探索单元，再为根因建立系统化调试单元。
 
 ## 选择开发方式
 
@@ -74,31 +74,47 @@ SDD 或 BDD 产生的具体实现目标应继续拆成实现与证据单元并�
 
 | 开发目标与证据形状 | 主要开发方式 |
 |---|---|
-| 明确的确定性行为具有独立稳定判据、真实测试接缝和具体回归风险，先写失败检查能实质降低风险 | [test-driven-development](../test-driven-development/SKILL.md) |
 | 稳定领域状态、公共 API、协议阶段、权限或单位能由类型系统显著排除非法组合，且类型建模本身构成独立目标和证据边界 | [type-driven-design](../type-driven-design/SKILL.md) |
 | 算法、解析器、序列化、状态机或转换面对广泛输入空间，并有独立属性或不变量 | [property-based-testing](../property-based-testing/SKILL.md) |
 | 可协作且独立演进的消费者与提供者需要用消费者期望和提供者验证持续证明版本兼容 | [consumer-driven-contract-testing](../consumer-driven-contract-testing/SKILL.md) |
-| 遗留重构、重写或复杂稳定输出需要从真实执行建立可审阅基线并同条件比较 | [characterization-testing](../characterization-testing/SKILL.md) |
-| AI、Agent 或其他概率性、主观结果需要用代表任务、grader、重复 trial 和持续评估驱动迭代 | [eval-driven-development](../eval-driven-development/SKILL.md) |
-| 目标、真实调用方和契约已经足以实施，增量局部，以上专项方法没有额外反馈或证据收益 | 直接实现，并通过 [evidence-based-testing](../evidence-based-testing/SKILL.md) 判断复用现有证据还是补普通定向证据 |
-| 删除适配器、导出、依赖或其他无行为变化路径 | [caller-driven-cleanup](../caller-driven-cleanup/SKILL.md) |
-| 添加或升级依赖、运行时、编译器、包管理器或锁文件 | [dependency-upgrade](../dependency-upgrade/SKILL.md) |
+| 遗留重构、重写、复杂稳定输出或 AI/Agent 等概率性、主观结果，需要可审阅基线或代表任务评估 | [baseline-and-eval-testing](../baseline-and-eval-testing/SKILL.md) |
+| 目标、真实调用方和契约已经足以实施，增量局部，以上专项方法没有额外反馈或证据收益 | 直接实现；是否需要测试步骤按任务级别与实际证据缺口决定 |
+| 删除死代码、适配器、导出、依赖或升级依赖等维护变更 | [maintenance-operations](../maintenance-operations/SKILL.md) |
 
-可测试不等于适合 TDD。TDD 和直接实现都说得通时，只有测试判据独立来自需求、真实调用方或契约，能拒绝合理错误实现，并对应具体回归风险，才选 TDD。已指定的声明式数据、映射、文案、普通字段或简单类型标注通常直接实现；解释、合并或消费这些内容的行为另拆单元按自身风险选法，不能用镜像断言替代使用方证据。
+已指定的声明式数据、映射、文案、普通字段或简单类型标注通常直接实现；解释、合并或消费这些内容的行为另拆单元按自身风险选法，不能用镜像断言替代使用方证据。
 
-有类型不等于适合 Type-Driven Design。只有“不合法状态不可表示”本身能够排除合理错误，而且值得形成独立建模单元时才选用；外部 JSON、HTTP、数据库或用户输入在解析前仍不可信，必须保留运行时解析与边界验证。复杂规格可以派生类型建模单元，但 SDD 与 Type-Driven Design 不共同拥有同一单元。
+只有“不合法状态不可表示”本身能够排除合理错误，而且值得形成独立建模单元时才选用 Type-Driven Design；外部 JSON、HTTP、数据库或用户输入在解析前仍不可信，必须保留运行时解析与边界验证。复杂规格可以派生类型建模单元，SDD 与 Type-Driven Design 各自拥有独立单元。
 
-需要在测试、CI、基线、评估和观测之间选择或复用证据时，叠加 [evidence-based-testing](../evidence-based-testing/SKILL.md)。它是证据策略支持，不与主要开发方式竞争，也不复制各方法的标准流程。
+是否需要测试步骤按任务级别与实际证据缺口决定；具体测试手段与强度在执行期根据现有代码、接缝和任务内容具体判断。
 
 ### 裁决重叠条件
 
 多个方法条件同时成立时，先检查它们是否各自产生可独立审阅的目标、产物和反证边界。能够分开时建立有依赖关系的工作单元；不能分开时，选择最直接解决当前主要不确定性或回归风险的方法，其他方法只作为技术或已有产物来源，不再执行第二套完整流程。
 
 - SDD 拥有需求、设计、任务、实现结果之间的规格链与演进；BDD 拥有一个业务行为切片的 Discovery、Formulation 和 Automation。复杂规格中的某个行为确实需要跨角色示例澄清时，建立独立 BDD 单元，并把确认场景和自动化结果链接回 SDD 规格链；SDD 不重复拥有该行为实现。若只有规格追踪问题选 SDD，只有共享行为理解问题选 BDD。
-- 广泛输入空间和独立属性是主要风险时，选择属性测试；首次属性失败只是该方法的执行证据，不另建 TDD 单元。一个确定性示例增量主要通过 Red → Green → Refactor 驱动时，选择 TDD；属性检查若只是其中一种测试技术，不再把同一行为声明为第二个主要方法。只有示例行为与广泛输入不变量具有不同目标和失败边界时才拆成两个单元。
+- 广泛输入空间和独立属性是主要风险时，选择属性测试；单个回归示例可以作为该方法的辅助证据，但不再把同一行为声明为第二个主要方法。只有示例行为与广泛输入不变量具有不同目标和失败边界时才拆成两个单元。
 - 调查发现、定义与设计、实现证据之间按产物依赖顺序转换。上游方法可以产生后续单元的输入，但不能因为同属一个请求就共同拥有后续变更。
 
-直接实现不要求证据在编码前已经齐全。是否需要新增普通回归测试、静态检查、集成验证或冒烟，由 [evidence-based-testing](../evidence-based-testing/SKILL.md) 根据实现后的真实缺口决定；缺少既有证据本身不会把单元升级为 TDD。
+直接实现不要求证据在编码前已经齐全。是否需要新增普通回归测试、静态检查、集成验证或冒烟，按实现后的真实证据缺口与任务级别决定；缺少既有证据本身不会改变单元的主要开发方式。
+
+## 组合开发流程：计划 → 实现 → 测试 → 评审 → 返工
+
+常规与复杂开发任务默认按“计划 → 实现 → 测试 → 评审 → 返工”的组合流程推进。这是对既有方法的标准编排，不是新的主要开发方式；每一步引用对应技能的标准流程。
+
+1. **计划**：用 [writing-plans](../writing-plans/SKILL.md) 落盘目标、范围、工作单元和验证方式。需要以文档描述功能开发步骤时，由 [spec-driven-development](../spec-driven-development/SKILL.md) 贯通 Requirements、Design / Plan、Tasks 与 Implement。
+2. **实现**：按计划执行工作单元，见 [executing-plans](../executing-plans/SKILL.md)；每个实现单元按自身证据形状在上文“选择开发方式”中选法。
+3. **测试**：是否需要测试步骤按任务级别与实现后的真实证据缺口决定；需要时，通过 [choosing-tests](../choosing-tests/SKILL.md) 选择测试方式与强度，从计划所指向的需求或规格派生验收证据并验证可观察结果。
+4. **评审**：任务级别要求时，由未参与实现、证据设计和差异修改的独立子代理评审完整差异，见 [requesting-code-review](../requesting-code-review/SKILL.md)。
+5. **返工**：按 [receiving-code-review](../receiving-code-review/SKILL.md) 核验意见并实施最小修复，重新验证后复审失效范围，直到评审同意或确认无需处理。
+
+**简化**：除实现外，每一步都可以按任务级别与证据收益省略。每一步的取舍标准是“它能发现当前任务会引入的哪种合理错误，且现有证据尚未覆盖同一风险”——能拒绝合理错误时保留，没有额外反证或定位价值时省略。任务级别只设下限，不设上限：微小任务只实现并做必要直接检查；常规任务按需补计划、定向测试或评审；复杂或高风险任务保留完整闭环。
+
+**示例**：
+- 写一个 Hello World 示例：目标明确、局部可逆、无外部副作用、可直接运行检查，是微小任务。直接实现并运行验证即可，不落计划、不写测试、不派评审。
+- 实现一个明确的业务需求（如新增接口并按契约返回结果）：通常为常规任务。先落盘简短计划（目标、范围、验证方式），按计划实现并补覆盖受影响路径的定向行为测试；评审只在定向验证覆盖不到的独立风险出现时才派发。
+- 修改公共 API、迁移数据库等跨模块或破坏性变更：属于复杂或高风险任务，完整保留计划 → 实现 → 测试 → 评审 → 返工闭环。
+
+**推进与隔离**：各步骤可以委派子代理推进，见 [subagent-driven-development](../subagent-driven-development/SKILL.md)。委派的首要目的是会话步骤隔离：把琐碎步骤移出主会话，避免主会话被填满而频繁压缩失真。评审是特殊流程，只能由独立子代理进行，或直接省略，不由根代理兼任。
 
 ## 叠加集成与交付方法
 
@@ -106,9 +122,7 @@ SDD 或 BDD 产生的具体实现目标应继续拆成实现与证据单元并�
 
 | 交付目标 | 方法 |
 |---|---|
-| 通过单一主干、短生命周期分支和小批次频繁集成降低延迟集成风险 | [trunk-based-development](../trunk-based-development/SKILL.md) |
-| 从版本控制到可追溯制品持续保持可按需发布 | [continuous-delivery](../continuous-delivery/SKILL.md) |
-| 对可发布候选版本受控暴露，以真实观测决定扩大、暂停或回退 | [progressive-delivery](../progressive-delivery/SKILL.md) |
+| 通过单一主干、小批次频繁集成、持续保持可发布到正式环境受控暴露，管理交付节奏 | [delivery](../delivery/SKILL.md) |
 
 具体 Git 分支交接仍由 [finishing-a-development-branch](../finishing-a-development-branch/SKILL.md) 处理。选择交付方法不自动授权推送、合并、发布、部署、流量调整、功能开关或正式环境写入。
 
@@ -118,6 +132,8 @@ SDD 或 BDD 产生的具体实现目标应继续拆成实现与证据单元并�
 |---|---|
 | 关键歧义会实质改变方案 | [brainstorming](../brainstorming/SKILL.md) |
 | 需要协调、恢复上下文或高风险控制 | [writing-plans](../writing-plans/SKILL.md) 与 [executing-plans](../executing-plans/SKILL.md) |
+| 需要选择测试方式（端到端、单元、属性、契约等） | [choosing-tests](../choosing-tests/SKILL.md) |
+| 需要判断证据充分性、复用或收敛长期证据 | [evidence-management](../evidence-management/SKILL.md) |
 | 方法产物需要长期保存为正式项目文档 | [project-documentation](../project-documentation/SKILL.md) |
 | 分支、版本或并行改动需要本地隔离 | [using-git-worktrees](../using-git-worktrees/SKILL.md) |
 | 单元委派有上下文或独立证据收益 | [subagent-driven-development](../subagent-driven-development/SKILL.md) 与 [dispatching-parallel-agents](../dispatching-parallel-agents/SKILL.md) |
@@ -131,7 +147,7 @@ SDD 或 BDD 产生的具体实现目标应继续拆成实现与证据单元并�
 
 证据冲突时按以下优先级判断：明确需求与不变量 > 真实调用方和运行行为 > 依赖、协议与框架契约 > 实现与测试 > 计划、清单与方法偏好。测试是证据，不得发明业务行为；计划是可修正的工作依据。
 
-先复用输入、环境、版本、路径和风险面仍适用的测试、评审、观测与 CI，只补受当前增量影响的缺口。行为保持型重构缺少有效基线时，先通过 [evidence-based-testing](../evidence-based-testing/SKILL.md) 选择最小充分证据，再开始修改。
+先复用输入、环境、版本、路径和风险面仍适用的测试、评审、观测与 CI，只补受当前增量影响的缺口。行为保持型重构缺少有效基线时，先选择最小充分证据，再开始修改。
 
 只同步本次变更直接影响的既有伴生产物。保持某个额外问题不变仍能正确完成当前任务时，它不属于当前范围；收集最小证据并报告，不自动实施。用户对普通 Git 交付的授权不扩大到部署、业务系统写入、权限变更或其他外部副作用。
 

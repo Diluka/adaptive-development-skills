@@ -1,4 +1,0 @@
-interface:
-  display_name: "Trunk-Based Development"
-  short_description: "用短生命周期分支和小批次频繁集成来持续维持主干健康"
-  default_prompt: "使用 $trunk-based-development 规划小批次、短周期并持续保持主干健康的集成方式。"

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Maintenance Operations"
+  short_description: "安全执行清理死代码与依赖升级等维护变更"
+  default_prompt: "使用 $maintenance-operations 以调用方与依赖解析证据安全执行清理或升级类维护变更。"
