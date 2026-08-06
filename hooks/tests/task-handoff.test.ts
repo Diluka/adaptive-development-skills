@@ -8,14 +8,14 @@ import {
   type StopCommandInput,
   type TaskHandoffCommandInput,
   type UserPromptSubmitCommandInput,
-} from "../codex_hook_types.ts";
+} from "../codex-hook-types.ts";
 import {
   loadCheckpoint,
   MAX_RECOVERY_CONTEXT_BYTES,
   statePath,
-} from "../task_handoff.ts";
+} from "../task-handoff.ts";
 
-const SCRIPT = fileURLToPath(new URL("../task_handoff.ts", import.meta.url));
+const SCRIPT = fileURLToPath(new URL("../task-handoff.ts", import.meta.url));
 
 interface Fixture {
   tempDir: string;
@@ -119,7 +119,7 @@ async function runHook(
       "--no-lock",
       "--no-npm",
       "--no-remote",
-      "--allow-env=PLUGIN_DATA,NODE_V8_COVERAGE",
+      "--allow-env=PLUGIN_DATA",
       `--allow-read=${fixture.pluginData}`,
       `--allow-write=${fixture.pluginData}`,
       "--allow-run=git",

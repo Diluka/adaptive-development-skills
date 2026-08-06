@@ -14,7 +14,7 @@ import {
   type TaskHandoffCommandOutputFor,
   type UserPromptSubmitCommandInput,
   type UserPromptSubmitCommandOutput,
-} from "./codex_hook_types.ts";
+} from "./codex-hook-types.ts";
 
 export const FORMAT = "task-handoff/v1";
 export const GIT_COMMAND_TIMEOUT_MS = 1_000;
