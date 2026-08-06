@@ -1,5 +1,17 @@
 import { dirname, join, resolve } from "node:path";
 
+import {
+  parseTaskHandoffCommandInput,
+  type PreCompactCommandInput,
+  type SessionStartCommandOutput,
+  type StopCommandInput,
+  type TaskHandoffCommandInput,
+  type TaskHandoffCommandOutput,
+  type TaskHandoffCommandOutputFor,
+  type UserPromptSubmitCommandInput,
+  type UserPromptSubmitCommandOutput,
+} from "./codex_hook_types.ts";
+
 export const FORMAT = "task-handoff/v1";
 export const GIT_COMMAND_TIMEOUT_MS = 1_000;
 export const MAX_REQUEST_BYTES = 6_000;
@@ -7,7 +19,6 @@ export const MAX_RESPONSE_BYTES = 6_000;
 export const MAX_REMINDER_CONTEXT_BYTES = 4_000;
 export const MAX_RECOVERY_CONTEXT_BYTES = 16_000;
 
-const SAVE_EVENTS = new Set(["UserPromptSubmit", "Stop", "PreCompact"]);
 const SESSION_HASH_RE = /^[0-9a-f]{64}$/;
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
@@ -29,8 +40,10 @@ export interface Checkpoint {
   text: string;
 }
 
-type HookEvent = Record<string, unknown>;
-type HookOutput = Record<string, unknown>;
+type SaveCommandInput =
+  | UserPromptSubmitCommandInput
+  | StopCommandInput
+  | PreCompactCommandInput;
 
 export class InvalidCheckpoint extends Error {}
 
@@ -393,23 +406,16 @@ async function withStateLock<T>(
   }
 }
 
-function eventLabel(event: HookEvent): string {
-  const eventName = requireString(
-    event.hook_event_name,
-    "missing hook_event_name",
-  );
-  if (
-    eventName === "PreCompact" &&
-    typeof event.trigger === "string" &&
-    event.trigger.length > 0
-  ) {
+function eventLabel(event: SaveCommandInput): string {
+  const eventName = event.hook_event_name;
+  if (eventName === "PreCompact") {
     return `PreCompact: ${event.trigger}`;
   }
   return eventName;
 }
 
 async function saveCheckpoint(
-  event: HookEvent,
+  event: SaveCommandInput,
   pluginData: string,
   now: string,
   snapshot: GitSnapshot,
@@ -464,38 +470,33 @@ async function saveCheckpoint(
   });
 }
 
-function hookContext(eventName: string, context: string): HookOutput {
-  return {
-    hookSpecificOutput: {
-      hookEventName: eventName,
-      additionalContext: context,
-    },
-  };
-}
-
-function userPromptReminder(path: string): HookOutput {
+function userPromptReminder(path: string): UserPromptSubmitCommandOutput {
   const context = [
     "Task handoff is active for this session.",
     `The hook maintains a session-scoped checkpoint at \`${path}\`.`,
     "Before context grows, keep the current goal, decisions, completed and pending work, validation status, and next step explicit in your working state.",
     "The checkpoint header's status=complete means only that the checkpoint write finished; it never means the task itself is complete.",
   ].join("\n");
-  return hookContext(
-    "UserPromptSubmit",
-    limitUtf8(context, MAX_REMINDER_CONTEXT_BYTES),
-  );
+  return {
+    hookSpecificOutput: {
+      hookEventName: "UserPromptSubmit",
+      additionalContext: limitUtf8(context, MAX_REMINDER_CONTEXT_BYTES),
+    },
+  };
 }
 
-function invalidRecovery(path: string): HookOutput {
+function invalidRecovery(path: string): SessionStartCommandOutput {
   const context = [
     "No valid task handoff checkpoint is available after context compaction.",
     `Expected session-scoped path: \`${path}\`.`,
     "Re-read active repository instructions and reconstruct the task from the current conversation and workspace before continuing. Do not assume prior work is complete.",
   ].join("\n");
-  return hookContext(
-    "SessionStart",
-    limitUtf8(context, MAX_RECOVERY_CONTEXT_BYTES),
-  );
+  return {
+    hookSpecificOutput: {
+      hookEventName: "SessionStart",
+      additionalContext: limitUtf8(context, MAX_RECOVERY_CONTEXT_BYTES),
+    },
+  };
 }
 
 function recoveryContext(
@@ -503,7 +504,7 @@ function recoveryContext(
   path: string,
   currentCwd: string,
   snapshot: GitSnapshot,
-): HookOutput {
+): SessionStartCommandOutput {
   const warnings: string[] = [];
   if (checkpoint.cwd !== currentCwd) {
     warnings.push(
@@ -532,22 +533,30 @@ function recoveryContext(
     checkpoint.text,
     "--- checkpoint ends ---",
   ].join("\n");
-  return hookContext(
-    "SessionStart",
-    limitUtf8(context, MAX_RECOVERY_CONTEXT_BYTES),
-  );
+  return {
+    hookSpecificOutput: {
+      hookEventName: "SessionStart",
+      additionalContext: limitUtf8(context, MAX_RECOVERY_CONTEXT_BYTES),
+    },
+  };
+}
+
+function assertNever(value: never): never {
+  throw new TypeError(`unsupported hook event: ${JSON.stringify(value)}`);
 }
 
 export async function processEvent(
-  event: HookEvent,
+  event: TaskHandoffCommandInput,
   pluginData: string,
   options: {
     now?: string;
     snapshot?: GitSnapshot;
   } = {},
-): Promise<HookOutput | null> {
+): Promise<TaskHandoffCommandOutput | null> {
   if (
-    typeof event.agent_id === "string" &&
+    (event.hook_event_name === "UserPromptSubmit" ||
+      event.hook_event_name === "PreCompact") &&
+    event.agent_id !== undefined &&
     event.agent_id.length > 0
   ) {
     // Subagents share the root session id, so they must not overwrite it.
@@ -555,42 +564,71 @@ export async function processEvent(
   }
   const sessionId = requireString(event.session_id, "missing session_id");
   const currentCwd = canonicalCwd(requireString(event.cwd, "missing cwd"));
-  const eventName = requireString(
-    event.hook_event_name,
-    "missing hook_event_name",
-  );
   const path = await statePath(pluginData, sessionId);
 
-  if (eventName === "SessionStart" && event.source === "compact") {
-    let checkpoint: Checkpoint;
-    try {
-      checkpoint = await loadCheckpoint(path, sessionId);
-    } catch (error) {
-      if (error instanceof InvalidCheckpoint) {
-        return invalidRecovery(path);
+  switch (event.hook_event_name) {
+    case "SessionStart": {
+      if (event.source !== "compact") {
+        return null;
       }
-      throw error;
+      let checkpoint: Checkpoint;
+      try {
+        checkpoint = await loadCheckpoint(path, sessionId);
+      } catch (error) {
+        if (error instanceof InvalidCheckpoint) {
+          return invalidRecovery(path) satisfies TaskHandoffCommandOutputFor<
+            typeof event
+          >;
+        }
+        throw error;
+      }
+      const currentSnapshot = options.snapshot ??
+        await collectGitSnapshot(currentCwd);
+      return recoveryContext(
+        checkpoint,
+        path,
+        currentCwd,
+        currentSnapshot,
+      ) satisfies TaskHandoffCommandOutputFor<typeof event>;
     }
-    const currentSnapshot = options.snapshot ??
-      await collectGitSnapshot(currentCwd);
-    return recoveryContext(checkpoint, path, currentCwd, currentSnapshot);
-  }
-
-  if (SAVE_EVENTS.has(eventName)) {
-    const currentSnapshot = options.snapshot ??
-      await collectGitSnapshot(currentCwd);
-    await saveCheckpoint(
-      event,
-      pluginData,
-      options.now ?? utcNow(),
-      currentSnapshot,
-    );
-    if (eventName === "UserPromptSubmit") {
-      return userPromptReminder(path);
+    case "UserPromptSubmit": {
+      const currentSnapshot = options.snapshot ??
+        await collectGitSnapshot(currentCwd);
+      await saveCheckpoint(
+        event,
+        pluginData,
+        options.now ?? utcNow(),
+        currentSnapshot,
+      );
+      return userPromptReminder(path) satisfies TaskHandoffCommandOutputFor<
+        typeof event
+      >;
     }
-    return {};
+    case "Stop": {
+      const currentSnapshot = options.snapshot ??
+        await collectGitSnapshot(currentCwd);
+      await saveCheckpoint(
+        event,
+        pluginData,
+        options.now ?? utcNow(),
+        currentSnapshot,
+      );
+      return {} satisfies TaskHandoffCommandOutputFor<typeof event>;
+    }
+    case "PreCompact": {
+      const currentSnapshot = options.snapshot ??
+        await collectGitSnapshot(currentCwd);
+      await saveCheckpoint(
+        event,
+        pluginData,
+        options.now ?? utcNow(),
+        currentSnapshot,
+      );
+      return {} satisfies TaskHandoffCommandOutputFor<typeof event>;
+    }
+    default:
+      return assertNever(event);
   }
-  return null;
 }
 
 async function main(): Promise<number> {
@@ -600,15 +638,8 @@ async function main(): Promise<number> {
       return 0;
     }
     const rawInput = await new Response(Deno.stdin.readable).text();
-    const event: unknown = JSON.parse(rawInput);
-    if (
-      typeof event !== "object" ||
-      event === null ||
-      Array.isArray(event)
-    ) {
-      throw new TypeError("hook input must be an object");
-    }
-    const output = await processEvent(event as HookEvent, pluginData);
+    const event = parseTaskHandoffCommandInput(JSON.parse(rawInput));
+    const output = await processEvent(event, pluginData);
     if (output !== null) {
       await Deno.stdout.write(
         encoder.encode(`${JSON.stringify(output)}\n`),
