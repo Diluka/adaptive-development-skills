@@ -1,0 +1,4 @@
+interface:
+  display_name: "Consumer-Driven Contract Testing"
+  short_description: "由真实使用方定义最小契约，并持续验证提供方版本兼容性"
+  default_prompt: "使用 $consumer-driven-contract-testing 为这个独立服务边界设计使用方契约、提供方验证和兼容性门禁。"

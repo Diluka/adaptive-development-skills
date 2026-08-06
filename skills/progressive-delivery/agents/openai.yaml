@@ -1,0 +1,4 @@
+interface:
+  display_name: "Progressive Delivery"
+  short_description: "通过受控暴露、实时观测和快速回退降低正式环境发布风险"
+  default_prompt: "使用 $progressive-delivery 设计受控、可观测且具备明确回退条件的渐进发布。"
