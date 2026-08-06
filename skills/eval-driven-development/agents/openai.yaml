@@ -1,0 +1,4 @@
+interface:
+  display_name: "Eval-Driven Development"
+  short_description: "用代表性任务、校准评价与重复试验驱动概率性结果开发"
+  default_prompt: "使用 $eval-driven-development 为这个概率性结果工作单元建立评估并驱动实现迭代。"

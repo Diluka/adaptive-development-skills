@@ -1,0 +1,4 @@
+interface:
+  display_name: "行为驱动开发"
+  short_description: "用真实业务示例完成行为发现、表述、自动化与反馈闭环"
+  default_prompt: "使用 $behavior-driven-development 围绕真实业务示例发现、表述并自动化这个行为。"

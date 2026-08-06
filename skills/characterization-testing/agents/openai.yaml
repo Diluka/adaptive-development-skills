@@ -1,0 +1,4 @@
+interface:
+  display_name: "Characterization Testing"
+  short_description: "用真实执行基线、差异审阅和显式批准保护复杂行为变更"
+  default_prompt: "使用 $characterization-testing 从真实执行路径建立可审阅基线，并比较这次行为变更。"

@@ -1,13 +1,13 @@
 ---
 name: contract-verification
-description: Use when 代码依赖 SDK、框架、协议、HTTP API、CLI、包版本、序列化规则或迁移，且真实契约可能与假设不同
+description: Use when 需要调查实际安装或运行的 SDK、框架、协议、HTTP API、CLI、包版本或序列化边界当前是什么，并以确切版本和安全探测证据确认既有契约事实
 ---
 
 # Contract Verification：契约验证
 
 ## 核心原则
 
-验证真正运行的边界：确切版本、真实调用方、实际输入和可观察输出。类型、示例和模拟对象在已安装或远端契约确认前都只是线索。
+验证真正运行的既有边界：确切版本、真实调用方、实际输入和可观察输出。类型、示例和模拟对象在已安装或远端契约确认前都只是线索。本技能只交付契约事实，不定义新契约，也不实施正式变更。
 
 ## 建立证据记录
 
@@ -22,16 +22,22 @@ description: Use when 代码依赖 SDK、框架、协议、HTTP API、CLI、包�
 
 提供方版本未知时先解决版本事实，不要猜。
 
+本地静态类型、生成声明或领域模型只能表达当前代码的期望，不能证明外部 JSON、HTTP、数据库、CLI 或第三方运行时真的满足它。即使使用 [type-driven-design](../type-driven-design/SKILL.md) 建立了可信内部表示，边界进入该表示之前仍需本技能核验实际契约。
+
 ## 验证
 
 1. 从真实入口追踪到边界。
 2. 读取项目锁定版本和实际解析的依赖树。
 3. 查看该版本的已安装源码、导出类型、生成客户端或 `COMMAND --help`。
 4. 用最小安全探测观察 HTTP、CLI、框架启动或集成行为。
-5. 任务包含已授权的正式实现时，最小修改并重跑同一探测。
-6. 需要把已核实契约保留为回归覆盖时，使用 [evidence-based-testing](../evidence-based-testing/SKILL.md) 选择最窄稳定接缝；纯调查不新增正式测试。
 
-官方文档用于解释行为；与项目版本冲突时，以实际安装或部署产物为准。服务于 [technical-spike](../technical-spike/SKILL.md) 时，把版本和探测证据返回探索，不擅自进入正式实现。没有外部或框架边界的确定性规则改用 [evidence-based-testing](../evidence-based-testing/SKILL.md)。
+官方文档用于解释行为；与项目版本冲突时，以实际安装或部署产物为准。服务于 [technical-spike](../technical-spike/SKILL.md) 时，把版本和探测证据返回探索，不擅自进入正式实现。没有外部或框架边界时，结束本调查单元并返回 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md) 重新分类。
+
+## 方法边界与衔接
+
+本技能回答既有边界当前是什么。双方共同控制消费者与提供者，且目标是新增或演进消费者期望、契约产物、提供者验证和兼容部署决定时，使用 [consumer-driven-contract-testing](../consumer-driven-contract-testing/SKILL.md)，不要用当前行为探测代替持续契约开发。
+
+需要把已核实契约转为正式实现、长期回归测试或契约产物时，停止调查，把确切版本、调用链、观察结果和未决边界返回 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md)，重新选择开发方式和证据支持；本技能不修改实现或新增正式测试。
 
 ## 安全边界
 
