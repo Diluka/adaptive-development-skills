@@ -266,8 +266,8 @@ jobs:
         env:
           PLUGIN_ROOT: ${{ steps.windows-paths.outputs.plugin_root }}
           PLUGIN_DATA: ${{ runner.temp }}\task-handoff-windows-node
-          PATH: ${{ steps.windows-paths.outputs.node_dir }};${{ steps.windows-paths.outputs.git_dir }};${{ steps.windows-paths.outputs.system32 }};${{ steps.windows-paths.outputs.windows_dir }}
         run: |
+          set "PATH=${{ steps.windows-paths.outputs.node_dir }};${{ steps.windows-paths.outputs.git_dir }};${{ steps.windows-paths.outputs.system32 }};${{ steps.windows-paths.outputs.windows_dir }}"
           where deno >nul 2>nul
           if not errorlevel 1 exit /b 91
           where node
