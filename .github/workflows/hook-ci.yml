@@ -146,6 +146,95 @@ jobs:
           test -f "$cached_root/hooks/task-handoff.ts"
           test -f "$cached_root/hooks/codex-hook-types.ts"
 
+  mise-node:
+    name: mise Node environment probe
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install Node 24.15.0 with mise
+        uses: jdx/mise-action@v3
+        with:
+          tool_versions: |
+            node 24.15.0
+
+      - name: Probe Node fallback Git environment
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          mise_node=$(realpath "$(mise which node)")
+          test "$(node --version)" = "v24.15.0"
+          test "$(node -p 'process.execPath')" = "$mise_node"
+
+          workspace=$(pwd -P)
+          probe_bin="$RUNNER_TEMP/mise-node-probe-bin"
+          plugin_data="$RUNNER_TEMP/mise-node-plugin-data"
+          input="$RUNNER_TEMP/mise-node-input.json"
+          output="$RUNNER_TEMP/mise-node-output.json"
+          session="ci-mise-node-session"
+          probe_head="1111111111111111111111111111111111111111"
+
+          mkdir -p "$probe_bin"
+          ln -s "$mise_node" "$probe_bin/node"
+          ln -s "$(command -v dirname)" "$probe_bin/dirname"
+          ln -s "$(command -v mkdir)" "$probe_bin/mkdir"
+          printf '%s\n' \
+            '#!/bin/sh' \
+            "printf '%s\\n' '$probe_head'" \
+            > "$probe_bin/git"
+          chmod +x "$probe_bin/git"
+
+          "$mise_node" -e '
+            const fs = require("node:fs");
+            const [path, session, cwd] = process.argv.slice(1);
+            fs.writeFileSync(path, JSON.stringify({
+              session_id: session,
+              transcript_path: null,
+              cwd,
+              model: "ci-model",
+              hook_event_name: "UserPromptSubmit",
+              permission_mode: "default",
+              turn_id: "ci-turn",
+              prompt: "Probe the mise Node child-process environment."
+            }));
+          ' "$input" "$session" "$workspace"
+
+          test ! -e "$plugin_data"
+          test "$(PATH="$probe_bin" command -v node)" = "$probe_bin/node"
+          test "$(PATH="$probe_bin" command -v git)" = "$probe_bin/git"
+          if PATH="$probe_bin" command -v deno >/dev/null 2>&1; then
+            echo "Deno must not be visible in the mise Node probe" >&2
+            exit 1
+          fi
+
+          PATH="$probe_bin" PLUGIN_DATA="$plugin_data" \
+            hooks/run-task-handoff.sh < "$input" > "$output"
+
+          session_hash=$("$mise_node" -e '
+            const { createHash } = require("node:crypto");
+            process.stdout.write(createHash("sha256").update(process.argv[1]).digest("hex"));
+          ' "$session")
+          state_file="$plugin_data/handoffs/$session_hash/state.md"
+          test -f "$state_file"
+
+          "$mise_node" -e '
+            const fs = require("node:fs");
+            const [outputPath, statePath, expectedHead] = process.argv.slice(1);
+            const output = JSON.parse(fs.readFileSync(outputPath, "utf8"));
+            if (output?.hookSpecificOutput?.hookEventName !== "UserPromptSubmit") {
+              throw new Error("unexpected Hook JSON output");
+            }
+            const state = fs.readFileSync(statePath, "utf8");
+            const match = /^git_head: (.+)$/m.exec(state);
+            const actualHead = match === null ? null : JSON.parse(match[1]);
+            if (actualHead !== expectedHead) {
+              throw new Error(`Hook used ${actualHead}; expected PATH probe ${expectedHead}`);
+            }
+          ' "$output" "$state_file" "$probe_head"
+
   windows:
     name: Windows hook checks
     runs-on: windows-latest
