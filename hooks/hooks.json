@@ -1,0 +1,57 @@
+{
+  "description": "Maintain a session-scoped task checkpoint and restore it after context compaction.",
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "deno run --quiet --no-prompt --no-config --no-lock --no-npm --no-remote --allow-env=PLUGIN_DATA --allow-read=\"${PLUGIN_DATA}\" --allow-write=\"${PLUGIN_DATA}\" --allow-run=git \"${PLUGIN_ROOT}/hooks/task_handoff.ts\"",
+            "commandWindows": "deno run --quiet --no-prompt --no-config --no-lock --no-npm --no-remote --allow-env=PLUGIN_DATA --allow-read=\"${PLUGIN_DATA}\" --allow-write=\"${PLUGIN_DATA}\" --allow-run=git \"${PLUGIN_ROOT}\\hooks\\task_handoff.ts\"",
+            "timeout": 10,
+            "additionalContextLimit": 0
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "deno run --quiet --no-prompt --no-config --no-lock --no-npm --no-remote --allow-env=PLUGIN_DATA --allow-read=\"${PLUGIN_DATA}\" --allow-write=\"${PLUGIN_DATA}\" --allow-run=git \"${PLUGIN_ROOT}/hooks/task_handoff.ts\"",
+            "commandWindows": "deno run --quiet --no-prompt --no-config --no-lock --no-npm --no-remote --allow-env=PLUGIN_DATA --allow-read=\"${PLUGIN_DATA}\" --allow-write=\"${PLUGIN_DATA}\" --allow-run=git \"${PLUGIN_ROOT}\\hooks\\task_handoff.ts\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "matcher": "^(manual|auto)$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "deno run --quiet --no-prompt --no-config --no-lock --no-npm --no-remote --allow-env=PLUGIN_DATA --allow-read=\"${PLUGIN_DATA}\" --allow-write=\"${PLUGIN_DATA}\" --allow-run=git \"${PLUGIN_ROOT}/hooks/task_handoff.ts\"",
+            "commandWindows": "deno run --quiet --no-prompt --no-config --no-lock --no-npm --no-remote --allow-env=PLUGIN_DATA --allow-read=\"${PLUGIN_DATA}\" --allow-write=\"${PLUGIN_DATA}\" --allow-run=git \"${PLUGIN_ROOT}\\hooks\\task_handoff.ts\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "^compact$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "deno run --quiet --no-prompt --no-config --no-lock --no-npm --no-remote --allow-env=PLUGIN_DATA --allow-read=\"${PLUGIN_DATA}\" --allow-write=\"${PLUGIN_DATA}\" --allow-run=git \"${PLUGIN_ROOT}/hooks/task_handoff.ts\"",
+            "commandWindows": "deno run --quiet --no-prompt --no-config --no-lock --no-npm --no-remote --allow-env=PLUGIN_DATA --allow-read=\"${PLUGIN_DATA}\" --allow-write=\"${PLUGIN_DATA}\" --allow-run=git \"${PLUGIN_ROOT}\\hooks\\task_handoff.ts\"",
+            "timeout": 10,
+            "additionalContextLimit": 0
+          }
+        ]
+      }
+    ]
+  }
+}

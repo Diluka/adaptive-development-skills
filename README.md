@@ -4,6 +4,35 @@
 
 计划、验证、独立评审和交付节点可以相同，但必要性随任务级别变化：微小任务直接实现、检查和总结；常规任务按证据收益选择；复杂或高风险任务使用共享计划和独立评审。已有测试、评审和 CI 只在当前变化影响其结论时失效。临时调研代码不会自动进入开发流程；是否使用子代理，取决于上下文成本和独立证据的价值。
 
+## 安装
+
+下面两种方式是替代渠道。不要在同一个 Codex 运行环境中同时安装 Plugin Skills 与同名 standalone Skills，避免重复发现和分开的更新状态。
+
+### 只安装 Skills
+
+现有 `npx skills` 安装方式保持不变，也不会安装 Hook：
+
+```bash
+npx skills add Diluka/adaptive-development-skills
+```
+
+### 安装 Codex Plugin
+
+Plugin 复用仓库根目录的同一份 `skills/`，并额外提供可选的 `task-handoff` Hook：
+
+```bash
+codex plugin marketplace add Diluka/adaptive-development-skills --ref main
+codex plugin add adaptive-development-skills@adaptive-development-skills
+```
+
+安装后请启动新任务，让 Codex 载入 Plugin Skills。Plugin 安装不会自动信任它携带的命令 Hook；通过 `/hooks` 审阅当前定义后，可以选择信任、保持未信任或单独禁用。未信任或禁用 Hook 不影响 Plugin Skills，marketplace 也使用 `AVAILABLE`，不会默认安装 Plugin。
+
+Hook 运行需要 Deno 2 或更高版本。Hook 启动命令禁用远程与 npm 依赖解析，只允许读取 `PLUGIN_DATA` 环境变量、在该目录读写检查点并启动 `git`；脚本只用 `git rev-parse` 读取 HEAD，不执行会扫描工作区内容的 `git status`，也不授予 Deno 网络或目标项目文件读写权限。环境不满足时可以保持 Hook 未信任或禁用，Plugin Skills 仍可独立使用。
+
+`task-handoff` 在 `$PLUGIN_DATA/handoffs/<sha256(session_id)>/state.md` 原子维护会话检查点，不写目标项目，也不读取 transcript 的内部 JSONL 格式。`state.md` 是唯一持久会话正文；同目录的 `.state.lock` 只用于串行化并发更新，临时文件会在原子替换后清理。检查点包含当前用户请求、最后一次完成的代理回复和 Git HEAD，因此可能包含任务上下文；请在信任 Hook 前审阅实现。
+
+Codex 当前不能把 `PreCompact` 的普通输出送给模型，所以 Hook 不声称能在压缩瞬间要求代理再总结一次。它会在用户回合开始时提前提醒，在限定的代表性事件上刷新已有状态，由 `PreCompact` 完成最后的完整性写入，再通过 `SessionStart` 的 `compact` 恢复入口把同一会话文件送回模型。`status=complete` 只表示检查点写入完整，不表示任务已经完成。
+
 ## 技能清单
 
 | 技能 | 用途 |

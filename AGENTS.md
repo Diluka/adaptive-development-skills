@@ -72,6 +72,15 @@
 - 本地技能依赖使用相对 Markdown 链接，并通过 `scripts/check-cross-references.ts` 检查技能间引用。
 - 只在 `README.md` 说明思想来源；本仓库不跟踪、不同步上游版本，也不承担上游兼容义务。
 
+## Plugin 与 Hook 发行
+
+- `skills/` 是唯一 Skill 源码，同时服务于 standalone `npx skills` 与可选 Codex Plugin；不得为 Plugin 复制、搬迁或生成第二份 Skill。
+- Skill 与 Hook 必须解耦。`skills/*` 不得引用、依赖或要求安装 Hook；新增或修改 Hook 时也不得把具体 Skill 的方法、规则或触发逻辑写入 Hook。
+- Hook 只作为可选 Plugin 能力分发。standalone `npx skills` 的安装、更新和运行不得依赖 Plugin manifest、marketplace 或 Hook 状态。
+- 修改 Plugin 或 Hook 时，核对 marketplace 仍为显式可选安装、Plugin Hook 仍需独立审阅信任，并验证未把 Hook 带入 standalone Skill 安装结果。
+- Hook 的可写状态只能放在 `PLUGIN_DATA`；脚本通过 `PLUGIN_ROOT` 定位，不写目标项目临时目录，不硬编码安装路径，不解析未承诺稳定的 transcript 内部格式。通过获准子进程读取项目元数据前，必须核验命令不会触发 Git hook、filter、helper 或其他外部进程；Deno 的 `--allow-run` 不会继续沙箱化子进程。
+- 正式发布 Plugin 变更时递增 manifest 版本；Git marketplace 用户通过 `codex plugin marketplace upgrade` 获取新快照。本地开发迭代按当前 `plugin-creator` 的 cachebuster 与重装流程验证，不把同版本缓存覆盖当作发行契约。
+
 ## 完成检查
 
 微小文档改动只运行能直接证明结果的检查和 `git diff --check`。创建或修改单个技能时，用当前 `skill-creator` 校验受影响技能；修改共享入口、生命周期规则或技能间引用时运行以下完整检查：
@@ -84,4 +93,14 @@ done
 deno check scripts/check-cross-references.ts
 scripts/check-cross-references.ts
 git diff --check
+```
+
+修改 Plugin 或 Hook 时，另运行：
+
+```bash
+deno fmt --check hooks/task_handoff.ts hooks/tests/task_handoff_test.ts
+deno lint --no-config hooks/task_handoff.ts hooks/tests/task_handoff_test.ts
+deno check --no-config --no-lock --no-npm --no-remote hooks/task_handoff.ts hooks/tests/task_handoff_test.ts
+deno test --no-config --no-lock --no-npm --no-remote --allow-read --allow-write --allow-run=deno hooks/tests/task_handoff_test.ts
+python3 "${CODEX_HOME:-$HOME/.codex}/skills/.system/plugin-creator/scripts/validate_plugin.py" .
 ```
