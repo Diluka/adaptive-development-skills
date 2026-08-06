@@ -75,8 +75,8 @@ description: Use when 用户明确要求跨 Codex 会话执行，且大型开发
 
 创建独立工作任务时：
 
-1. 仓库或保存项目的工作先调用 `list_projects` 确认精确项目、宿主和 `isGitRepository`；Git 项目默认使用 Codex worktree，非 Git 项目使用保存项目的本地环境。只有用户明确要求直接使用保存项目时才选择 `local`；没有仓库或保存项目的工作使用 `projectless`，不能把它伪装成某个项目任务。
-2. 默认从项目默认分支开始。只有用户明确要求从当前 working tree 或某个既有分支/ref 开始时才设置 `startingState`；不能用它创建新分支名，也不能让后继任务假定能看到前驱 worktree 的未集成修改。
+1. 仓库或保存项目的工作先调用 `list_projects` 确认精确项目、宿主和 `isGitRepository`；Git 项目默认以 `environment: { type: "worktree" }` 创建任务，由 Codex App 管理隔离工作树，非 Git 项目使用保存项目的本地环境。只有用户明确要求直接使用保存项目时才选择 `environment: { type: "local" }`；没有仓库或保存项目的工作使用 `projectless`，不能把它伪装成某个项目任务。App 管理的工作树位置由工具决定；只有执行者自行调用 Git CLI 创建工作树时，才按 [using-git-worktrees](../using-git-worktrees/SKILL.md) 选择位置。
+2. 默认从项目默认分支开始。只有用户明确要求从当前工作树（`startingState: { type: "working-tree" }`）或某个既有分支/ref 开始时才设置 `startingState`；不能用它创建新分支名，也不能让后继任务假定能看到前驱工作树的未集成修改。
 3. 使用包含 `run_id`、`unit_id` 和 `attempt` 的唯一标题调用 `create_thread`。除非用户明确指定，否则不覆盖模型或推理强度。
 4. 首个提示必须自包含：协调任务标识、单元目标与判据、范围与授权、精确输入、依赖已满足的证据、工作区和写入所有权、验证责任、回报格式、禁止创建兄弟任务及禁止修改协调账本。
 5. 创建已返回 `threadId` 和 `hostId` 时立即记录；只返回 `clientThreadId` 时记为 `provisioning`，绝不把它传给要求真实 `threadId` 的工具。通过唯一标题、项目和宿主重新对账；无法唯一解析时保留可见失败，不盲目重复创建。
