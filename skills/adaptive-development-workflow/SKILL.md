@@ -108,10 +108,14 @@ description: Use when 开始任何项目开发、技术调查、修改、集成�
 | 结果主要是已指定的提示词、文案、静态常量或声明式内容，且不改变确定性生成逻辑 | 直接实现并按影响验证，不复制目标字面量制造测试 |
 | 结果具有主观性、概率性或多种合理实现，但已有样例或评价标准 | [evidence-based-testing](../evidence-based-testing/SKILL.md)，按需组合独立评估、实验或冒烟 |
 | 需求、调用方式和契约已明确，且无需专项调查、技术探索或依赖变更 | 直接实现，并按影响选择验证 |
+| 需要建立当前源码仓库的结构地图、专题运行模型或可验证演进脉络 | [source-repo-study](../source-repo-study/SKILL.md) |
+| 公共 API、框架、核心基础设施或跨模块目标设计中的职责、所有权、生命周期、状态边界或不变量需要审查 | [architecture-design-review](../architecture-design-review/SKILL.md) |
 | 删除适配器、依赖、导出项或无效路径 | [caller-driven-cleanup](../caller-driven-cleanup/SKILL.md) |
 | 根因未知或行为间歇出现 | [systematic-debugging](../systematic-debugging/SKILL.md) |
 | 技术可行性未知 | [technical-spike](../technical-spike/SKILL.md) |
 | 依赖或工具链版本变化 | [dependency-upgrade](../dependency-upgrade/SKILL.md) |
+
+同一请求既要理解当前系统，又要形成目标架构时，拆成两个有依赖关系的工作单元：先通过 [source-repo-study](../source-repo-study/SKILL.md) 建立可追溯的现状事实，再通过 [architecture-design-review](../architecture-design-review/SKILL.md) 评估目标模型与取舍。不要让目标设计反向改写尚未证实的当前系统结论。
 
 可测试不等于适合 TDD。TDD 和直接实现都说得通时，默认直接实现。只有判据有独立来源、失败测试能识别合理的错误实现，而且存在具体回归风险时，才选择 TDD。精确文本本身属于协议、安全、合规或其他外部契约时，可以按契约风险测试，但普通内容修改不适用。
 

@@ -1,0 +1,4 @@
+interface:
+  display_name: "架构设计审查"
+  short_description: "基于真实系统事实审查公共 API 与跨模块架构设计"
+  default_prompt: "使用 $architecture-design-review 审查当前架构设计，核对职责、所有权、生命周期、状态边界与风险。"
