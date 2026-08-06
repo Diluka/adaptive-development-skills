@@ -23,8 +23,7 @@ description: Use when 需要为开发工作单元选择测试方式，判断端�
 | 定义精确、自包含的零件或组件（需求与契约完全明确） | [test-driven-development](../test-driven-development/SKILL.md)：适用场景狭窄，只在能写出准确描述需求的测试时使用；需求模糊或大功能开发不适用 |
 | 算法、解析器、状态机等广泛输入空间 | [property-based-testing](../property-based-testing/SKILL.md) |
 | 跨服务或跨版本的消费者与提供者 | [consumer-driven-contract-testing](../consumer-driven-contract-testing/SKILL.md) |
-| 遗留重构、重写或复杂稳定输出 | [characterization-testing](../characterization-testing/SKILL.md) |
-| AI、Agent 或概率性、主观结果 | [eval-driven-development](../eval-driven-development/SKILL.md) |
+| 遗留重构、重写、复杂稳定输出或 AI/Agent 等概率性、主观结果 | [baseline-and-eval-testing](../baseline-and-eval-testing/SKILL.md) |
 | 已指定的声明式数据、映射、文案、普通字段 | 直接实现并复用现有检查，不需要专门测试；消费这些内容的行为按自身风险另选方式 |
 | 稳定领域状态、协议阶段、权限或单位等可类型化约束 | 由 [type-driven-design](../type-driven-design/SKILL.md) 建模排除非法组合，不再为此专门编写测试；只补类型无法覆盖的运行时行为 |
 
@@ -38,5 +37,5 @@ description: Use when 需要为开发工作单元选择测试方式，判断端�
 ## 边界
 
 - 本技能只负责选择测试方式；选中后进入对应技能。
-- 证据充分性判断、复用与长期收敛由 [evidence-based-testing](../evidence-based-testing/SKILL.md) 负责。
+- 证据充分性判断、复用与长期收敛由 [evidence-management](../evidence-management/SKILL.md) 负责。
 - 是否需要测试步骤由任务级别与证据缺口决定，见 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md)。

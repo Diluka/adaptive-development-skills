@@ -1,4 +1,0 @@
-interface:
-  display_name: "Exploratory Testing"
-  short_description: "通过受控探索会话发现未知行为、产品风险与可复现问题"
-  default_prompt: "使用 $exploratory-testing 调查这个可运行产品中的未知行为与风险，只交付学习和可复现发现。"

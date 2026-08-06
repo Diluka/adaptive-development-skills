@@ -45,7 +45,7 @@ description: Use when 算法、解析器、序列化、状态机或数据转换�
 - 输入集合小而封闭，参数化示例能更清楚地覆盖全部风险；
 - 结果主要是主观评价、概率分布或多种合理答案；
 - 外部副作用昂贵、不可逆或无法隔离，生成执行会造成真实风险；
-- 属性、输入域或工具可行性仍未知，此时先通过 [technical-spike](../technical-spike/SKILL.md) 获得可丢弃证据。
+- 属性、输入域或工具可行性仍未知，此时先通过 [unknown-exploration](../unknown-exploration/SKILL.md) 获得可丢弃证据。
 
 ## 产出证据
 
@@ -53,4 +53,4 @@ description: Use when 算法、解析器、序列化、状态机或数据转换�
 
 ## 相邻方法
 
-属性测试规定如何用独立属性、生成与收缩探索广泛输入空间。单个回归示例可以固化已发现的最小反例，但广泛输入不变量仍由本技能拥有；只有示例行为与广泛输入不变量具有独立目标和失败边界时才拆成两个单元。[type-driven-design](../type-driven-design/SKILL.md) 排除类型层面的非法表示；属性测试继续验证可信运行时值上的算法、变形关系和状态机不变量，不能因为算法使用类型就改走类型建模。[characterization-testing](../characterization-testing/SKILL.md) 从真实执行记录当前行为，不能替代独立属性；整体证据组合由 [evidence-based-testing](../evidence-based-testing/SKILL.md) 收敛。
+属性测试规定如何用独立属性、生成与收缩探索广泛输入空间。单个回归示例可以固化已发现的最小反例，但广泛输入不变量仍由本技能拥有；只有示例行为与广泛输入不变量具有独立目标和失败边界时才拆成两个单元。[type-driven-design](../type-driven-design/SKILL.md) 排除类型层面的非法表示；属性测试继续验证可信运行时值上的算法、变形关系和状态机不变量，不能因为算法使用类型就改走类型建模。[baseline-and-eval-testing](../baseline-and-eval-testing/SKILL.md) 从真实执行记录当前行为，不能替代独立属性；整体证据组合由 [evidence-management](../evidence-management/SKILL.md) 收敛。

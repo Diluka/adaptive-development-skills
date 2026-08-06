@@ -56,7 +56,7 @@ Discovery 与 Formulation 证明团队对预期行为形成了可审查的共享
 
 - 不为已指定的静态内容、内部字面量、类型声明、私有结构或协作调用制造业务场景；精确内容本身属于外部契约时，在真实使用边界验证其效果。
 - 业务示例揭示出值得编码的稳定领域状态时，把类型建模拆成独立工作单元交给 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md)；BDD 继续拥有可观察业务结果，不检查内部类型形状。
-- 不自动化所有示例。通过 [evidence-based-testing](../evidence-based-testing/SKILL.md) 按回归风险、失败信号和维护成本选择长期证据。
+- 不自动化所有示例。通过 [evidence-management](../evidence-management/SKILL.md) 按回归风险、失败信号和维护成本选择长期证据。
 - 关键业务取舍尚未决定时使用 [brainstorming](../brainstorming/SKILL.md)；BDD 用示例揭示差异，但不替用户决定业务政策。
 - 复杂功能还需要需求、设计、任务和实现持续可追溯时，把规格链交给独立 [spec-driven-development](../spec-driven-development/SKILL.md) 单元；BDD 只拥有当前行为切片的 Discovery、Formulation 与 Automation，SDD 链接其场景和结果而不重复实现。
 - [writing-plans](../writing-plans/SKILL.md)、[executing-plans](../executing-plans/SKILL.md) 和 [project-documentation](../project-documentation/SKILL.md) 分别负责协调、执行状态和长期文档，不替代 Discovery、Formulation 与 Automation。

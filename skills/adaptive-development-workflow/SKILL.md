@@ -15,6 +15,8 @@ description: Use when 开始任何项目开发、技术调查、集成或交付�
 
 本技能只负责分类、选择和转换。新证据改变单元性质、判据或影响面时，返回本入口重新分级和选法。
 
+术语与中英对照见 `resources/terminology.md`。
+
 ## 判断整体交付意图
 
 最终需要项目保留、集成或交付代码、配置、依赖、测试、脚本、技能、工作流或版本控制文档时，整体请求是开发任务。只交付解释、评审意见、事实、根因、可行性证据或决策输入时，不是开发任务；调查中使用的可丢弃脚本、原型、测试或插桩不改变这一判断。
@@ -50,12 +52,10 @@ description: Use when 开始任何项目开发、技术调查、集成或交付�
 
 | 不确定性 | 主要调查方法 |
 |---|---|
-| 当前源码结构、真实运行路径或历史演进未知 | [source-repo-study](../source-repo-study/SKILL.md) |
-| 职责、所有权、生命周期、状态边界或架构不变量存在待决取舍 | [architecture-design-review](../architecture-design-review/SKILL.md) |
+| 当前源码结构、真实运行路径、历史演进或架构决策未知 | [system-understanding](../system-understanding/SKILL.md) |
 | 实际安装或运行的第三方 SDK、框架、协议、HTTP API 或 CLI 契约未知 | [contract-verification](../contract-verification/SKILL.md) |
 | 已观察症状，但第一个错误状态和因果链未知 | [systematic-debugging](../systematic-debugging/SKILL.md) |
-| 有明确的可行性、性能或集成问题，需要可丢弃试验回答 | [technical-spike](../technical-spike/SKILL.md) |
-| 可运行系统仍有重要未知行为、状态组合或用户风险，需要主动学习和发现 | [exploratory-testing](../exploratory-testing/SKILL.md) |
+| 有明确的技术可行性、依赖行为、性能或集成形态未知，或可运行系统仍有未知行为与风险 | [unknown-exploration](../unknown-exploration/SKILL.md) |
 
 这些方法可以形成有依赖关系的多个调查单元。例如探索发现稳定症状后，结束探索单元，再为根因建立系统化调试单元。
 
@@ -77,11 +77,9 @@ SDD 或 BDD 产生的具体实现目标应继续拆成实现与证据单元并�
 | 稳定领域状态、公共 API、协议阶段、权限或单位能由类型系统显著排除非法组合，且类型建模本身构成独立目标和证据边界 | [type-driven-design](../type-driven-design/SKILL.md) |
 | 算法、解析器、序列化、状态机或转换面对广泛输入空间，并有独立属性或不变量 | [property-based-testing](../property-based-testing/SKILL.md) |
 | 可协作且独立演进的消费者与提供者需要用消费者期望和提供者验证持续证明版本兼容 | [consumer-driven-contract-testing](../consumer-driven-contract-testing/SKILL.md) |
-| 遗留重构、重写或复杂稳定输出需要从真实执行建立可审阅基线并同条件比较 | [characterization-testing](../characterization-testing/SKILL.md) |
-| AI、Agent 或其他概率性、主观结果需要用代表任务、grader、重复 trial 和持续评估驱动迭代 | [eval-driven-development](../eval-driven-development/SKILL.md) |
+| 遗留重构、重写、复杂稳定输出或 AI/Agent 等概率性、主观结果，需要可审阅基线或代表任务评估 | [baseline-and-eval-testing](../baseline-and-eval-testing/SKILL.md) |
 | 目标、真实调用方和契约已经足以实施，增量局部，以上专项方法没有额外反馈或证据收益 | 直接实现；是否需要测试步骤按任务级别与实际证据缺口决定 |
-| 删除适配器、导出、依赖或其他无行为变化路径 | [caller-driven-cleanup](../caller-driven-cleanup/SKILL.md) |
-| 添加或升级依赖、运行时、编译器、包管理器或锁文件 | [dependency-upgrade](../dependency-upgrade/SKILL.md) |
+| 删除死代码、适配器、导出、依赖或升级依赖等维护变更 | [maintenance-operations](../maintenance-operations/SKILL.md) |
 
 已指定的声明式数据、映射、文案、普通字段或简单类型标注通常直接实现；解释、合并或消费这些内容的行为另拆单元按自身风险选法，不能用镜像断言替代使用方证据。
 
@@ -124,9 +122,7 @@ SDD 或 BDD 产生的具体实现目标应继续拆成实现与证据单元并�
 
 | 交付目标 | 方法 |
 |---|---|
-| 通过单一主干、短生命周期分支和小批次频繁集成降低延迟集成风险 | [trunk-based-development](../trunk-based-development/SKILL.md) |
-| 从版本控制到可追溯制品持续保持可按需发布 | [continuous-delivery](../continuous-delivery/SKILL.md) |
-| 对可发布候选版本受控暴露，以真实观测决定扩大、暂停或回退 | [progressive-delivery](../progressive-delivery/SKILL.md) |
+| 通过单一主干、小批次频繁集成、持续保持可发布到正式环境受控暴露，管理交付节奏 | [delivery](../delivery/SKILL.md) |
 
 具体 Git 分支交接仍由 [finishing-a-development-branch](../finishing-a-development-branch/SKILL.md) 处理。选择交付方法不自动授权推送、合并、发布、部署、流量调整、功能开关或正式环境写入。
 
@@ -137,7 +133,7 @@ SDD 或 BDD 产生的具体实现目标应继续拆成实现与证据单元并�
 | 关键歧义会实质改变方案 | [brainstorming](../brainstorming/SKILL.md) |
 | 需要协调、恢复上下文或高风险控制 | [writing-plans](../writing-plans/SKILL.md) 与 [executing-plans](../executing-plans/SKILL.md) |
 | 需要选择测试方式（端到端、单元、TDD、属性、契约等） | [choosing-tests](../choosing-tests/SKILL.md) |
-| 需要判断证据充分性、复用或收敛长期证据 | [evidence-based-testing](../evidence-based-testing/SKILL.md) |
+| 需要判断证据充分性、复用或收敛长期证据 | [evidence-management](../evidence-management/SKILL.md) |
 | 方法产物需要长期保存为正式项目文档 | [project-documentation](../project-documentation/SKILL.md) |
 | 分支、版本或并行改动需要本地隔离 | [using-git-worktrees](../using-git-worktrees/SKILL.md) |
 | 单元委派有上下文或独立证据收益 | [subagent-driven-development](../subagent-driven-development/SKILL.md) 与 [dispatching-parallel-agents](../dispatching-parallel-agents/SKILL.md) |
