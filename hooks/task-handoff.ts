@@ -104,7 +104,6 @@ async function runGit(cwd: string, ...args: string[]): Promise<string | null> {
         ],
         {
           encoding: "utf8",
-          env: {},
           timeout: GIT_COMMAND_TIMEOUT_MS,
           windowsHide: true,
         },
