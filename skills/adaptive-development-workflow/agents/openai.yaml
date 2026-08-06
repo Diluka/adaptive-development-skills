@@ -1,4 +1,4 @@
 interface:
   display_name: "Adaptive Development Workflow"
-  short_description: "按当前任务增量和真实风险分级并选择最低充分的开发流程、方法与证据"
-  default_prompt: "使用 $adaptive-development-workflow 按当前增量和风险分级任务，决定必要流程节点，再为工作单元选择最低充分方法与证据。"
+  short_description: "根代理入口：按当前增量和真实风险选择最低充分流程、方法与证据"
+  default_prompt: "先使用 $adaptive-development-workflow 判断任务类型与当前增量，再决定是否调用其他开发技能以及需要哪些流程和证据。"
