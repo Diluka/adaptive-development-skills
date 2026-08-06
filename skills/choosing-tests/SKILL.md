@@ -37,6 +37,6 @@ description: Use when 需要为开发工作单元选择测试方式，判断端�
 
 ## 边界
 
-- 本技能只负责选择测试方式，不重写各方法的执行流程；选中后进入对应技能。
+- 本技能只负责选择测试方式；选中后进入对应技能。
 - 证据充分性判断、复用与长期收敛由 [evidence-based-testing](../evidence-based-testing/SKILL.md) 负责。
 - 是否需要测试步骤由任务级别与证据缺口决定，见 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md)。
