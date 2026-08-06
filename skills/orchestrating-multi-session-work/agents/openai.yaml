@@ -1,0 +1,4 @@
+interface:
+  display_name: "Orchestrating Multi-Session Work"
+  short_description: "按依赖编排可恢复、相互隔离的多个 Codex 工作任务"
+  default_prompt: "使用 $orchestrating-multi-session-work 将这个大型任务拆成可独立负责的工作任务，并按依赖、隔离与完成回报持续调度。"

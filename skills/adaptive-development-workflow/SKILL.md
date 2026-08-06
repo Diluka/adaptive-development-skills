@@ -130,6 +130,7 @@ description: Use when 开始任何项目开发、技术调查、修改、集成�
 | 为项目改动创建或检出开发分支，或需判断只读分支访问、版本与改动隔离方式 | [using-git-worktrees](../using-git-worktrees/SKILL.md) |
 | 边界清晰的单元可显著节约上下文，或独立视角能提高模糊结果的证据可信度 | [subagent-driven-development](../subagent-driven-development/SKILL.md) |
 | 至少两个单元可安全隔离，且并行吞吐或独立对照有收益 | [dispatching-parallel-agents](../dispatching-parallel-agents/SKILL.md) |
+| 用户明确要求跨 Codex 会话执行，且粗粒度单元需要独立长上下文、隔离工作区或可恢复调度 | [orchestrating-multi-session-work](../orchestrating-multi-session-work/SKILL.md) |
 | 常规任务的独立视角有明确证据收益，或者复杂、高风险任务准备交付 | [requesting-code-review](../requesting-code-review/SKILL.md) |
 | 即将声明完成 | [verification-before-completion](../verification-before-completion/SKILL.md) |
 | 需要分支集成或交接 | [finishing-a-development-branch](../finishing-a-development-branch/SKILL.md) |
@@ -139,7 +140,7 @@ description: Use when 开始任何项目开发、技术调查、修改、集成�
 1. 按最终交付意图判断任务类型，明确当前增量并选择最低充分级别。
 2. 决定各流程节点是必需、条件触发还是跳过，澄清会改变方案的关键歧义。
 3. 拆分工作单元，为每个单元选择主要方法；需要落盘计划时再使用 [writing-plans](../writing-plans/SKILL.md)。
-4. 按依赖顺序调查和实现；只在上下文收益或独立证据收益高于交接成本时委派。
+4. 按依赖顺序调查和实现；只在上下文收益或独立证据收益高于交接成本时委派。当前任务内使用子代理；只有用户明确授权跨会话执行，且粗粒度单元需要独立上下文、工作区或恢复生命周期时，才创建独立工作任务。
 5. 复用仍有效的证据，验证当前增量及受影响组合链路；新事实改变影响面时重新定级、选法并按需更新计划。
 6. 任务级别或具体风险要求时，由未参与实现、证据设计或相关差异修改的独立子代理评审受影响的最终完整差异；实质修复后只重新验证和复审失效范围。
 7. 按授权完成提交、推送、PR/MR、集成与交接，按任务级别说明结果、证据、未完成事项和剩余风险。
