@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { chmod, mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import process from "node:process";
+import { fileURLToPath } from "node:url";
 
 import {
   parseTaskHandoffCommandInput,
@@ -586,6 +587,22 @@ async function main(): Promise<number> {
   return 0;
 }
 
-if (import.meta.main) {
+function isMainModule(): boolean {
+  if (import.meta.main) {
+    return true;
+  }
+  const entrypoint = process.argv[1];
+  if (!entrypoint) {
+    return false;
+  }
+  const modulePath = resolve(fileURLToPath(import.meta.url));
+  const entrypointPath = resolve(entrypoint);
+  if (process.platform === "win32") {
+    return modulePath.toLowerCase() === entrypointPath.toLowerCase();
+  }
+  return modulePath === entrypointPath;
+}
+
+if (isMainModule()) {
   process.exitCode = await main();
 }
