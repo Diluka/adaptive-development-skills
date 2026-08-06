@@ -23,6 +23,11 @@ if deno_path=$(command -v deno 2>/dev/null); then
 fi
 
 if node_path=$(command -v node 2>/dev/null); then
+  # Node fixes permission roots at startup, so the allowed data root must exist.
+  if [ -n "${PLUGIN_DATA:-}" ] && ! mkdir -p -- "$PLUGIN_DATA"; then
+    printf '%s\n' 'task-handoff hook skipped: cannot create PLUGIN_DATA.' >&2
+    exit 0
+  fi
   exec "$node_path" \
     --experimental-strip-types \
     --permission \

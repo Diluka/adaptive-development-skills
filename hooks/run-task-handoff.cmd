@@ -18,5 +18,10 @@ deno run --quiet --no-prompt --no-config --no-lock --no-npm --no-remote --allow-
 exit /b %errorlevel%
 
 :run_node
+if defined PLUGIN_DATA if not exist "%PLUGIN_DATA%\." mkdir "%PLUGIN_DATA%" >nul 2>nul
+if errorlevel 1 (
+  >&2 echo task-handoff hook skipped: cannot create PLUGIN_DATA.
+  exit /b 0
+)
 node --experimental-strip-types --permission --allow-fs-read="%HOOKS_READ%" --allow-fs-read="%PLUGIN_DATA%" --allow-fs-write="%PLUGIN_DATA%" --allow-child-process "%SCRIPT%"
 exit /b %errorlevel%

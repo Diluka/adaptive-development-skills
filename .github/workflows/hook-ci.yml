@@ -55,6 +55,7 @@ jobs:
           workspace=$(pwd -P)
           expected_head=$(git rev-parse --verify HEAD)
           real_node=$(command -v node)
+          real_mkdir=$(command -v mkdir)
 
           write_input() {
             local path=$1
@@ -122,6 +123,7 @@ jobs:
           ln -s "$real_node" "$node_bin/node"
           ln -s "$(command -v git)" "$node_bin/git"
           ln -s "$(command -v dirname)" "$node_bin/dirname"
+          ln -s "$real_mkdir" "$node_bin/mkdir"
           write_input "$node_input" "ci-node-session"
           PATH="$node_bin" PLUGIN_DATA="$node_data" \
             hooks/run-task-handoff.sh < "$node_input" > "$node_output"
