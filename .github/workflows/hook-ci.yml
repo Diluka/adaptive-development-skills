@@ -303,9 +303,13 @@ jobs:
           )
 
           foreach ($case in $cases) {
-            $output = [IO.File]::ReadAllText($case.Output) | ConvertFrom-Json
+            $outputText = [IO.File]::ReadAllText($case.Output)
+            if ([string]::IsNullOrWhiteSpace($outputText)) {
+              throw "Hook stdout is empty for $($case.Session)"
+            }
+            $output = $outputText | ConvertFrom-Json
             if ($output.hookSpecificOutput.hookEventName -ne "UserPromptSubmit") {
-              throw "Unexpected Hook JSON for $($case.Session)"
+              throw "Unexpected Hook JSON for $($case.Session): $outputText"
             }
 
             $sessionBytes = [Text.Encoding]::UTF8.GetBytes($case.Session)
