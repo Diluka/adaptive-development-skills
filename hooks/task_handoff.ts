@@ -337,75 +337,6 @@ async function ensureStateDirectory(path: string): Promise<void> {
   }
 }
 
-async function writeAll(file: Deno.FsFile, content: Uint8Array): Promise<void> {
-  let written = 0;
-  while (written < content.byteLength) {
-    const count = await file.write(content.subarray(written));
-    if (count === 0) {
-      throw new Error("failed to write checkpoint");
-    }
-    written += count;
-  }
-}
-
-async function atomicWrite(path: string, content: string): Promise<void> {
-  await ensureStateDirectory(path);
-  const temporaryPath = join(
-    dirname(path),
-    `.state.${crypto.randomUUID()}.tmp`,
-  );
-  let file: Deno.FsFile | undefined;
-  try {
-    file = await Deno.open(temporaryPath, {
-      write: true,
-      createNew: true,
-      mode: 0o600,
-    });
-    await writeAll(file, encoder.encode(content));
-    await file.sync();
-    file.close();
-    file = undefined;
-    if (Deno.build.os !== "windows") {
-      await Deno.chmod(temporaryPath, 0o600);
-    }
-    await Deno.rename(temporaryPath, path);
-  } finally {
-    file?.close();
-    try {
-      await Deno.remove(temporaryPath);
-    } catch {
-      // Best effort only; do not hide the original write or rename result.
-    }
-  }
-}
-
-async function withStateLock<T>(
-  path: string,
-  action: () => Promise<T>,
-): Promise<T> {
-  await ensureStateDirectory(path);
-  const lockPath = join(dirname(path), ".state.lock");
-  const lockFile = await Deno.open(lockPath, {
-    read: true,
-    write: true,
-    create: true,
-    mode: 0o600,
-  });
-  try {
-    if (Deno.build.os !== "windows") {
-      await Deno.chmod(lockPath, 0o600);
-    }
-    await lockFile.lock(true);
-    try {
-      return await action();
-    } finally {
-      await lockFile.unlock();
-    }
-  } finally {
-    lockFile.close();
-  }
-}
-
 function eventLabel(event: SaveCommandInput): string {
   const eventName = event.hook_event_name;
   if (eventName === "PreCompact") {
@@ -423,51 +354,53 @@ async function saveCheckpoint(
   const sessionId = requireString(event.session_id, "missing session_id");
   const cwd = canonicalCwd(requireString(event.cwd, "missing cwd"));
   const path = await statePath(pluginData, sessionId);
-  return await withStateLock(path, async () => {
-    let previous: Checkpoint | null = null;
-    try {
-      previous = await loadCheckpoint(path, sessionId);
-    } catch (error) {
-      if (!(error instanceof InvalidCheckpoint)) {
-        throw error;
-      }
+  await ensureStateDirectory(path);
+  let previous: Checkpoint | null = null;
+  try {
+    previous = await loadCheckpoint(path, sessionId);
+  } catch (error) {
+    if (!(error instanceof InvalidCheckpoint)) {
+      throw error;
     }
+  }
 
-    let currentRequest = previous?.currentRequest ??
-      "(not captured before compaction)";
-    let lastAssistantMessage = previous?.lastAssistantMessage ??
-      "(no completed assistant message captured)";
-    if (event.hook_event_name === "UserPromptSubmit") {
-      currentRequest = cleanText(
-        event.prompt,
-        MAX_REQUEST_BYTES,
-        "(empty user prompt)",
-      );
-    }
-    if (event.hook_event_name === "Stop") {
-      lastAssistantMessage = cleanText(
-        event.last_assistant_message,
-        MAX_RESPONSE_BYTES,
-        lastAssistantMessage,
-      );
-    }
-
-    const normalizedSnapshot: GitSnapshot = {
-      head: cleanText(snapshot.head, 256, "unavailable"),
-    };
-    const text = renderCheckpoint({
-      sessionHash: await hashSessionId(sessionId),
-      generation: (previous?.generation ?? 0) + 1,
-      savedAt: now,
-      cwd,
-      snapshot: normalizedSnapshot,
-      currentRequest,
+  let currentRequest = previous?.currentRequest ??
+    "(not captured before compaction)";
+  let lastAssistantMessage = previous?.lastAssistantMessage ??
+    "(no completed assistant message captured)";
+  if (event.hook_event_name === "UserPromptSubmit") {
+    currentRequest = cleanText(
+      event.prompt,
+      MAX_REQUEST_BYTES,
+      "(empty user prompt)",
+    );
+  }
+  if (event.hook_event_name === "Stop") {
+    lastAssistantMessage = cleanText(
+      event.last_assistant_message,
+      MAX_RESPONSE_BYTES,
       lastAssistantMessage,
-      lastEvent: eventLabel(event),
-    });
-    await atomicWrite(path, text);
-    return await loadCheckpoint(path, sessionId);
+    );
+  }
+
+  const normalizedSnapshot: GitSnapshot = {
+    head: cleanText(snapshot.head, 256, "unavailable"),
+  };
+  const text = renderCheckpoint({
+    sessionHash: await hashSessionId(sessionId),
+    generation: (previous?.generation ?? 0) + 1,
+    savedAt: now,
+    cwd,
+    snapshot: normalizedSnapshot,
+    currentRequest,
+    lastAssistantMessage,
+    lastEvent: eventLabel(event),
   });
+  await Deno.writeTextFile(path, text, { mode: 0o600 });
+  if (Deno.build.os !== "windows") {
+    await Deno.chmod(path, 0o600);
+  }
+  return await loadCheckpoint(path, sessionId);
 }
 
 function userPromptReminder(path: string): UserPromptSubmitCommandOutput {

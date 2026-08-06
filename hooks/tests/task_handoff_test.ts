@@ -250,7 +250,7 @@ Deno.test("PreCompact refreshes root state without subagent overwrite", async ()
     assert.equal(await Deno.readTextFile(path), original);
     assert.deepEqual(
       Array.from(Deno.readDirSync(dirname(path)), (entry) => entry.name).sort(),
-      [".state.lock", "state.md"],
+      ["state.md"],
     );
   });
 });

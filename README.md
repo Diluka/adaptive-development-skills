@@ -29,9 +29,9 @@ codex plugin add adaptive-development-skills@adaptive-development-skills
 
 Hook 运行需要 Deno 2 或更高版本。Hook 启动命令禁用远程与 npm 依赖解析，只允许读取 `PLUGIN_DATA` 环境变量、在该目录读写检查点并启动 `git`；脚本只用 `git rev-parse` 读取 HEAD，不执行会扫描工作区内容的 `git status`，也不授予 Deno 网络或目标项目文件读写权限。环境不满足时可以保持 Hook 未信任或禁用，Plugin Skills 仍可独立使用。
 
-`task-handoff` 在 `$PLUGIN_DATA/handoffs/<sha256(session_id)>/state.md` 原子维护会话检查点，不写目标项目，也不读取 transcript 的内部 JSONL 格式。`state.md` 是唯一持久会话正文；同目录的 `.state.lock` 只用于串行化并发更新，临时文件会在原子替换后清理。检查点包含当前用户请求、最后一次完成的代理回复和 Git HEAD，因此可能包含任务上下文；请在信任 Hook 前审阅实现。
+`task-handoff` 在 `$PLUGIN_DATA/handoffs/<sha256(session_id)>/state.md` 维护会话检查点，不写目标项目，也不读取 transcript 的内部 JSONL 格式。`state.md` 是唯一持久会话文件。检查点包含当前用户请求、最后一次完成的代理回复和 Git HEAD，因此可能包含任务上下文；请在信任 Hook 前审阅实现。
 
-Codex 当前不能把 `PreCompact` 的普通输出送给模型，所以 Hook 不声称能在压缩瞬间要求代理再总结一次。它会在用户回合开始时提前提醒，在限定的代表性事件上刷新已有状态，由 `PreCompact` 完成最后的完整性写入，再通过 `SessionStart` 的 `compact` 恢复入口把同一会话文件送回模型。`status=complete` 只表示检查点写入完整，不表示任务已经完成。
+Codex 当前不能把 `PreCompact` 的普通输出送给模型，所以 Hook 不声称能在压缩瞬间要求代理再总结一次。它会在用户回合开始时提前提醒，在限定的代表性事件上刷新已有状态，由 `PreCompact` 完成压缩前的最后一次状态刷新，再通过 `SessionStart` 的 `compact` 恢复入口把同一会话文件送回模型。`status=complete` 只表示检查点保存流程完成，不表示任务已经完成。
 
 ## 技能清单
 
