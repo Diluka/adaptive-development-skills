@@ -32,7 +32,7 @@ description: Use when 遗留系统、重写或行为保持型重构需要记录�
 
 ### 4. 审阅并批准
 
-比较 received 结果与现有 approved 结果。首次建立旧行为基线时，评审实际结果并显式批准；为新复杂输出使用 Approval Testing 时，先生成结果，再依据需求评估其完整性后批准。第一次缺少 approved 结果导致的失败不是 TDD 红灯。
+比较 received 结果与现有 approved 结果。首次建立旧行为基线时，评审实际结果并显式批准；为新复杂输出使用 Approval Testing 时，先生成结果，再依据需求评估其完整性后批准。第一次缺少 approved 结果只说明基线尚未建立，不能证明业务行为存在缺陷。
 
 ### 5. 修改后比较
 
@@ -48,7 +48,7 @@ description: Use when 遗留系统、重写或行为保持型重构需要记录�
 - 差异过大、不可读或没有具备上下文的评审者，批准只会变成机械接受；
 - 目标是主观质量、概率性效果或多种合理答案，精确结果比较会制造虚假契约；
 - 简单确定性规则已有独立判据，明确断言或 [property-based-testing](../property-based-testing/SKILL.md) 更能表达风险；
-- 需要证明新行为尚不存在并用红灯驱动实现，此时使用 [test-driven-development](../test-driven-development/SKILL.md)。
+- 目标是实现尚不存在的新行为，而不是记录现有行为或比较复杂稳定输出。
 
 ## 产出证据
 
@@ -56,4 +56,4 @@ description: Use when 遗留系统、重写或行为保持型重构需要记录�
 
 ## 相邻方法
 
-特征测试在旧实现上先建立通过的事实基线；[test-driven-development](../test-driven-development/SKILL.md) 先用失败测试表达尚未满足的独立需求。[property-based-testing](../property-based-testing/SKILL.md) 用属性探索广泛输入空间，不能替代对复杂完整输出的审阅。最终是否保留快照、明确断言、冒烟或其他观测，由 [evidence-based-testing](../evidence-based-testing/SKILL.md) 按风险收敛。
+特征测试只负责记录和比较真实执行产生的现有行为，不定义或驱动新增行为。[property-based-testing](../property-based-testing/SKILL.md) 用属性探索广泛输入空间，不能替代对复杂完整输出的审阅。最终是否保留快照、明确断言、冒烟或其他观测，由 [evidence-based-testing](../evidence-based-testing/SKILL.md) 按风险收敛。

@@ -1,8 +1,10 @@
 # Adaptive Development Skills
 
-这是一套按工作单元选择方法的通用开发技能。`adaptive-development-workflow` 是唯一入口：先按当前增量决定最低充分流程，再按独立目标与证据边界把请求拆成调查或开发单元；集成与交付方法、计划、文档、验证、评审、工作树和代理编排按需叠加，不与主要方法竞争。
+这是一套按工作单元选择方法的通用开发技能。`adaptive-development-workflow` 是共享分类与路由入口：先按当前增量决定最低充分流程，再按独立目标与证据边界把请求拆成调查或开发单元；用户明确调用独立方法时，该方法按自身触发条件核验适用性。集成与交付方法、计划、文档、验证、评审、工作树和代理编排按需叠加，不与主要方法竞争。
 
 调查方法只交付事实、根因、可行性或决策输入。调查结论一旦要转成项目长期保留的实现、测试、契约或文档，就返回入口重新选择开发方式。开发方式保持各自的行业标准流程；小而明确的增量仍可直接实现，不为形式强制 SDD、BDD 或 TDD。
+
+常规与复杂开发任务默认按“计划 → 实现 → 测试 → 评审 → 返工”的组合流程推进：这是对既有方法的编排组合，不是新的主要开发方式。除实现外各步骤可按任务级别省略；各步骤可由子代理推进以隔离会话步骤，评审只能由独立子代理进行或省略。完整定义与简化规则见 `adaptive-development-workflow`。
 
 ## 技能体系
 
@@ -18,7 +20,7 @@
 |---|---|
 | `spec-driven-development` | 以可演进规格贯通 Requirements、Design / Plan、Tasks 与 Implement |
 | `behavior-driven-development` | 通过 Discovery、Formulation、Automation 和真实业务示例形成共享行为 |
-| `test-driven-development` | 对已选定的确定性行为执行标准 Red → Green → Refactor |
+| `test-driven-development` | 自行判断适用性，并对确定性行为执行标准 Red → Green → Refactor |
 | `type-driven-design` | 把稳定领域不变量编码为类型约束，在可信边界内排除非法表示 |
 | `property-based-testing` | 以独立属性、生成器、执行、收缩和回归反例验证广泛输入空间 |
 | `consumer-driven-contract-testing` | 用真实使用方期望、版本化契约和提供方验证持续判断服务兼容 |

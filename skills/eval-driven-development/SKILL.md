@@ -99,4 +99,4 @@ description: Use when AI、Agent、生成、排序、推荐或其他主观或概
 - 轨迹与结果状态如何支持结论，以及成本、延迟和错误变化；
 - 达成或未达成的决策条件、剩余不确定性和后续维护安排。
 
-开放式未知风险发现使用 [exploratory-testing](../exploratory-testing/SKILL.md)，已出现症状的根因调查使用 [systematic-debugging](../systematic-debugging/SKILL.md)，具有唯一稳定判据的行为变更再考虑 [test-driven-development](../test-driven-development/SKILL.md)。子代理可以提供独立证据设计或人工评价，但其角色隔离按 [subagent-driven-development](../subagent-driven-development/SKILL.md) 管理，不能替代评价器校准。
+开放式未知风险发现使用 [exploratory-testing](../exploratory-testing/SKILL.md)，已出现症状的根因调查使用 [systematic-debugging](../systematic-debugging/SKILL.md)，具有唯一稳定判据的确定性行为变更返回 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md) 重新选择开发方式。子代理可以提供独立证据设计或人工评价，但其角色隔离按 [subagent-driven-development](../subagent-driven-development/SKILL.md) 管理，不能替代评价器校准。

@@ -12,7 +12,7 @@ description: Use when 需要统一通用软件开发术语的中英文表达、�
 以下内容保留原始英文：
 
 - 产品、项目、语言、框架和包的正式名称；
-- API、SDK、CLI、HTTP、SQL、TDD、PR/MR、APM 等通行缩写；
+- API、SDK、CLI、HTTP、SQL、PR/MR、APM 等通行缩写；
 - 命令、参数、环境变量、路径、文件名、配置键、符号、类型和错误信息；
 - 技能名、Git 引用、协议标记和传输字段等必须精确匹配的值。
 
@@ -30,10 +30,8 @@ description: Use when 需要统一通用软件开发术语的中英文表达、�
 | RFD | Reflected File Download | 反射型文件下载；Web 安全漏洞语境 |
 | DoR | Definition of Ready | 就绪定义 |
 | DoD | Definition of Done | 完成定义 |
-| TDD | Test-Driven Development | 测试驱动开发；本仓库不把 TDD 用作 Type-Driven Development 的缩写 |
 | SDD | Spec-Driven Development | 规格驱动开发；不要与单纯编写规格或实施计划混同 |
 | BDD | Behavior-Driven Development | 行为驱动开发；核心实践为 Discovery、Formulation、Automation |
-| ATDD | Acceptance Test-Driven Development | 验收测试驱动开发 |
 | PBT | Property-Based Testing | 属性测试；缩写没有上下文时优先写完整方法名 |
 | CDC | Consumer-Driven Contract Testing | 使用方驱动契约测试；也可能表示 Change Data Capture，必须结合语境判断 |
 | RCA | Root Cause Analysis | 根因分析 |
@@ -67,7 +65,7 @@ description: Use when 需要统一通用软件开发术语的中英文表达、�
 | non-goal | 非目标 |
 | spec-driven development | 规格驱动开发 |
 | behavior-driven development | 行为驱动开发 |
-| Type-Driven Design / Type-Driven Development | 类型驱动设计 / 类型驱动开发；技能名使用 `type-driven-design`，避免与测试驱动开发的 TDD 缩写冲突 |
+| Type-Driven Design / Type-Driven Development | 类型驱动设计 / 类型驱动开发；技能名使用 `type-driven-design` |
 | property-based testing | 属性测试 |
 | consumer-driven contract testing | 使用方驱动契约测试 |
 | characterization testing | 特征测试；描述系统当前实际行为，不自动代表正确需求 |

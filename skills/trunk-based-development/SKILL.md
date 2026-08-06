@@ -41,7 +41,7 @@ description: Use when 开发工作需要以单一主干、短生命周期分支�
 
 ## 方法边界
 
-- 本技能决定集成节奏，不决定功能应使用 TDD、直接实现或其他证据方法；实现仍按 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md) 为各工作单元选法。
+- 本技能决定集成节奏，不决定功能工作单元的主要开发或证据方法；实现仍按 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md) 为各工作单元选法。
 - 独立工作树解决本地检出、所有权和状态隔离；它不延长分支寿命，也不授权创建、推送或合并分支。
 - [continuous-delivery](../continuous-delivery/SKILL.md) 负责主干之后持续保持可发布的交付能力；本技能不负责制品提升或部署。
 - 分支较短、CI 通过或主干健康都不能替代功能、契约、安全和运行行为的必要证据。
