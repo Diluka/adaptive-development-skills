@@ -1,0 +1,57 @@
+{
+  "description": "Maintain a session-scoped task checkpoint and restore it after context compaction.",
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${PLUGIN_ROOT}/hooks/run-task-handoff.sh\"",
+            "commandWindows": "cmd.exe /d /s /c call \"${PLUGIN_ROOT}\\hooks\\run-task-handoff.cmd\"",
+            "timeout": 10,
+            "additionalContextLimit": 0
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${PLUGIN_ROOT}/hooks/run-task-handoff.sh\"",
+            "commandWindows": "cmd.exe /d /s /c call \"${PLUGIN_ROOT}\\hooks\\run-task-handoff.cmd\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "matcher": "^(manual|auto)$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${PLUGIN_ROOT}/hooks/run-task-handoff.sh\"",
+            "commandWindows": "cmd.exe /d /s /c call \"${PLUGIN_ROOT}\\hooks\\run-task-handoff.cmd\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "^compact$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${PLUGIN_ROOT}/hooks/run-task-handoff.sh\"",
+            "commandWindows": "cmd.exe /d /s /c call \"${PLUGIN_ROOT}\\hooks\\run-task-handoff.cmd\"",
+            "timeout": 10,
+            "additionalContextLimit": 0
+          }
+        ]
+      }
+    ]
+  }
+}
