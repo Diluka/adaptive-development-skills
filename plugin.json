@@ -13,5 +13,7 @@
     "development-workflow",
     "skills"
   ],
-  "skills": "skills/"
+  "skills": [
+    "skills/"
+  ]
 }
