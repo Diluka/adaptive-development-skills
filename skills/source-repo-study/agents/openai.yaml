@@ -1,0 +1,4 @@
+interface:
+  display_name: "源码仓库研究"
+  short_description: "按地图、专题与演进模式建立可追溯且边界明确的源码仓库理解"
+  default_prompt: "使用 $source-repo-study 研究当前源码仓库，并用准确引用区分事实、综合与未知。"

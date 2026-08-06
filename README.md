@@ -9,6 +9,8 @@
 | 技能 | 用途 |
 |---|---|
 | `adaptive-development-workflow` | 按当前增量分级，决定必要流程节点并为工作单元选择方法 |
+| `source-repo-study` | 用地图、专题或演进模式建立有源码依据的当前系统理解 |
+| `architecture-design-review` | 基于真实系统事实审查目标架构的职责、边界、不变量与风险 |
 | `evidence-based-testing` | 复用仍有效证据，在测试、CI、快照、评估和观测之间补足真实缺口 |
 | `contract-verification` | 核验 SDK、协议、框架与依赖的真实契约 |
 | `caller-driven-cleanup` | 依据真实调用方、导出和运行时加载完成删除清理 |
@@ -31,4 +33,5 @@
 
 ## 思想来源
 
-最初的设计参考了 [obra/superpowers](https://github.com/obra/superpowers) 等项目，目前独立维护。
+- [obra/superpowers](https://github.com/obra/superpowers)
+- [lzj960515/codex-workbench](https://github.com/lzj960515/codex-workbench)
