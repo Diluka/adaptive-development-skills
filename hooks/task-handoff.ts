@@ -104,6 +104,8 @@ async function runGit(cwd: string, ...args: string[]): Promise<string | null> {
         ],
         {
           encoding: "utf8",
+          // Deno cannot inherit ungranted env vars; Node needs inheritance for PATH.
+          env: process.versions.deno === undefined ? undefined : {},
           timeout: GIT_COMMAND_TIMEOUT_MS,
           windowsHide: true,
         },
