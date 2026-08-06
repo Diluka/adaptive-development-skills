@@ -1,0 +1,19 @@
+{
+  "name": "adaptive-development-skills",
+  "version": "0.1.0",
+  "description": "Risk-adaptive development workflow skills for GitHub Copilot.",
+  "author": {
+    "name": "Diluka",
+    "url": "https://github.com/Diluka"
+  },
+  "homepage": "https://github.com/Diluka/adaptive-development-skills",
+  "repository": "https://github.com/Diluka/adaptive-development-skills",
+  "license": "MIT",
+  "keywords": [
+    "development-workflow",
+    "skills"
+  ],
+  "skills": [
+    "skills/"
+  ]
+}

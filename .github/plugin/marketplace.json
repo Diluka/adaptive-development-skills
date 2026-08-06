@@ -1,0 +1,18 @@
+{
+  "name": "adaptive-development-skills",
+  "metadata": {
+    "description": "Risk-adaptive development workflow skills",
+    "version": "1.0.0"
+  },
+  "owner": {
+    "name": "Diluka"
+  },
+  "plugins": [
+    {
+      "name": "adaptive-development-skills",
+      "description": "Risk-adaptive development workflow skills for GitHub Copilot.",
+      "version": "0.1.0",
+      "source": "./"
+    }
+  ]
+}
