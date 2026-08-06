@@ -167,9 +167,9 @@ jobs:
         run: |
           $ErrorActionPreference = "Stop"
           $workspace = (Get-Location).ProviderPath
-          $nodeExe = (Get-Command node -CommandType Application).Source
-          $gitExe = (Get-Command git -CommandType Application).Source
-          $denoExe = (Get-Command deno -CommandType Application).Source
+          $nodeExe = (Get-Command node -CommandType Application | Select-Object -First 1).Source
+          $gitExe = (Get-Command git -CommandType Application | Select-Object -First 1).Source
+          $denoExe = (Get-Command deno -CommandType Application | Select-Object -First 1).Source
           $pluginRoot = Join-Path $env:RUNNER_TEMP "plugin root with spaces"
           [IO.Directory]::CreateDirectory($pluginRoot) | Out-Null
           Copy-Item -LiteralPath (Join-Path $workspace "hooks") -Destination $pluginRoot -Recurse
