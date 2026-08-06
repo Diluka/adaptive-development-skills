@@ -1,0 +1,359 @@
+name: Hook CI
+
+on:
+  pull_request:
+    paths:
+      - "hooks/**"
+      - ".github/workflows/hook-ci.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "hooks/**"
+      - ".github/workflows/hook-ci.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  ubuntu:
+    name: Ubuntu hook checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install Deno 2.9.4
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.9.4
+
+      - name: Install Node 24.15.0
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24.15.0
+
+      - name: Check Hook types, syntax, and logic
+        shell: bash
+        run: |
+          set -euo pipefail
+          deno fmt --check hooks/codex-hook-types.ts hooks/task-handoff.ts hooks/tests/task-handoff.test.ts
+          deno lint --no-config hooks/codex-hook-types.ts hooks/task-handoff.ts hooks/tests/task-handoff.test.ts
+          deno check --no-config --no-lock --no-npm --no-remote hooks/codex-hook-types.ts hooks/task-handoff.ts
+          node --check hooks/codex-hook-types.ts
+          node --check hooks/task-handoff.ts
+          sh -n hooks/run-task-handoff.sh
+          test -x hooks/run-task-handoff.sh
+          deno test --no-config --no-lock --no-npm --no-remote --allow-read --allow-write --allow-run=deno hooks/tests/task-handoff.test.ts
+
+      - name: Smoke test POSIX launchers
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          workspace=$(pwd -P)
+          expected_head=$(git rev-parse --verify HEAD)
+          real_node=$(command -v node)
+
+          write_input() {
+            local path=$1
+            local session=$2
+            "$real_node" -e '
+              const fs = require("node:fs");
+              const [path, session, cwd] = process.argv.slice(1);
+              fs.writeFileSync(path, JSON.stringify({
+                session_id: session,
+                transcript_path: null,
+                cwd,
+                model: "ci-model",
+                hook_event_name: "UserPromptSubmit",
+                permission_mode: "default",
+                turn_id: "ci-turn",
+                prompt: "Validate the launcher path."
+              }));
+            ' "$path" "$session" "$workspace"
+          }
+
+          assert_checkpoint() {
+            local plugin_data=$1
+            local session=$2
+            local output=$3
+            local expected_hash
+            expected_hash=$("$real_node" -e '
+              const { createHash } = require("node:crypto");
+              process.stdout.write(createHash("sha256").update(process.argv[1]).digest("hex"));
+            ' "$session")
+            local state_file="$plugin_data/handoffs/$expected_hash/state.md"
+
+            "$real_node" -e '
+              const fs = require("node:fs");
+              const value = JSON.parse(fs.readFileSync(process.argv[1], "utf8"));
+              if (value?.hookSpecificOutput?.hookEventName !== "UserPromptSubmit") {
+                throw new Error("unexpected hook output");
+              }
+            ' "$output"
+            test "$(find "$plugin_data" -type f -name state.md | wc -l)" -eq 1
+            test -f "$state_file"
+            grep -Fqx "session_hash: $expected_hash" "$state_file"
+            grep -Fqx "cwd: $("$real_node" -e 'process.stdout.write(JSON.stringify(process.argv[1]))' "$workspace")" "$state_file"
+            grep -Fqx "git_head: \"$expected_head\"" "$state_file"
+            grep -Fqx "status: complete" "$state_file"
+            test "$(stat -c %a "$state_file")" = 600
+          }
+
+          priority_bin="$RUNNER_TEMP/deno-priority-bin"
+          deno_data="$RUNNER_TEMP/task-handoff-deno"
+          deno_input="$RUNNER_TEMP/task-handoff-deno.json"
+          deno_output="$RUNNER_TEMP/task-handoff-deno-output.json"
+          mkdir -p "$priority_bin" "$deno_data"
+          printf '#!/bin/sh\nexit 97\n' > "$priority_bin/node"
+          chmod +x "$priority_bin/node"
+          write_input "$deno_input" "ci-deno-session"
+          PATH="$priority_bin:$PATH" PLUGIN_DATA="$deno_data" \
+            hooks/run-task-handoff.sh < "$deno_input" > "$deno_output"
+          assert_checkpoint "$deno_data" "ci-deno-session" "$deno_output"
+
+          node_bin="$RUNNER_TEMP/node-fallback-bin"
+          node_data="$RUNNER_TEMP/task-handoff-node"
+          node_input="$RUNNER_TEMP/task-handoff-node.json"
+          node_output="$RUNNER_TEMP/task-handoff-node-output.json"
+          mkdir -p "$node_bin" "$node_data"
+          ln -s "$real_node" "$node_bin/node"
+          ln -s "$(command -v git)" "$node_bin/git"
+          ln -s "$(command -v dirname)" "$node_bin/dirname"
+          write_input "$node_input" "ci-node-session"
+          PATH="$node_bin" PLUGIN_DATA="$node_data" \
+            hooks/run-task-handoff.sh < "$node_input" > "$node_output"
+          assert_checkpoint "$node_data" "ci-node-session" "$node_output"
+
+      - name: Validate Plugin installation
+        shell: bash
+        env:
+          CODEX_HOME: ${{ runner.temp }}/codex-home
+        run: |
+          set -euo pipefail
+          mkdir -p "$CODEX_HOME"
+          npx --yes @openai/codex@0.146.1 plugin marketplace add . --json
+          npx --yes @openai/codex@0.146.1 plugin add adaptive-development-skills@adaptive-development-skills --json
+          plugin_version=$(node -p "require('./.codex-plugin/plugin.json').version")
+          cached_root="$CODEX_HOME/plugins/cache/adaptive-development-skills/adaptive-development-skills/$plugin_version"
+          test -x "$cached_root/hooks/run-task-handoff.sh"
+          test -f "$cached_root/hooks/run-task-handoff.cmd"
+          test -f "$cached_root/hooks/task-handoff.ts"
+          test -f "$cached_root/hooks/codex-hook-types.ts"
+
+  windows:
+    name: Windows hook checks
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install Deno 2.9.4
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.9.4
+
+      - name: Install Node 24.15.0
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24.15.0
+
+      - name: Prepare Windows smoke inputs
+        id: windows-paths
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $workspace = (Get-Location).ProviderPath
+          $nodeExe = (Get-Command node -CommandType Application).Source
+          $gitExe = (Get-Command git -CommandType Application).Source
+          $denoExe = (Get-Command deno -CommandType Application).Source
+          $pluginRoot = Join-Path $env:RUNNER_TEMP "plugin root with spaces"
+          [IO.Directory]::CreateDirectory($pluginRoot) | Out-Null
+          Copy-Item -LiteralPath (Join-Path $workspace "hooks") -Destination $pluginRoot -Recurse
+
+          foreach ($case in @(
+            @{ File = "task-handoff-windows-deno.json"; Session = "ci-windows-deno-session" },
+            @{ File = "task-handoff-windows-node.json"; Session = "ci-windows-node-session" }
+          )) {
+            $input = @{
+              session_id = $case.Session
+              transcript_path = $null
+              cwd = $workspace
+              model = "ci-model"
+              hook_event_name = "UserPromptSubmit"
+              permission_mode = "default"
+              turn_id = "ci-turn"
+              prompt = "Validate the Windows launcher path."
+            } | ConvertTo-Json -Compress
+            $path = Join-Path $env:RUNNER_TEMP $case.File
+            [IO.File]::WriteAllText($path, $input, [Text.UTF8Encoding]::new($false))
+          }
+
+          "node_dir=$(Split-Path -Parent $nodeExe)" >> $env:GITHUB_OUTPUT
+          "git_dir=$(Split-Path -Parent $gitExe)" >> $env:GITHUB_OUTPUT
+          "plugin_root=$pluginRoot" >> $env:GITHUB_OUTPUT
+          "system32=$env:SystemRoot\System32" >> $env:GITHUB_OUTPUT
+          "windows_dir=$env:SystemRoot" >> $env:GITHUB_OUTPUT
+          Write-Host "Deno: $denoExe"
+          Write-Host "Node: $nodeExe"
+          Write-Host "Git: $gitExe"
+
+      - name: Smoke test Deno priority through PowerShell and cmd.exe
+        shell: pwsh
+        env:
+          PLUGIN_ROOT: ${{ steps.windows-paths.outputs.plugin_root }}
+          PLUGIN_DATA: ${{ runner.temp }}\task-handoff-windows-deno
+        run: |
+          $ErrorActionPreference = "Stop"
+          if (-not (Get-Command deno -CommandType Application)) {
+            throw "Deno is not available"
+          }
+          if (-not (Get-Command node -CommandType Application)) {
+            throw "Node is not available"
+          }
+
+          $sentinelDir = Join-Path $env:RUNNER_TEMP "deno-priority-sentinel"
+          [IO.Directory]::CreateDirectory($sentinelDir) | Out-Null
+          [IO.File]::WriteAllText(
+            (Join-Path $sentinelDir "node.cmd"),
+            "@exit /b 97`r`n",
+            [Text.ASCIIEncoding]::new()
+          )
+          $env:PATH = "$sentinelDir;$env:PATH"
+
+          $hookConfig = Get-Content -LiteralPath "hooks\hooks.json" -Raw | ConvertFrom-Json
+          $commands = @(
+            $hookConfig.hooks.PSObject.Properties.Value |
+              ForEach-Object { $_.hooks } |
+              ForEach-Object { $_.commandWindows }
+          )
+          if ($commands.Count -ne 4 -or ($commands | Select-Object -Unique).Count -ne 1) {
+            throw "Configured Windows Hook commands are not identical"
+          }
+          $commandWindows = $commands[0]
+          $startInfo = [Diagnostics.ProcessStartInfo]::new()
+          $startInfo.FileName = (Get-Command pwsh.exe -CommandType Application).Source
+          $startInfo.ArgumentList.Add("-NoProfile")
+          $startInfo.ArgumentList.Add("-Command")
+          $startInfo.ArgumentList.Add($commandWindows)
+          $startInfo.UseShellExecute = $false
+          $startInfo.RedirectStandardInput = $true
+          $startInfo.RedirectStandardOutput = $true
+          $startInfo.RedirectStandardError = $true
+
+          $process = [Diagnostics.Process]::Start($startInfo)
+          $input = [IO.File]::ReadAllText((Join-Path $env:RUNNER_TEMP "task-handoff-windows-deno.json"))
+          $process.StandardInput.Write($input)
+          $process.StandardInput.Close()
+          $stdout = $process.StandardOutput.ReadToEnd()
+          $stderr = $process.StandardError.ReadToEnd()
+          $process.WaitForExit()
+          [Console]::Error.Write($stderr)
+          [IO.File]::WriteAllText(
+            (Join-Path $env:RUNNER_TEMP "task-handoff-windows-deno-output.json"),
+            $stdout,
+            [Text.UTF8Encoding]::new($false)
+          )
+          if ($process.ExitCode -ne 0) {
+            throw "PowerShell -> cmd.exe -> Deno launcher failed with $($process.ExitCode)"
+          }
+
+      - name: Smoke test Node fallback through cmd.exe
+        shell: cmd
+        env:
+          PLUGIN_ROOT: ${{ steps.windows-paths.outputs.plugin_root }}
+          PLUGIN_DATA: ${{ runner.temp }}\task-handoff-windows-node
+          PATH: ${{ steps.windows-paths.outputs.node_dir }};${{ steps.windows-paths.outputs.git_dir }};${{ steps.windows-paths.outputs.system32 }};${{ steps.windows-paths.outputs.windows_dir }}
+        run: |
+          where deno >nul 2>nul
+          if not errorlevel 1 exit /b 91
+          where node
+          where git
+          cmd.exe /d /s /c call "%PLUGIN_ROOT%\hooks\run-task-handoff.cmd" < "%RUNNER_TEMP%\task-handoff-windows-node.json" > "%RUNNER_TEMP%\task-handoff-windows-node-output.json"
+          if errorlevel 1 exit /b %errorlevel%
+
+          move /y "%PLUGIN_ROOT%\hooks\task-handoff.ts" "%RUNNER_TEMP%\task-handoff.ts.saved" >nul
+          node --experimental-strip-types --permission --allow-fs-read="%PLUGIN_ROOT%\hooks\." --allow-fs-read="%PLUGIN_DATA%" --allow-fs-write="%PLUGIN_DATA%" --allow-child-process "%PLUGIN_ROOT%\hooks\task-handoff.ts" < "%RUNNER_TEMP%\task-handoff-windows-node.json" >nul 2>nul
+          set "DIRECT_EXIT=%ERRORLEVEL%"
+          cmd.exe /d /s /c call "%PLUGIN_ROOT%\hooks\run-task-handoff.cmd" < "%RUNNER_TEMP%\task-handoff-windows-node.json" >nul 2>nul
+          set "WRAPPER_EXIT=%ERRORLEVEL%"
+          move /y "%RUNNER_TEMP%\task-handoff.ts.saved" "%PLUGIN_ROOT%\hooks\task-handoff.ts" >nul
+          if "%DIRECT_EXIT%"=="0" exit /b 92
+          if not "%WRAPPER_EXIT%"=="%DIRECT_EXIT%" exit /b 93
+
+      - name: Assert Windows launcher results
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $expectedHead = (git -C $env:GITHUB_WORKSPACE rev-parse --verify HEAD).Trim()
+          $cases = @(
+            @{
+              Session = "ci-windows-deno-session"
+              Data = Join-Path $env:RUNNER_TEMP "task-handoff-windows-deno"
+              Output = Join-Path $env:RUNNER_TEMP "task-handoff-windows-deno-output.json"
+            },
+            @{
+              Session = "ci-windows-node-session"
+              Data = Join-Path $env:RUNNER_TEMP "task-handoff-windows-node"
+              Output = Join-Path $env:RUNNER_TEMP "task-handoff-windows-node-output.json"
+            }
+          )
+
+          foreach ($case in $cases) {
+            $output = [IO.File]::ReadAllText($case.Output) | ConvertFrom-Json
+            if ($output.hookSpecificOutput.hookEventName -ne "UserPromptSubmit") {
+              throw "Unexpected Hook JSON for $($case.Session)"
+            }
+
+            $sessionBytes = [Text.Encoding]::UTF8.GetBytes($case.Session)
+            $sessionHash = [Convert]::ToHexString(
+              [Security.Cryptography.SHA256]::HashData($sessionBytes)
+            ).ToLowerInvariant()
+            $expectedState = Join-Path $case.Data "handoffs\$sessionHash\state.md"
+            $stateFiles = @(Get-ChildItem -LiteralPath $case.Data -Filter state.md -File -Recurse)
+            if ($stateFiles.Count -ne 1) {
+              throw "Expected exactly one state.md for $($case.Session)"
+            }
+            if (-not [IO.File]::Exists($expectedState)) {
+              throw "Checkpoint path does not match the session hash"
+            }
+
+            $lines = [IO.File]::ReadAllLines($expectedState)
+            if ($lines[0] -ne "---") {
+              throw "Checkpoint metadata header is missing"
+            }
+            $metadata = @{}
+            for ($index = 1; $index -lt $lines.Length; $index++) {
+              if ($lines[$index] -eq "---") {
+                break
+              }
+              $separator = $lines[$index].IndexOf(":")
+              if ($separator -lt 1) {
+                throw "Malformed checkpoint metadata"
+              }
+              $metadata[$lines[$index].Substring(0, $separator)] =
+                $lines[$index].Substring($separator + 1).Trim()
+            }
+
+            if ($metadata.session_hash -ne $sessionHash) {
+              throw "Checkpoint session hash mismatch"
+            }
+            if ($metadata.status -ne "complete") {
+              throw "Checkpoint is incomplete"
+            }
+            $savedCwd = $metadata.cwd | ConvertFrom-Json
+            if (-not [string]::Equals(
+              [IO.Path]::GetFullPath($savedCwd),
+              [IO.Path]::GetFullPath($env:GITHUB_WORKSPACE),
+              [StringComparison]::OrdinalIgnoreCase
+            )) {
+              throw "Checkpoint cwd mismatch"
+            }
+            $savedHead = $metadata.git_head | ConvertFrom-Json
+            if ($savedHead -ne $expectedHead) {
+              throw "Checkpoint Git HEAD mismatch"
+            }
+          }

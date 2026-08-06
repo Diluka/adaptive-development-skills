@@ -27,7 +27,9 @@ codex plugin add adaptive-development-skills@adaptive-development-skills
 
 安装后请启动新任务，让 Codex 载入 Plugin Skills。Plugin 安装不会自动信任它携带的命令 Hook；通过 `/hooks` 审阅当前定义后，可以选择信任、保持未信任或单独禁用。未信任或禁用 Hook 不影响 Plugin Skills，marketplace 也使用 `AVAILABLE`，不会默认安装 Plugin。
 
-Hook 的默认启动命令需要 Deno 2 或更高版本。生产脚本只使用 Deno 与 Node 共同支持的 Node 内置 API，也可由 Node 24 或更高版本直接执行；Plugin 仍默认使用 Deno，因为 Node 的权限模型不能把子进程权限收窄到仅允许 `git`。默认启动命令禁用远程与 npm 依赖解析，只允许业务代码读取 `PLUGIN_DATA`、允许 Deno 的 Node 兼容层读取 `NODE_V8_COVERAGE`、在 `PLUGIN_DATA` 读写检查点并启动 `git`；除兼容层自身处理的 `NODE_V8_COVERAGE` 外，`git` 不继承 Hook 环境。脚本只用 `git rev-parse` 读取 HEAD，不执行会扫描工作区内容的 `git status`，也不授予 Deno 网络或目标项目文件读写权限。环境不满足时可以保持 Hook 未信任或禁用，Plugin Skills 仍可独立使用。
+Hook launcher 优先使用 Deno 2；只有找不到 `deno` 可执行文件时才使用 Node 24 的 TypeScript type stripping 运行同一脚本。选中的运行时若执行失败，launcher 会原样返回退出码，不会换另一个运行时重试；两者都不存在时只向 stderr 提示并以 0 退出，不阻止可选 Hook、用户回合或压缩。
+
+Deno 分支禁用远程与 npm 依赖解析，只允许业务代码读取 `PLUGIN_DATA`、允许 Deno 的 Node 兼容层读取 `NODE_V8_COVERAGE`、在 `PLUGIN_DATA` 读写检查点并启动 `git`。Node fallback 只能整体开放 `child_process`，不能限制为仅执行 `git`，其权限模型也不限制环境变量或网络，因此 Deno 始终优先。两条路径都只用 `git rev-parse` 读取 HEAD，不执行会扫描工作区内容的 `git status`；检查点仍只写入 `PLUGIN_DATA`。环境不满足时也可以保持 Hook 未信任或禁用，Plugin Skills 仍可独立使用。
 
 `task-handoff` 在 `$PLUGIN_DATA/handoffs/<sha256(session_id)>/state.md` 维护会话检查点，不写目标项目，也不读取 transcript 的内部 JSONL 格式。`state.md` 是唯一持久会话文件。检查点包含当前用户请求、最后一次完成的代理回复和 Git HEAD，因此可能包含任务上下文；请在信任 Hook 前审阅实现。
 

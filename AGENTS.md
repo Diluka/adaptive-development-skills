@@ -79,7 +79,7 @@
 - Hook 只作为可选 Plugin 能力分发。standalone `npx skills` 的安装、更新和运行不得依赖 Plugin manifest、marketplace 或 Hook 状态。
 - 修改 Plugin 或 Hook 时，核对 marketplace 仍为显式可选安装、Plugin Hook 仍需独立审阅信任，并验证未把 Hook 带入 standalone Skill 安装结果。
 - Hook 的可写状态只能放在 `PLUGIN_DATA`；脚本通过 `PLUGIN_ROOT` 定位，不写目标项目临时目录，不硬编码安装路径，不解析未承诺稳定的 transcript 内部格式。通过获准子进程读取项目元数据前，必须核验命令不会触发 Git hook、filter、helper 或其他外部进程；Deno 的 `--allow-run` 不会继续沙箱化子进程。
-- Hook 生产脚本只使用 Deno 2 与 Node 24 共同支持的 Node 内置 API；Plugin 默认仍以 Deno 启动来保留针对环境变量、目录和 `git` 的细粒度权限。修改生产脚本或入口时同时执行 Deno 类型检查与 Node 语法检查；未经明确审阅权限扩展，不把默认启动器改为 Node。
+- Hook 生产脚本只使用 Deno 2 与 Node 24 共同支持的 Node 内置 API；launcher 优先使用 Deno，只有找不到 `deno` 时才回退 Node，选中的运行时失败后不得再次执行另一运行时。Node fallback 的子进程、环境变量和网络权限比 Deno 更宽，修改入口或权限时必须同步审阅两条路径。Windows 的 `commandWindows` 不假设 Codex 使用哪种会话 shell，必须显式通过 `cmd.exe` 执行 `.cmd` launcher。
 - `hooks/codex-hook-types.ts` 按当前最低核对 Codex 版本的官方生成 schema 约束 stdin 与逐事件 stdout；修改事件、字段或支持版本时先更新该类型边界，并以 `deno check` 作为接口静态检查。执行测试只验证脚本自身设计逻辑，每个已配置 Hook 保留一个代表性测试，不用人工事件镜像重复类型约束，也不把独立脚本测试称为 Codex 集成测试。
 - 正式发布 Plugin 变更时递增 manifest 版本；Git marketplace 用户通过 `codex plugin marketplace upgrade` 获取新快照。本地开发迭代按当前 `plugin-creator` 的 cachebuster 与重装流程验证，不把同版本缓存覆盖当作发行契约。
 
@@ -104,6 +104,10 @@ deno fmt --check hooks/codex-hook-types.ts hooks/task-handoff.ts hooks/tests/tas
 deno lint --no-config hooks/codex-hook-types.ts hooks/task-handoff.ts hooks/tests/task-handoff.test.ts
 deno check --no-config --no-lock --no-npm --no-remote hooks/codex-hook-types.ts hooks/task-handoff.ts
 node --check hooks/codex-hook-types.ts && node --check hooks/task-handoff.ts
+sh -n hooks/run-task-handoff.sh
+test -x hooks/run-task-handoff.sh
 deno test --no-config --no-lock --no-npm --no-remote --allow-read --allow-write --allow-run=deno hooks/tests/task-handoff.test.ts
 python3 "${CODEX_HOME:-$HOME/.codex}/skills/.system/plugin-creator/scripts/validate_plugin.py" .
 ```
+
+Hook CI 固定使用 Deno 2.9.4、Node 24.15.0 和 Codex CLI 0.146.1。Ubuntu 运行上述静态检查、现有四个 Hook 测试、真实 Deno/Node launcher 冒烟和一次临时 `CODEX_HOME` Plugin 安装校验；Windows 同时从 PowerShell 外层和 `cmd.exe` 外层执行 `.cmd`，覆盖 Deno 优先、Node fallback、stdin/stdout、检查点以及 `.cmd` 退出码透传。它们是脚本与 Plugin 的运行时冒烟，不是 Codex 压缩集成测试。

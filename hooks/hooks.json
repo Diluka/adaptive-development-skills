@@ -6,8 +6,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "deno run --quiet --no-prompt --no-config --no-lock --no-npm --no-remote --allow-env=PLUGIN_DATA,NODE_V8_COVERAGE --allow-read=\"${PLUGIN_DATA}\" --allow-write=\"${PLUGIN_DATA}\" --allow-run=git \"${PLUGIN_ROOT}/hooks/task-handoff.ts\"",
-            "commandWindows": "deno run --quiet --no-prompt --no-config --no-lock --no-npm --no-remote --allow-env=PLUGIN_DATA,NODE_V8_COVERAGE --allow-read=\"${PLUGIN_DATA}\" --allow-write=\"${PLUGIN_DATA}\" --allow-run=git \"${PLUGIN_ROOT}\\hooks\\task-handoff.ts\"",
+            "command": "\"${PLUGIN_ROOT}/hooks/run-task-handoff.sh\"",
+            "commandWindows": "cmd.exe /d /s /c call \"%PLUGIN_ROOT%\\hooks\\run-task-handoff.cmd\"",
             "timeout": 10,
             "additionalContextLimit": 0
           }
@@ -19,8 +19,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "deno run --quiet --no-prompt --no-config --no-lock --no-npm --no-remote --allow-env=PLUGIN_DATA,NODE_V8_COVERAGE --allow-read=\"${PLUGIN_DATA}\" --allow-write=\"${PLUGIN_DATA}\" --allow-run=git \"${PLUGIN_ROOT}/hooks/task-handoff.ts\"",
-            "commandWindows": "deno run --quiet --no-prompt --no-config --no-lock --no-npm --no-remote --allow-env=PLUGIN_DATA,NODE_V8_COVERAGE --allow-read=\"${PLUGIN_DATA}\" --allow-write=\"${PLUGIN_DATA}\" --allow-run=git \"${PLUGIN_ROOT}\\hooks\\task-handoff.ts\"",
+            "command": "\"${PLUGIN_ROOT}/hooks/run-task-handoff.sh\"",
+            "commandWindows": "cmd.exe /d /s /c call \"%PLUGIN_ROOT%\\hooks\\run-task-handoff.cmd\"",
             "timeout": 10
           }
         ]
@@ -32,8 +32,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "deno run --quiet --no-prompt --no-config --no-lock --no-npm --no-remote --allow-env=PLUGIN_DATA,NODE_V8_COVERAGE --allow-read=\"${PLUGIN_DATA}\" --allow-write=\"${PLUGIN_DATA}\" --allow-run=git \"${PLUGIN_ROOT}/hooks/task-handoff.ts\"",
-            "commandWindows": "deno run --quiet --no-prompt --no-config --no-lock --no-npm --no-remote --allow-env=PLUGIN_DATA,NODE_V8_COVERAGE --allow-read=\"${PLUGIN_DATA}\" --allow-write=\"${PLUGIN_DATA}\" --allow-run=git \"${PLUGIN_ROOT}\\hooks\\task-handoff.ts\"",
+            "command": "\"${PLUGIN_ROOT}/hooks/run-task-handoff.sh\"",
+            "commandWindows": "cmd.exe /d /s /c call \"%PLUGIN_ROOT%\\hooks\\run-task-handoff.cmd\"",
             "timeout": 10
           }
         ]
@@ -45,8 +45,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "deno run --quiet --no-prompt --no-config --no-lock --no-npm --no-remote --allow-env=PLUGIN_DATA,NODE_V8_COVERAGE --allow-read=\"${PLUGIN_DATA}\" --allow-write=\"${PLUGIN_DATA}\" --allow-run=git \"${PLUGIN_ROOT}/hooks/task-handoff.ts\"",
-            "commandWindows": "deno run --quiet --no-prompt --no-config --no-lock --no-npm --no-remote --allow-env=PLUGIN_DATA,NODE_V8_COVERAGE --allow-read=\"${PLUGIN_DATA}\" --allow-write=\"${PLUGIN_DATA}\" --allow-run=git \"${PLUGIN_ROOT}\\hooks\\task-handoff.ts\"",
+            "command": "\"${PLUGIN_ROOT}/hooks/run-task-handoff.sh\"",
+            "commandWindows": "cmd.exe /d /s /c call \"%PLUGIN_ROOT%\\hooks\\run-task-handoff.cmd\"",
             "timeout": 10,
             "additionalContextLimit": 0
           }
