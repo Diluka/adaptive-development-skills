@@ -1,4 +1,4 @@
 interface:
   display_name: "Using Git Worktrees"
-  short_description: "让开发分支默认绑定工作树，并判断只读分支访问等隔离例外"
-  default_prompt: "使用 $using-git-worktrees 为会产生改动的开发分支建立独立工作树，并判断只读分支访问能否安全使用根路径。"
+  short_description: "隔离开发工作树，并指导 Codex 复用、转移、新建与协调任务"
+  default_prompt: "使用 $using-git-worktrees 分开判断会话与工作树，为并行写入建立所有权，并在 Codex 中选择复用、Handoff、Fork、Create 或手工 Git CLI。"

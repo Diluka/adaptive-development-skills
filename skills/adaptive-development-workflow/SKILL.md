@@ -108,7 +108,7 @@ SDD 或 BDD 产生的具体实现目标应继续拆成实现与证据单元并�
 1. **计划**：用 [writing-plans](../writing-plans/SKILL.md) 落盘目标、范围、工作单元和验证方式。需要以文档描述功能开发步骤时，由 [spec-driven-development](../spec-driven-development/SKILL.md) 贯通 Requirements、Design / Plan、Tasks 与 Implement。
 2. **实现**：按计划执行工作单元，见 [executing-plans](../executing-plans/SKILL.md)；每个实现单元按自身证据形状在上文“选择开发方式”中选法。
 3. **测试**：是否需要测试步骤按任务级别与实现后的真实证据缺口决定；需要时，通过 [choosing-tests](../choosing-tests/SKILL.md) 选择测试方式与强度，从计划所指向的需求或规格派生验收证据并验证可观察结果。
-4. **评审**：任务级别要求时，由未参与实现、证据设计和差异修改的独立子代理评审完整差异，见 [requesting-code-review](../requesting-code-review/SKILL.md)。
+4. **评审**：任务级别要求时，由未参与实现、证据设计和差异修改的独立评审者检查完整差异，见 [requesting-code-review](../requesting-code-review/SKILL.md)。
 5. **返工**：按 [receiving-code-review](../receiving-code-review/SKILL.md) 核验意见并实施最小修复，重新验证后复审失效范围，直到评审同意或确认无需处理。
 
 **简化**：除实现外，每一步都可以按任务级别与证据收益省略。每一步的取舍标准是“它能发现当前任务会引入的哪种合理错误，且现有证据尚未覆盖同一风险”——能拒绝合理错误时保留，没有额外反证或定位价值时省略。任务级别只设下限，不设上限：微小任务只实现并做必要直接检查；常规任务按需补计划、定向测试或评审；复杂或高风险任务保留完整闭环。
@@ -118,7 +118,7 @@ SDD 或 BDD 产生的具体实现目标应继续拆成实现与证据单元并�
 - 实现一个明确的业务需求（如新增接口并按契约返回结果）：通常为常规任务。先落盘简短计划（目标、范围、验证方式），按计划实现并补覆盖受影响路径的定向行为测试；评审只在定向验证覆盖不到的独立风险出现时才派发。
 - 修改公共 API、迁移数据库等跨模块或破坏性变更：属于复杂或高风险任务，完整保留计划 → 实现 → 测试 → 评审 → 返工闭环。
 
-**推进与隔离**：各步骤可以委派子代理推进，见 [subagent-driven-development](../subagent-driven-development/SKILL.md)。委派的首要目的是会话步骤隔离：把琐碎步骤移出主会话，避免主会话被填满而频繁压缩失真。评审是特殊流程，只能由独立子代理进行，或直接省略，不由根代理兼任。
+**推进与隔离**：当前 Codex 任务内的短小、只读、无持久写入所有权或无需长期独立生命周期的局部步骤，可以通过 [subagent-driven-development](../subagent-driven-development/SKILL.md) 委派。粗粒度、持续写入的并行开发单元使用 [using-git-worktrees](../using-git-worktrees/SKILL.md) 建立独立工作树和负责会话；新建这类开发会话通常同时分配工作树，但当前会话也可以通过 Handoff、复用或 Git CLI 继续负责既有工作树。独立评审的执行层由评审范围决定，不由根代理兼任。
 
 ## 叠加集成与交付方法
 
@@ -139,9 +139,8 @@ SDD 或 BDD 产生的具体实现目标应继续拆成实现与证据单元并�
 | 需要选择测试方式（端到端、单元、属性、契约等） | [choosing-tests](../choosing-tests/SKILL.md) |
 | 需要判断证据充分性、复用或收敛长期证据 | [evidence-management](../evidence-management/SKILL.md) |
 | 方法产物需要长期保存为正式项目文档 | [project-documentation](../project-documentation/SKILL.md) |
-| 分支、版本或并行改动需要本地隔离 | [using-git-worktrees](../using-git-worktrees/SKILL.md) |
-| 单元委派有上下文或独立证据收益 | [subagent-driven-development](../subagent-driven-development/SKILL.md) 与 [dispatching-parallel-agents](../dispatching-parallel-agents/SKILL.md) |
-| 用户明确要求跨 Codex 任务编排 | [orchestrating-multi-session-work](../orchestrating-multi-session-work/SKILL.md) |
+| 分支、版本、多个工作树或 Codex 工作树任务需要隔离与协调 | [using-git-worktrees](../using-git-worktrees/SKILL.md) |
+| 当前任务内局部委派或多个单元需要判断并行收益 | [subagent-driven-development](../subagent-driven-development/SKILL.md) 与 [dispatching-parallel-agents](../dispatching-parallel-agents/SKILL.md) |
 | 独立评审能覆盖定向验证之外的风险 | [requesting-code-review](../requesting-code-review/SKILL.md)；意见通过 [receiving-code-review](../receiving-code-review/SKILL.md) 核验 |
 | 即将声明完成或交付 | [verification-before-completion](../verification-before-completion/SKILL.md) 与 [finishing-a-development-branch](../finishing-a-development-branch/SKILL.md) |
 

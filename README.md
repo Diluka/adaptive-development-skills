@@ -6,7 +6,7 @@
 
 开发任务以及准备正式纳入版本控制的文档、配置等项目变更，默认根据实际 `git remote` 和目标仓库约定完成分支、提交、推送与 GitLab MR 或 GitHub PR。用户可以明确收窄为本地修改、只提供差异、不提交、不推送或不创建 MR/PR；默认交付不包含合并、发布、部署、正式环境写入、权限修改或其他高影响外部操作。调查、解释和评审等非开发任务不自动产生 Git 交付。
 
-常规与复杂开发任务默认按“计划 → 实现 → 测试 → 评审 → 返工”的组合流程推进：这是对既有方法的编排组合，不是新的主要开发方式。除实现外各步骤可按任务级别省略；各步骤可由子代理推进以隔离会话步骤，评审只能由独立子代理进行或省略。完整定义与简化规则见 `adaptive-development-workflow`。
+常规与复杂开发任务默认按“计划 → 实现 → 测试 → 评审 → 返工”的组合流程推进：这是对既有方法的编排组合，不是新的主要开发方式。除实现外各步骤可按任务级别省略；当前任务内子代理只承担短小局部协作，粗粒度、持续写入的并行开发单元各自使用负责会话与独立工作树。新建这类开发会话通常同时分配工作树，但创建、进入或复用工作树不要求新会话。完整定义与简化规则见 `adaptive-development-workflow`。
 
 ## 安装
 
@@ -64,10 +64,9 @@ Codex 当前不能把 `PreCompact` 的普通输出送给模型，所以 Hook 不
 | `executing-plans` | 执行并同步已有计划，衔接适用验证、评审与必要复审 |
 | `requesting-code-review` | 在独立视角能补充风险证据时准备和执行评审 |
 | `receiving-code-review` | 先核验审查意见，再决定是否以及如何修改 |
-| `subagent-driven-development` | 在同一 Codex 任务内为上下文收益或独立证据委派工作单元 |
-| `dispatching-parallel-agents` | 判断工作单元能否安全并行以及并行是否有实际收益 |
-| `orchestrating-multi-session-work` | 按明确授权编排可恢复、隔离的独立 Codex 工作任务 |
-| `using-git-worktrees` | 为项目改动分支提供本地工作树隔离，并处理只读访问等例外 |
+| `subagent-driven-development` | 在同一 Codex 任务内委派短小、局部且无持久开发所有权的工作 |
+| `dispatching-parallel-agents` | 判断局部协作或粗粒度工作树单元能否安全并行且确有收益 |
+| `using-git-worktrees` | 隔离分支与并行写入，并统一指导 Codex 工作树复用、Handoff、Fork、Create、协调和手工 Git CLI |
 | `finishing-a-development-branch` | 核对分支就绪状态，按实际 `git remote` 和仓库约定完成默认 Git 交付，并分开处理合并或清理 |
 | `verification-before-completion` | 为当前完成声明匹配最新且直接的验证、CI、观测或评审证据 |
 | `choosing-tests` | 根据任务形状与优先级选择端到端、单元、属性或契约测试等方式 |
