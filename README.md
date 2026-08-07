@@ -68,7 +68,7 @@ Codex 当前不能把 `PreCompact` 的普通输出送给模型，所以 Hook 不
 | `dispatching-parallel-agents` | 判断工作单元能否安全并行以及并行是否有实际收益 |
 | `orchestrating-multi-session-work` | 按明确授权编排可恢复、隔离的独立 Codex 工作任务 |
 | `using-git-worktrees` | 为项目改动分支提供本地工作树隔离，并处理只读访问等例外 |
-| `finishing-a-development-branch` | 核对分支就绪状态，按实际 remote 和仓库约定完成默认 Git 交付，并分开处理合并或清理 |
+| `finishing-a-development-branch` | 核对分支就绪状态，按实际 `git remote` 和仓库约定完成默认 Git 交付，并分开处理合并或清理 |
 | `verification-before-completion` | 为当前完成声明匹配最新且直接的验证、CI、观测或评审证据 |
 | `choosing-tests` | 根据任务形状与优先级选择端到端、单元、属性或契约测试等方式 |
 | `evidence-management` | 判断证据充分性、复用既有证据并收敛长期证据组合 |
