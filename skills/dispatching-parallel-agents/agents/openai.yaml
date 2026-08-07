@@ -1,4 +1,4 @@
 interface:
   display_name: "Dispatching Parallel Agents"
-  short_description: "判断在子代理或独立工作任务间并行是否安全且真正有益"
-  default_prompt: "使用 $dispatching-parallel-agents 判断并行吞吐或独立对照是否确有收益，并选择当前任务内子代理或独立 Codex 工作任务；只派发可安全隔离的单元。"
+  short_description: "判断局部子代理或粗粒度工作树单元并行是否安全且有收益"
+  default_prompt: "使用 $dispatching-parallel-agents 判断并行是否确有收益，并在短小局部子代理与粗粒度独立工作树单元之间选择安全执行层。"

@@ -29,7 +29,7 @@ description: Use when 已有开发任务计划文档需要执行或同步进展�
 
 用户明确收窄或排除某个工作单元时，立即停止该路径并从交付差异中移除本任务为它产生的改动；已经投入的时间、已有实现或通过的测试都不是保留理由。只移除自己为本任务产生的内容，保留用户和其他工作的改动。
 
-协调者或单代理写回状态、关键证据、偏差和剩余风险，其他执行者只回报变化，由协调者核验并维护统一计划。当前 Codex 任务内的委派使用 [subagent-driven-development](../subagent-driven-development/SKILL.md)；只有用户明确授权跨会话执行，且粗粒度单元需要独立上下文、工作区或恢复生命周期时，才使用 [orchestrating-multi-session-work](../orchestrating-multi-session-work/SKILL.md)。两种方式都不让多个执行者并发编辑计划。
+协调者或单代理写回状态、关键证据、偏差和剩余风险，其他执行者只回报变化，由协调者核验并维护统一计划。当前 Codex 任务内的短小局部委派使用 [subagent-driven-development](../subagent-driven-development/SKILL.md)；粗粒度单元需要持续写入、独立上下文、工作树或恢复生命周期时，使用 [using-git-worktrees](../using-git-worktrees/SKILL.md) 建立或复用独立工作树，并另行分配负责执行上下文。两种方式都不让多个执行者并发编辑计划。
 
 ## 边界
 
