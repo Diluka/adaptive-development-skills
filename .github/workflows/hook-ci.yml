@@ -54,6 +54,10 @@ jobs:
 
           workspace=$(pwd -P)
           expected_head=$(git rev-parse --verify HEAD)
+          task_handoff_uid=$(id -u)
+          real_chmod=$(command -v chmod)
+          real_id=$(command -v id)
+          real_ls=$(command -v ls)
           real_node=$(command -v node)
           real_mkdir=$(command -v mkdir)
 
@@ -100,35 +104,95 @@ jobs:
             grep -Fqx "cwd: $("$real_node" -e 'process.stdout.write(JSON.stringify(process.argv[1]))' "$workspace")" "$state_file"
             grep -Fqx "git_head: \"$expected_head\"" "$state_file"
             grep -Fqx "status: complete" "$state_file"
+            test "$(stat -c %a "$data_root")" = 700
             test "$(stat -c %a "$state_file")" = 600
+          }
+
+          assert_rejected_data_root() {
+            local temp_root=$1
+            local input=$2
+            local output=$3
+            local error=$4
+            PATH="$priority_bin:$PATH" TMPDIR="$temp_root" \
+              hooks/run-task-handoff.sh < "$input" > "$output" 2> "$error"
+            test ! -s "$output"
+            grep -Fqx 'task-handoff hook skipped: TASK_HANDOFF_DATA is not a private directory owned by the current user.' "$error"
           }
 
           priority_bin="$RUNNER_TEMP/deno-priority-bin"
           deno_temp="$RUNNER_TEMP/task-handoff-deno-temp"
-          deno_data="$deno_temp/adaptive-development-skills-task-handoff"
+          deno_data="$deno_temp/adaptive-development-skills-task-handoff-$task_handoff_uid"
           deno_input="$RUNNER_TEMP/task-handoff-deno.json"
           deno_output="$RUNNER_TEMP/task-handoff-deno-output.json"
           mkdir -p "$priority_bin"
+          mkdir -m 700 "$deno_temp"
           printf '#!/bin/sh\nexit 97\n' > "$priority_bin/node"
           chmod +x "$priority_bin/node"
           write_input "$deno_input" "ci-deno-session"
-          test ! -e "$deno_temp"
+          test ! -e "$deno_data"
           PATH="$priority_bin:$PATH" TMPDIR="$deno_temp" \
             hooks/run-task-handoff.sh < "$deno_input" > "$deno_output"
           assert_checkpoint "$deno_data" "ci-deno-session" "$deno_output"
 
+          symlink_temp="$RUNNER_TEMP/task-handoff-symlink-temp"
+          symlink_target="$RUNNER_TEMP/task-handoff-symlink-target"
+          symlink_data="$symlink_temp/adaptive-development-skills-task-handoff-$task_handoff_uid"
+          symlink_output="$RUNNER_TEMP/task-handoff-symlink-output.json"
+          symlink_error="$RUNNER_TEMP/task-handoff-symlink-error.log"
+          mkdir -m 700 "$symlink_temp"
+          mkdir -m 755 "$symlink_target"
+          ln -s "$symlink_target" "$symlink_data"
+          assert_rejected_data_root "$symlink_temp" "$deno_input" "$symlink_output" "$symlink_error"
+          test -L "$symlink_data"
+          test "$(stat -c %a "$symlink_target")" = 755
+          test "$(find "$symlink_target" -type f | wc -l)" -eq 0
+
+          file_temp="$RUNNER_TEMP/task-handoff-file-temp"
+          file_data="$file_temp/adaptive-development-skills-task-handoff-$task_handoff_uid"
+          file_output="$RUNNER_TEMP/task-handoff-file-output.json"
+          file_error="$RUNNER_TEMP/task-handoff-file-error.log"
+          mkdir -m 700 "$file_temp"
+          : > "$file_data"
+          assert_rejected_data_root "$file_temp" "$deno_input" "$file_output" "$file_error"
+          test -f "$file_data"
+          test ! -s "$file_data"
+
+          foreign_temp="$RUNNER_TEMP/task-handoff-foreign-temp"
+          foreign_data="$foreign_temp/adaptive-development-skills-task-handoff-$task_handoff_uid"
+          foreign_output="$RUNNER_TEMP/task-handoff-foreign-output.json"
+          foreign_error="$RUNNER_TEMP/task-handoff-foreign-error.log"
+          mkdir -m 700 "$foreign_temp"
+          sudo mkdir -m 700 "$foreign_data"
+          test "$(stat -c %u "$foreign_data")" != "$task_handoff_uid"
+          assert_rejected_data_root "$foreign_temp" "$deno_input" "$foreign_output" "$foreign_error"
+          test "$(stat -c %u "$foreign_data")" != "$task_handoff_uid"
+          test "$(stat -c %a "$foreign_data")" = 700
+
+          wide_temp="$RUNNER_TEMP/task-handoff-wide-temp"
+          wide_data="$wide_temp/adaptive-development-skills-task-handoff-$task_handoff_uid"
+          wide_output="$RUNNER_TEMP/task-handoff-wide-output.json"
+          mkdir -m 700 "$wide_temp"
+          mkdir -m 755 "$wide_data"
+          PATH="$priority_bin:$PATH" TMPDIR="$wide_temp" \
+            hooks/run-task-handoff.sh < "$deno_input" > "$wide_output"
+          assert_checkpoint "$wide_data" "ci-deno-session" "$wide_output"
+
           node_bin="$RUNNER_TEMP/node-fallback-bin"
           node_temp="$RUNNER_TEMP/task-handoff-node-temp"
-          node_data="$node_temp/adaptive-development-skills-task-handoff"
+          node_data="$node_temp/adaptive-development-skills-task-handoff-$task_handoff_uid"
           node_input="$RUNNER_TEMP/task-handoff-node.json"
           node_output="$RUNNER_TEMP/task-handoff-node-output.json"
           mkdir -p "$node_bin"
+          mkdir -m 700 "$node_temp"
           ln -s "$real_node" "$node_bin/node"
           ln -s "$(command -v git)" "$node_bin/git"
           ln -s "$(command -v dirname)" "$node_bin/dirname"
+          ln -s "$real_chmod" "$node_bin/chmod"
+          ln -s "$real_id" "$node_bin/id"
+          ln -s "$real_ls" "$node_bin/ls"
           ln -s "$real_mkdir" "$node_bin/mkdir"
           write_input "$node_input" "ci-node-session"
-          test ! -e "$node_temp"
+          test ! -e "$node_data"
           PATH="$node_bin" TMPDIR="$node_temp" \
             hooks/run-task-handoff.sh < "$node_input" > "$node_output"
           assert_checkpoint "$node_data" "ci-node-session" "$node_output"
@@ -173,17 +237,22 @@ jobs:
           test "$(node -p 'process.execPath')" = "$mise_node"
 
           workspace=$(pwd -P)
+          task_handoff_uid=$(id -u)
           probe_bin="$RUNNER_TEMP/mise-node-probe-bin"
           temp_root="$RUNNER_TEMP/mise-node-temp"
-          task_handoff_data="$temp_root/adaptive-development-skills-task-handoff"
+          task_handoff_data="$temp_root/adaptive-development-skills-task-handoff-$task_handoff_uid"
           input="$RUNNER_TEMP/mise-node-input.json"
           output="$RUNNER_TEMP/mise-node-output.json"
           session="ci-mise-node-session"
           probe_head="1111111111111111111111111111111111111111"
 
           mkdir -p "$probe_bin"
+          mkdir -m 700 "$temp_root"
           ln -s "$mise_node" "$probe_bin/node"
           ln -s "$(command -v dirname)" "$probe_bin/dirname"
+          ln -s "$(command -v chmod)" "$probe_bin/chmod"
+          ln -s "$(command -v id)" "$probe_bin/id"
+          ln -s "$(command -v ls)" "$probe_bin/ls"
           ln -s "$(command -v mkdir)" "$probe_bin/mkdir"
           printf '%s\n' \
             '#!/bin/sh' \
@@ -206,7 +275,7 @@ jobs:
             }));
           ' "$input" "$session" "$workspace"
 
-          test ! -e "$temp_root"
+          test ! -e "$task_handoff_data"
           test "$(PATH="$probe_bin" command -v node)" = "$probe_bin/node"
           test "$(PATH="$probe_bin" command -v git)" = "$probe_bin/git"
           if PATH="$probe_bin" command -v deno >/dev/null 2>&1; then
