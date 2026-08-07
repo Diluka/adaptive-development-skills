@@ -70,11 +70,11 @@ export async function hashSessionId(sessionId: string): Promise<string> {
 }
 
 export async function statePath(
-  pluginData: string,
+  taskHandoffData: string,
   sessionId: string,
 ): Promise<string> {
   const dataRoot = resolve(
-    requireString(pluginData, "PLUGIN_DATA is required"),
+    requireString(taskHandoffData, "TASK_HANDOFF_DATA is required"),
   );
   return join(dataRoot, "handoffs", await hashSessionId(sessionId), "state.md");
 }
@@ -351,13 +351,13 @@ function eventLabel(event: SaveCommandInput): string {
 
 async function saveCheckpoint(
   event: SaveCommandInput,
-  pluginData: string,
+  taskHandoffData: string,
   now: string,
   snapshot: GitSnapshot,
 ): Promise<Checkpoint> {
   const sessionId = requireString(event.session_id, "missing session_id");
   const cwd = canonicalCwd(requireString(event.cwd, "missing cwd"));
-  const path = await statePath(pluginData, sessionId);
+  const path = await statePath(taskHandoffData, sessionId);
   await ensureStateDirectory(path);
   let previous: Checkpoint | null = null;
   try {
@@ -484,7 +484,7 @@ function assertNever(value: never): never {
 
 export async function processEvent(
   event: TaskHandoffCommandInput,
-  pluginData: string,
+  taskHandoffData: string,
   options: {
     now?: string;
     snapshot?: GitSnapshot;
@@ -501,7 +501,7 @@ export async function processEvent(
   }
   const sessionId = requireString(event.session_id, "missing session_id");
   const currentCwd = canonicalCwd(requireString(event.cwd, "missing cwd"));
-  const path = await statePath(pluginData, sessionId);
+  const path = await statePath(taskHandoffData, sessionId);
 
   switch (event.hook_event_name) {
     case "SessionStart": {
@@ -533,7 +533,7 @@ export async function processEvent(
         await collectGitSnapshot(currentCwd);
       await saveCheckpoint(
         event,
-        pluginData,
+        taskHandoffData,
         options.now ?? utcNow(),
         currentSnapshot,
       );
@@ -546,7 +546,7 @@ export async function processEvent(
         await collectGitSnapshot(currentCwd);
       await saveCheckpoint(
         event,
-        pluginData,
+        taskHandoffData,
         options.now ?? utcNow(),
         currentSnapshot,
       );
@@ -557,7 +557,7 @@ export async function processEvent(
         await collectGitSnapshot(currentCwd);
       await saveCheckpoint(
         event,
-        pluginData,
+        taskHandoffData,
         options.now ?? utcNow(),
         currentSnapshot,
       );
@@ -570,13 +570,13 @@ export async function processEvent(
 
 async function main(): Promise<number> {
   try {
-    const pluginData = process.env.PLUGIN_DATA;
-    if (!pluginData) {
+    const taskHandoffData = process.env.TASK_HANDOFF_DATA;
+    if (!taskHandoffData) {
       return 0;
     }
     const rawInput = readFileSync(0, "utf8");
     const event = parseTaskHandoffCommandInput(JSON.parse(rawInput));
-    const output = await processEvent(event, pluginData);
+    const output = await processEvent(event, taskHandoffData);
     if (output !== null) {
       process.stdout.write(`${JSON.stringify(output)}\n`);
     }
