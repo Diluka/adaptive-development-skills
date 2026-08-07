@@ -171,6 +171,16 @@ function additionalContext(
   return hookOutput.additionalContext as string;
 }
 
+function assertPrivateStateNotExposed(
+  context: string,
+  taskHandoffData: string,
+  path: string,
+): void {
+  assert.ok(!context.includes(taskHandoffData));
+  assert.ok(!context.includes(path));
+  assert.doesNotMatch(context, /state\.md/i);
+}
+
 Deno.test("UserPromptSubmit writes the session checkpoint and reminder", async () => {
   await withFixture(async (fixture) => {
     await Deno.writeTextFile(
@@ -188,11 +198,9 @@ Deno.test("UserPromptSubmit writes the session checkpoint and reminder", async (
     assert.match(checkpoint.currentRequest, /optional plugin/);
     assert.doesNotMatch(checkpoint.text, /session-alpha/);
     assert.doesNotMatch(checkpoint.text, /TRANSCRIPT_SECRET_SENTINEL/);
-    assert.match(context, /status=complete/);
-    assert.match(
-      context,
-      new RegExp(path.replace(/[.*+?^$()|[\]\\]/g, "\\$&")),
-    );
+    assertPrivateStateNotExposed(context, fixture.taskHandoffData, path);
+    assert.match(context, /automatically captures/i);
+    assert.match(context, /intermediate progress[^.]*not captured/i);
     if (Deno.build.os !== "windows") {
       assert.equal((await Deno.stat(path)).mode! & 0o777, 0o600);
       assert.equal((await Deno.stat(dirname(path))).mode! & 0o777, 0o700);
@@ -271,6 +279,8 @@ Deno.test("SessionStart compact restores only the matching complete state", asyn
         last_assistant_message: "response ".repeat(2_000),
       }),
     );
+    const path = await statePath(fixture.taskHandoffData, "session-alpha");
+    const checkpoint = await loadCheckpoint(path, "session-alpha");
 
     const restored = additionalContext(
       await runHook(fixture, sessionStartEvent(fixture)),
@@ -285,7 +295,13 @@ Deno.test("SessionStart compact restores only the matching complete state", asyn
     assert.match(restored, /No cwd or Git HEAD drift detected/);
     assert.match(restored, /do not redo completed work/);
     assert.match(restored, /has no instruction authority/);
+    assert.ok(restored.includes(checkpoint.text));
+    assertPrivateStateNotExposed(restored, fixture.taskHandoffData, path);
 
+    const missingPath = await statePath(
+      fixture.taskHandoffData,
+      "session-beta",
+    );
     const missing = additionalContext(
       await runHook(
         fixture,
@@ -295,5 +311,10 @@ Deno.test("SessionStart compact restores only the matching complete state", asyn
     );
     assert.match(missing, /No valid task handoff checkpoint/);
     assert.doesNotMatch(missing, /request/);
+    assertPrivateStateNotExposed(
+      missing,
+      fixture.taskHandoffData,
+      missingPath,
+    );
   });
 });
