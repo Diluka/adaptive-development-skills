@@ -66,7 +66,7 @@ Codex 当前不能把 `PreCompact` 的普通输出送给模型，所以 Hook 不
 | `receiving-code-review` | 先核验审查意见，再决定是否以及如何修改 |
 | `subagent-driven-development` | 在同一 Codex 任务内委派短小、局部且无持久开发所有权的工作 |
 | `dispatching-parallel-agents` | 判断局部协作或粗粒度工作树单元能否安全并行且确有收益 |
-| `using-git-worktrees` | 隔离分支与并行写入，并统一指导 Codex 工作树复用、Handoff、Fork、Create、协调和手工 Git CLI |
+| `using-git-worktrees` | 隔离分支与并行写入，维护工作树所有权、共享资源和串行集成边界 |
 | `finishing-a-development-branch` | 核对分支就绪状态，按实际 `git remote` 和仓库约定完成默认 Git 交付，并分开处理合并或清理 |
 | `verification-before-completion` | 为当前完成声明匹配最新且直接的验证、CI、观测或评审证据 |
 | `choosing-tests` | 根据任务形状与优先级选择端到端、单元、属性或契约测试等方式 |

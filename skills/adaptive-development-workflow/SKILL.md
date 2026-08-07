@@ -118,7 +118,7 @@ SDD 或 BDD 产生的具体实现目标应继续拆成实现与证据单元并�
 - 实现一个明确的业务需求（如新增接口并按契约返回结果）：通常为常规任务。先落盘简短计划（目标、范围、验证方式），按计划实现并补覆盖受影响路径的定向行为测试；评审只在定向验证覆盖不到的独立风险出现时才派发。
 - 修改公共 API、迁移数据库等跨模块或破坏性变更：属于复杂或高风险任务，完整保留计划 → 实现 → 测试 → 评审 → 返工闭环。
 
-**推进与隔离**：当前 Codex 任务内的短小、只读、无持久写入所有权或无需长期独立生命周期的局部步骤，可以通过 [subagent-driven-development](../subagent-driven-development/SKILL.md) 委派。粗粒度、持续写入的并行开发单元使用 [using-git-worktrees](../using-git-worktrees/SKILL.md) 建立独立工作树和负责会话；新建这类开发会话通常同时分配工作树，但当前会话也可以通过 Handoff、复用或 Git CLI 继续负责既有工作树。独立评审的执行层由评审范围决定，不由根代理兼任。
+**推进与隔离**：当前 Codex 任务内的短小、只读、无持久写入所有权或无需长期独立生命周期的局部步骤，可以通过 [subagent-driven-development](../subagent-driven-development/SKILL.md) 委派。粗粒度、持续写入的并行开发单元通过 [using-git-worktrees](../using-git-worktrees/SKILL.md) 建立或复用独立工作树，并另行分配负责执行上下文；执行上下文的创建方式不属于工作树技能，仍由当前环境能力和用户授权决定。新建这类开发会话通常同时分配工作树，但当前会话也可以继续负责已经关联的工作树。独立评审的执行层由评审范围决定，不由根代理兼任。
 
 ## 叠加集成与交付方法
 
@@ -139,7 +139,7 @@ SDD 或 BDD 产生的具体实现目标应继续拆成实现与证据单元并�
 | 需要选择测试方式（端到端、单元、属性、契约等） | [choosing-tests](../choosing-tests/SKILL.md) |
 | 需要判断证据充分性、复用或收敛长期证据 | [evidence-management](../evidence-management/SKILL.md) |
 | 方法产物需要长期保存为正式项目文档 | [project-documentation](../project-documentation/SKILL.md) |
-| 分支、版本、多个工作树或 Codex 工作树任务需要隔离与协调 | [using-git-worktrees](../using-git-worktrees/SKILL.md) |
+| 分支、版本或多个工作树需要隔离与协调 | [using-git-worktrees](../using-git-worktrees/SKILL.md) |
 | 当前任务内局部委派或多个单元需要判断并行收益 | [subagent-driven-development](../subagent-driven-development/SKILL.md) 与 [dispatching-parallel-agents](../dispatching-parallel-agents/SKILL.md) |
 | 独立评审能覆盖定向验证之外的风险 | [requesting-code-review](../requesting-code-review/SKILL.md)；意见通过 [receiving-code-review](../receiving-code-review/SKILL.md) 核验 |
 | 即将声明完成或交付 | [verification-before-completion](../verification-before-completion/SKILL.md) 与 [finishing-a-development-branch](../finishing-a-development-branch/SKILL.md) |

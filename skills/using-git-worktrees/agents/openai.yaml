@@ -1,4 +1,4 @@
 interface:
   display_name: "Using Git Worktrees"
-  short_description: "隔离开发工作树，并指导 Codex 复用、转移、新建与协调任务"
-  default_prompt: "使用 $using-git-worktrees 分开判断会话与工作树，为并行写入建立所有权，并在 Codex 中选择复用、Handoff、Fork、Create 或手工 Git CLI。"
+  short_description: "隔离开发分支与并行写入，并协调工作树所有权和共享资源"
+  default_prompt: "使用 $using-git-worktrees 为开发分支或并行写入建立独立工作树，划分所有权与共享资源，并保留串行集成边界。"
