@@ -495,15 +495,15 @@ export async function processEvent(
     // Subagents share the root session id, so they must not overwrite it.
     return null;
   }
-  const sessionId = requireString(event.session_id, "missing session_id");
   const currentCwd = canonicalCwd(requireString(event.cwd, "missing cwd"));
-  const path = await statePath(taskHandoffData, sessionId);
 
   switch (event.hook_event_name) {
     case "SessionStart": {
       if (event.source !== "compact") {
         return null;
       }
+      const sessionId = requireString(event.session_id, "missing session_id");
+      const path = await statePath(taskHandoffData, sessionId);
       let checkpoint: Checkpoint;
       try {
         checkpoint = await loadCheckpoint(path, sessionId);
