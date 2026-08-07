@@ -5,6 +5,8 @@ hooks_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd) || {
   exit 0
 }
 script="$hooks_dir/task-handoff.ts"
+TASK_HANDOFF_DATA="${TMPDIR:-/tmp}/adaptive-development-skills-task-handoff"
+export TASK_HANDOFF_DATA
 
 if deno_path=$(command -v deno 2>/dev/null); then
   exec "$deno_path" run \
@@ -14,9 +16,9 @@ if deno_path=$(command -v deno 2>/dev/null); then
     --no-lock \
     --no-npm \
     --no-remote \
-    --allow-env=PLUGIN_DATA,NODE_V8_COVERAGE \
-    --allow-read="${PLUGIN_DATA}" \
-    --allow-write="${PLUGIN_DATA}" \
+    --allow-env=TASK_HANDOFF_DATA,NODE_V8_COVERAGE \
+    --allow-read="$TASK_HANDOFF_DATA" \
+    --allow-write="$TASK_HANDOFF_DATA" \
     --allow-run=git \
     "$script"
   exit $?
@@ -24,16 +26,16 @@ fi
 
 if node_path=$(command -v node 2>/dev/null); then
   # Node fixes permission roots at startup, so the allowed data root must exist.
-  if [ -n "${PLUGIN_DATA:-}" ] && ! mkdir -p -- "$PLUGIN_DATA"; then
-    printf '%s\n' 'task-handoff hook skipped: cannot create PLUGIN_DATA.' >&2
+  if ! mkdir -p -- "$TASK_HANDOFF_DATA"; then
+    printf '%s\n' 'task-handoff hook skipped: cannot create TASK_HANDOFF_DATA.' >&2
     exit 0
   fi
   exec "$node_path" \
     --experimental-strip-types \
     --permission \
     --allow-fs-read="$hooks_dir" \
-    --allow-fs-read="${PLUGIN_DATA}" \
-    --allow-fs-write="${PLUGIN_DATA}" \
+    --allow-fs-read="$TASK_HANDOFF_DATA" \
+    --allow-fs-write="$TASK_HANDOFF_DATA" \
     --allow-child-process \
     "$script"
   exit $?

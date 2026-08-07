@@ -19,7 +19,7 @@ const SCRIPT = fileURLToPath(new URL("../task-handoff.ts", import.meta.url));
 
 interface Fixture {
   tempDir: string;
-  pluginData: string;
+  taskHandoffData: string;
   cwd: string;
   transcriptPath: string;
 }
@@ -30,7 +30,11 @@ async function withFixture(
   const tempDir = await Deno.makeTempDir({ prefix: "task-handoff-test-" });
   const fixture: Fixture = {
     tempDir,
-    pluginData: join(tempDir, "plugin-data"),
+    taskHandoffData: join(
+      tempDir,
+      "system-temp",
+      "adaptive-development-skills-task-handoff",
+    ),
     cwd: join(tempDir, "workspace"),
     transcriptPath: join(tempDir, "private.jsonl"),
   };
@@ -119,14 +123,14 @@ async function runHook(
       "--no-lock",
       "--no-npm",
       "--no-remote",
-      "--allow-env=PLUGIN_DATA",
-      `--allow-read=${fixture.pluginData}`,
-      `--allow-write=${fixture.pluginData}`,
+      "--allow-env=TASK_HANDOFF_DATA",
+      `--allow-read=${fixture.taskHandoffData}`,
+      `--allow-write=${fixture.taskHandoffData}`,
       "--allow-run=git",
       SCRIPT,
     ],
     cwd: fixture.cwd,
-    env: { PLUGIN_DATA: fixture.pluginData },
+    env: { TASK_HANDOFF_DATA: fixture.taskHandoffData },
     stdin: "piped",
     stdout: "piped",
     stderr: "piped",
@@ -175,7 +179,7 @@ Deno.test("UserPromptSubmit writes the session checkpoint and reminder", async (
     );
     const result = await runHook(fixture, userPromptEvent(fixture));
     const context = additionalContext(result, "UserPromptSubmit");
-    const path = await statePath(fixture.pluginData, "session-alpha");
+    const path = await statePath(fixture.taskHandoffData, "session-alpha");
     const checkpoint = await loadCheckpoint(path, "session-alpha");
 
     assert.equal(checkpoint.generation, 1);
@@ -209,7 +213,7 @@ Deno.test("Stop preserves the request and records the completed response", async
       }),
     );
     const checkpoint = await loadCheckpoint(
-      await statePath(fixture.pluginData, "session-alpha"),
+      await statePath(fixture.taskHandoffData, "session-alpha"),
       "session-alpha",
     );
 
@@ -231,7 +235,7 @@ Deno.test("PreCompact refreshes root state without subagent overwrite", async ()
       fixture,
       preCompactEvent(fixture, { trigger: "auto" }),
     );
-    const path = await statePath(fixture.pluginData, "session-alpha");
+    const path = await statePath(fixture.taskHandoffData, "session-alpha");
     const checkpoint = await loadCheckpoint(path, "session-alpha");
     const original = await Deno.readTextFile(path);
 

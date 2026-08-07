@@ -77,7 +77,7 @@ jobs:
           }
 
           assert_checkpoint() {
-            local plugin_data=$1
+            local data_root=$1
             local session=$2
             local output=$3
             local expected_hash
@@ -85,7 +85,7 @@ jobs:
               const { createHash } = require("node:crypto");
               process.stdout.write(createHash("sha256").update(process.argv[1]).digest("hex"));
             ' "$session")
-            local state_file="$plugin_data/handoffs/$expected_hash/state.md"
+            local state_file="$data_root/handoffs/$expected_hash/state.md"
 
             "$real_node" -e '
               const fs = require("node:fs");
@@ -94,7 +94,7 @@ jobs:
                 throw new Error("unexpected hook output");
               }
             ' "$output"
-            test "$(find "$plugin_data" -type f -name state.md | wc -l)" -eq 1
+            test "$(find "$data_root" -type f -name state.md | wc -l)" -eq 1
             test -f "$state_file"
             grep -Fqx "session_hash: $expected_hash" "$state_file"
             grep -Fqx "cwd: $("$real_node" -e 'process.stdout.write(JSON.stringify(process.argv[1]))' "$workspace")" "$state_file"
@@ -104,19 +104,22 @@ jobs:
           }
 
           priority_bin="$RUNNER_TEMP/deno-priority-bin"
-          deno_data="$RUNNER_TEMP/task-handoff-deno"
+          deno_temp="$RUNNER_TEMP/task-handoff-deno-temp"
+          deno_data="$deno_temp/adaptive-development-skills-task-handoff"
           deno_input="$RUNNER_TEMP/task-handoff-deno.json"
           deno_output="$RUNNER_TEMP/task-handoff-deno-output.json"
-          mkdir -p "$priority_bin" "$deno_data"
+          mkdir -p "$priority_bin"
           printf '#!/bin/sh\nexit 97\n' > "$priority_bin/node"
           chmod +x "$priority_bin/node"
           write_input "$deno_input" "ci-deno-session"
-          PATH="$priority_bin:$PATH" PLUGIN_DATA="$deno_data" \
+          test ! -e "$deno_temp"
+          PATH="$priority_bin:$PATH" TMPDIR="$deno_temp" \
             hooks/run-task-handoff.sh < "$deno_input" > "$deno_output"
           assert_checkpoint "$deno_data" "ci-deno-session" "$deno_output"
 
           node_bin="$RUNNER_TEMP/node-fallback-bin"
-          node_data="$RUNNER_TEMP/task-handoff-node"
+          node_temp="$RUNNER_TEMP/task-handoff-node-temp"
+          node_data="$node_temp/adaptive-development-skills-task-handoff"
           node_input="$RUNNER_TEMP/task-handoff-node.json"
           node_output="$RUNNER_TEMP/task-handoff-node-output.json"
           mkdir -p "$node_bin"
@@ -125,8 +128,8 @@ jobs:
           ln -s "$(command -v dirname)" "$node_bin/dirname"
           ln -s "$real_mkdir" "$node_bin/mkdir"
           write_input "$node_input" "ci-node-session"
-          test ! -e "$node_data"
-          PATH="$node_bin" PLUGIN_DATA="$node_data" \
+          test ! -e "$node_temp"
+          PATH="$node_bin" TMPDIR="$node_temp" \
             hooks/run-task-handoff.sh < "$node_input" > "$node_output"
           assert_checkpoint "$node_data" "ci-node-session" "$node_output"
 
@@ -171,7 +174,8 @@ jobs:
 
           workspace=$(pwd -P)
           probe_bin="$RUNNER_TEMP/mise-node-probe-bin"
-          plugin_data="$RUNNER_TEMP/mise-node-plugin-data"
+          temp_root="$RUNNER_TEMP/mise-node-temp"
+          task_handoff_data="$temp_root/adaptive-development-skills-task-handoff"
           input="$RUNNER_TEMP/mise-node-input.json"
           output="$RUNNER_TEMP/mise-node-output.json"
           session="ci-mise-node-session"
@@ -202,7 +206,7 @@ jobs:
             }));
           ' "$input" "$session" "$workspace"
 
-          test ! -e "$plugin_data"
+          test ! -e "$temp_root"
           test "$(PATH="$probe_bin" command -v node)" = "$probe_bin/node"
           test "$(PATH="$probe_bin" command -v git)" = "$probe_bin/git"
           if PATH="$probe_bin" command -v deno >/dev/null 2>&1; then
@@ -210,14 +214,14 @@ jobs:
             exit 1
           fi
 
-          PATH="$probe_bin" PLUGIN_DATA="$plugin_data" \
+          PATH="$probe_bin" TMPDIR="$temp_root" \
             hooks/run-task-handoff.sh < "$input" > "$output"
 
           session_hash=$("$mise_node" -e '
             const { createHash } = require("node:crypto");
             process.stdout.write(createHash("sha256").update(process.argv[1]).digest("hex"));
           ' "$session")
-          state_file="$plugin_data/handoffs/$session_hash/state.md"
+          state_file="$task_handoff_data/handoffs/$session_hash/state.md"
           test -f "$state_file"
 
           "$mise_node" -e '
@@ -297,7 +301,7 @@ jobs:
         shell: pwsh
         env:
           PLUGIN_ROOT: ${{ steps.windows-paths.outputs.plugin_root }}
-          PLUGIN_DATA: ${{ runner.temp }}\task-handoff-windows-deno
+          TEMP: ${{ runner.temp }}\task-handoff-windows-deno-temp
         run: |
           $ErrorActionPreference = "Stop"
           if (-not (Get-Command deno -CommandType Application)) {
@@ -357,9 +361,10 @@ jobs:
         shell: cmd
         env:
           PLUGIN_ROOT: ${{ steps.windows-paths.outputs.plugin_root }}
-          PLUGIN_DATA: ${{ runner.temp }}\task-handoff-windows-node
+          TMP: ${{ runner.temp }}\task-handoff-windows-node-temp
         run: |
           set "PATH=${{ steps.windows-paths.outputs.node_dir }};${{ steps.windows-paths.outputs.git_dir }};${{ steps.windows-paths.outputs.system32 }};${{ steps.windows-paths.outputs.windows_dir }}"
+          set "TEMP="
           where deno >nul 2>nul
           if not errorlevel 1 exit /b 91
           where node
@@ -368,7 +373,8 @@ jobs:
           if errorlevel 1 exit /b %errorlevel%
 
           move /y "%PLUGIN_ROOT%\hooks\task-handoff.ts" "%RUNNER_TEMP%\task-handoff.ts.saved" >nul
-          node --experimental-strip-types --permission --allow-fs-read="%PLUGIN_ROOT%\hooks\." --allow-fs-read="%PLUGIN_DATA%" --allow-fs-write="%PLUGIN_DATA%" --allow-child-process "%PLUGIN_ROOT%\hooks\task-handoff.ts" < "%RUNNER_TEMP%\task-handoff-windows-node.json" >nul 2>nul
+          set "TASK_HANDOFF_DATA=%TMP%\adaptive-development-skills-task-handoff"
+          node --experimental-strip-types --permission --allow-fs-read="%PLUGIN_ROOT%\hooks\." --allow-fs-read="%TASK_HANDOFF_DATA%" --allow-fs-write="%TASK_HANDOFF_DATA%" --allow-child-process "%PLUGIN_ROOT%\hooks\task-handoff.ts" < "%RUNNER_TEMP%\task-handoff-windows-node.json" >nul 2>nul
           set "DIRECT_EXIT=%ERRORLEVEL%"
           cmd.exe /d /s /c call "%PLUGIN_ROOT%\hooks\run-task-handoff.cmd" < "%RUNNER_TEMP%\task-handoff-windows-node.json" >nul 2>nul
           set "WRAPPER_EXIT=%ERRORLEVEL%"
@@ -384,12 +390,12 @@ jobs:
           $cases = @(
             @{
               Session = "ci-windows-deno-session"
-              Data = Join-Path $env:RUNNER_TEMP "task-handoff-windows-deno"
+              TempRoot = Join-Path $env:RUNNER_TEMP "task-handoff-windows-deno-temp"
               Output = Join-Path $env:RUNNER_TEMP "task-handoff-windows-deno-output.json"
             },
             @{
               Session = "ci-windows-node-session"
-              Data = Join-Path $env:RUNNER_TEMP "task-handoff-windows-node"
+              TempRoot = Join-Path $env:RUNNER_TEMP "task-handoff-windows-node-temp"
               Output = Join-Path $env:RUNNER_TEMP "task-handoff-windows-node-output.json"
             }
           )
@@ -408,15 +414,15 @@ jobs:
             $sessionHash = [Convert]::ToHexString(
               [Security.Cryptography.SHA256]::HashData($sessionBytes)
             ).ToLowerInvariant()
-            $expectedState = Join-Path $case.Data "handoffs\$sessionHash\state.md"
-            $stateFiles = @(Get-ChildItem -LiteralPath $case.Data -Filter state.md -File -Recurse)
+            $dataRoot = Join-Path $case.TempRoot "adaptive-development-skills-task-handoff"
+            $expectedState = Join-Path $dataRoot "handoffs\$sessionHash\state.md"
+            $stateFiles = @(Get-ChildItem -LiteralPath $case.TempRoot -Filter state.md -File -Recurse)
             if ($stateFiles.Count -ne 1) {
               throw "Expected exactly one state.md for $($case.Session)"
             }
             if (-not [IO.File]::Exists($expectedState)) {
               throw "Checkpoint path does not match the session hash"
             }
-
             $lines = [IO.File]::ReadAllLines($expectedState)
             if ($lines[0] -ne "---") {
               throw "Checkpoint metadata header is missing"
