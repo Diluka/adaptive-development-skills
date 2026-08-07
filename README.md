@@ -1,16 +1,22 @@
 # Adaptive Development Skills
 
-这是一套按工作单元选择方法的通用开发技能。`adaptive-development-workflow` 是共享分类与路由入口：先按当前增量决定最低充分流程，再按独立目标与证据边界把请求拆成调查或开发单元；用户明确调用独立方法时，该方法按自身触发条件核验适用性。集成与交付方法、计划、文档、验证、评审、工作树和代理编排按需叠加，不与主要方法竞争。
+这是一套按工作单元选择方法的通用开发技能。
 
-调查方法只交付事实、根因、可行性或决策输入。调查结论一旦要转成项目长期保留的实现、测试、契约或文档，就返回入口重新选择开发方式。开发方式保持各自的行业标准流程；小而明确的增量仍可直接实现，不为形式强制 SDD、BDD 或 TDD。
+## 如何选择和组合技能
+
+`adaptive-development-workflow` 是共享的分类与路由入口。它先按当前增量选择最低充分流程，再按独立目标与证据边界把请求拆成调查或开发单元。用户明确调用独立方法时，该方法按自身触发条件核验适用性。
+
+集成与交付方法、计划、文档、验证、评审、工作树和代理编排按需叠加，不与主要方法竞争。开发方式保持各自的行业标准流程；小而明确的增量可以直接实现，不为形式强制 SDD、BDD 或 TDD。
+
+调查方法只交付事实、根因、可行性或决策输入。调查结论一旦要转成项目长期保留的实现、测试、契约或文档，就回到入口重新选择开发方式。
 
 开发任务以及准备正式纳入版本控制的文档、配置等项目变更，默认根据实际 `git remote` 和目标仓库约定完成分支、提交、推送与 GitLab MR 或 GitHub PR。用户可以明确收窄为本地修改、只提供差异、不提交、不推送或不创建 MR/PR；默认交付不包含合并、发布、部署、正式环境写入、权限修改或其他高影响外部操作。调查、解释和评审等非开发任务不自动产生 Git 交付。
 
-常规与复杂开发任务默认按“计划 → 实现 → 测试 → 评审 → 返工”的组合流程推进：这是对既有方法的编排组合，不是新的主要开发方式。除实现外各步骤可按任务级别省略；当前任务内子代理只承担短小局部协作，粗粒度、持续写入的并行开发单元各自使用负责会话与独立工作树。新建这类开发会话通常同时分配工作树，但创建、进入或复用工作树不要求新会话。完整定义与简化规则见 `adaptive-development-workflow`。
+常规与复杂开发任务默认按任务等级组合计划、实现、测试、评审和返工。这是对既有方法的编排，不是新的主要开发方式；除实现外，各步骤可按任务等级省略。当前任务内的子代理只承担短小局部协作；粗粒度、持续写入的并行开发单元各自使用负责会话与独立工作树。新建这类开发会话通常同时分配工作树，但创建、进入或复用工作树不要求新会话。完整定义与简化规则见 `adaptive-development-workflow`。
 
 ## 安装
 
-下面三种方式是替代渠道。不要在同一个 Codex 运行环境中同时安装 Plugin Skills 与同名 standalone Skills，避免重复发现和分开的更新状态。
+以下三种方式是替代渠道。同一个 Codex 运行环境不要同时安装 Plugin Skills 与同名 standalone Skills，以免重复发现并形成分开的更新状态。
 
 ### 只安装 Skills
 
@@ -29,26 +35,42 @@ codex plugin marketplace add Diluka/adaptive-development-skills --ref main
 codex plugin add adaptive-development-skills@adaptive-development-skills
 ```
 
-安装后请启动新任务，让 Codex 载入 Plugin Skills。Plugin 安装不会自动信任它携带的命令 Hook；通过 `/hooks` 审阅当前定义后，可以选择信任、保持未信任或单独禁用。未信任或禁用 Hook 不影响 Plugin Skills，marketplace 也使用 `AVAILABLE`，不会默认安装 Plugin。
+#### 启动与信任
 
-Hook launcher 优先使用 Deno 2；只有找不到 `deno` 可执行文件时才使用 Node 24 的 TypeScript type stripping 运行同一脚本。选中的运行时若执行失败，launcher 会原样返回退出码，不会换另一个运行时重试；两者都不存在时只向 stderr 提示并以 0 退出，不阻止可选 Hook、用户回合或压缩。
+安装后启动新任务，让 Codex 载入 Plugin Skills。Plugin 安装不会自动信任携带的命令 Hook；通过 `/hooks` 审阅当前定义后，可以选择信任、保持未信任或单独禁用。
 
-Deno 分支禁用远程与 npm 依赖解析，只允许业务代码读取 `TASK_HANDOFF_DATA`、允许 Deno 的 Node 兼容层读取 `NODE_V8_COVERAGE`、在 launcher 拼接出的 Plugin 专属临时子目录内读写检查点并启动 `git`；读写权限不覆盖整个系统临时目录。Node fallback 使用同一子目录，但只能整体开放 `child_process`，不能限制为仅执行 `git`，其权限模型也不限制环境变量或网络，因此 Deno 始终优先。两条路径都只用 `git rev-parse` 读取 HEAD，不执行会扫描工作区内容的 `git status`。环境不满足时也可以保持 Hook 未信任或禁用，Plugin Skills 仍可独立使用。
+未信任或禁用 Hook 不影响 Plugin Skills。marketplace 也使用 `AVAILABLE`，不会默认安装 Plugin。
 
-`task-handoff` 在 POSIX 的 `${TMPDIR:-/tmp}/adaptive-development-skills-task-handoff/handoffs/<sha256(session_id)>/state.md` 或 Windows 的 `%TEMP%\adaptive-development-skills-task-handoff\handoffs\<sha256(session_id)>\state.md` 维护会话检查点；Windows 在 `TEMP` 缺失时回退 `TMP`。它不写目标项目，也不读取 transcript 的内部 JSONL 格式。每个会话只维护一个 `state.md`；会话不再恢复后 Hook 不会再次读取，文件由系统临时目录的清理策略回收，不另设 TTL 或清理器。检查点包含当前用户请求、最后一次完成的代理回复和 Git HEAD，因此可能包含任务上下文；请在信任 Hook 前审阅实现。
+#### 运行时与权限
+
+Hook launcher 优先使用 Deno 2；只有找不到 `deno` 可执行文件时，才使用 Node 24 的 TypeScript type stripping 运行同一脚本。选中的运行时执行失败时，launcher 原样返回退出码，不会换另一个运行时重试；两者都不存在时，只向 stderr 提示并以 0 退出，不阻止可选 Hook、用户回合或压缩。
+
+Deno 分支禁用远程与 npm 依赖解析。业务代码只读取 `TASK_HANDOFF_DATA`；Deno 的 Node 兼容层可读取 `NODE_V8_COVERAGE`，并在 launcher 拼接出的 Plugin 专属临时子目录内读写检查点和启动 `git`。读写权限不覆盖整个系统临时目录。
+
+Node fallback 使用同一子目录，但只能整体开放 `child_process`，不能限制为仅执行 `git`，其权限模型也不限制环境变量或网络，因此 Deno 始终优先。两条路径都只用 `git rev-parse` 读取 HEAD，不执行会扫描工作区内容的 `git status`。环境不满足时也可以保持 Hook 未信任或禁用，Plugin Skills 仍可独立使用。
+
+#### 检查点与恢复
+
+`task-handoff` 在 POSIX 的 `${TMPDIR:-/tmp}/adaptive-development-skills-task-handoff/handoffs/<sha256(session_id)>/state.md` 或 Windows 的 `%TEMP%\adaptive-development-skills-task-handoff\handoffs\<sha256(session_id)>\state.md` 维护会话检查点；Windows 在 `TEMP` 缺失时回退 `TMP`。
+
+它不写目标项目，也不读取 transcript 的内部 JSONL 格式。每个会话只维护一个 `state.md`；会话不再恢复后 Hook 不会再次读取，文件由系统临时目录的清理策略回收，不另设 TTL 或清理器。检查点包含当前用户请求、最后一次完成的代理回复和 Git HEAD，因此可能包含任务上下文；请在信任 Hook 前审阅实现。
 
 Codex 当前不能把 `PreCompact` 的普通输出送给模型，所以 Hook 不声称能在压缩瞬间要求代理再总结一次。它会在用户回合开始时提前提醒，在限定的代表性事件上刷新已有状态，由 `PreCompact` 完成压缩前的最后一次状态刷新，再通过 `SessionStart` 的 `compact` 恢复入口把同一会话文件送回模型。`status=complete` 只表示检查点保存流程完成，不表示任务已经完成。
 
 ### 在 VS Code 中安装 Copilot 插件
 
-仓库以 VS Code Agent plugins（预览）格式复用同一份 `skills/`，只提供 Skills，不提供 Hook：VS Code 中 Copilot 插件的 Hook 执行存在已知问题（远程会话会误用本地路径），当前不进行适配。两种安装方式：
+仓库以 VS Code Agent plugins（预览）格式复用同一份 `skills/`，只提供 Skills，不提供 Hook。VS Code 中 Copilot 插件的 Hook 执行存在已知问题：远程会话会误用本地路径，当前不进行适配。
+
+两种安装方式：
 
 - 从源码安装：命令面板运行 `Chat: Install Plugin From Source`，输入 `https://github.com/Diluka/adaptive-development-skills`。
 - 作为 marketplace：在用户 `settings.json` 中设置 `"chat.plugins.marketplaces": ["Diluka/adaptive-development-skills"]`，然后在扩展视图搜索 `@agentPlugins` 安装 `adaptive-development-skills`。
 
 确保 VS Code 已启用 Agent plugins（设置 `chat.plugins.enabled`，默认开启）。
 
-## 技能体系
+## 技能目录
+
+当目标、真实调用方和契约已经足以实施，且专项方法没有额外反馈或证据收益时，直接实现也是一等选择，不需要为它创建专用技能。现有证据是否存在不决定开发方式；真实缺口由 `evidence-management` 判断证据充分性并收敛。
 
 ### 共享入口
 
@@ -56,7 +78,7 @@ Codex 当前不能把 `PreCompact` 的普通输出送给模型，所以 Hook 不
 |---|---|
 | `adaptive-development-workflow` | 分级当前增量，拆分并分类工作单元，选择主要方法及正交支持；`resources/terminology.md` 提供术语对照 |
 
-### 工作节点技能
+### 工作节点
 
 | 技能 | 用途 |
 |---|---|
@@ -74,9 +96,7 @@ Codex 当前不能把 `PreCompact` 的普通输出送给模型，所以 Hook 不
 | `brainstorming` | 只澄清会实质改变方案的关键歧义 |
 | `project-documentation` | 维护需要长期保存并版本控制的需求、设计、决策和其他正式项目文档 |
 
-### 方法技能
-
-#### 开发方法
+### 开发方法
 
 | 技能 | 用途 |
 |---|---|
@@ -86,7 +106,7 @@ Codex 当前不能把 `PreCompact` 的普通输出送给模型，所以 Hook 不
 | `type-driven-design` | 把稳定领域不变量编码为类型约束，在可信边界内排除非法表示 |
 | `maintenance-operations` | 安全执行清理死代码、依赖升级等不改变行为或只改变解析的维护变更 |
 
-#### 测试方法
+### 测试方法
 
 | 技能 | 用途 |
 |---|---|
@@ -94,7 +114,7 @@ Codex 当前不能把 `PreCompact` 的普通输出送给模型，所以 Hook 不
 | `consumer-driven-contract-testing` | 用真实使用方期望、版本化契约和提供方验证持续判断服务兼容 |
 | `baseline-and-eval-testing` | 以可审阅基线或代表任务评估验证复杂、旧行为或概率性主观输出 |
 
-#### 调查方法
+### 调查方法
 
 | 技能 | 用途 |
 |---|---|
@@ -103,13 +123,11 @@ Codex 当前不能把 `PreCompact` 的普通输出送给模型，所以 Hook 不
 | `systematic-debugging` | 从已观察症状追踪到第一个错误状态和因果链 |
 | `unknown-exploration` | 以最小可丢弃试验或受控探索会话回答技术未知与行为风险 |
 
-#### 交付方法
+### 交付方法
 
 | 技能 | 用途 |
 |---|---|
 | `delivery` | 通过主干集成、持续保持可发布到正式环境受控暴露管理交付节奏 |
-
-目标、真实调用方和契约已经足以实施，且专项方法没有额外反馈或证据收益时，直接实现也是一等选择，不需要为它创建专用技能；现有证据是否存在不决定开发方式，真实缺口由 `evidence-management` 判断证据充分性并收敛。
 
 ## 方法来源
 
