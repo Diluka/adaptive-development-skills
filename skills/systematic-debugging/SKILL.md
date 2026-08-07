@@ -7,11 +7,9 @@ description: Use when 已观察到缺陷、失败测试、生产事故、间歇�
 
 ## 核心原则
 
-从真实失败边界取证，逐步降低不确定性。某个原因假设必须比其他候选更能解释症状、调用链、环境和反证，才能成为确定性根因。
+从真实失败边界取证；只有比其他候选更能解释症状、调用链、环境和反证的假设才是根因。到第一个错误状态或契约违例即结束调查，不实施修复。
 
-到达第一个错误状态并建立因果链后，结束本调查单元，不实施正式修复。
-
-必要时可使用最小、可逆且可丢弃的诊断插桩。插桩不得改变业务不变量或暴露敏感数据；部署、外部状态和正式环境操作仍需明确授权。决定保留插桩时，立即停止调查，把它作为正式增量返回 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md) 重新选择开发方式。
+可用最小、可逆、可丢弃的插桩，但不改不变量或泄密；部署、外部状态和正式环境仍须授权。决定保留即作为正式增量返回 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md)。
 
 ## 确认症状
 
@@ -45,9 +43,6 @@ description: Use when 已观察到缺陷、失败测试、生产事故、间歇�
 
 ## 交付根因证据与转换
 
-- 报告症状边界、因果链、第一个错误状态或契约违例、决定性证据、影响范围、反证、剩余不确定性和建议修正边界；不修改实现或测试。
-- 请求还包含修复时，建立足以支撑决定的根因证据后停止调查。把被违反的需求或契约、建议修改层和可复用的区分性观测返回 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md)，重新选择开发方式。
+报告症状边界、因果链/首错或契约违例、决定性证据、影响、反证、未知和建议修复层；不修改实现或测试。
 
-外部边界事实不确定时，把该问题返回 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md)，拆成独立的 [contract-verification](../contract-verification/SKILL.md) 调查单元。
-
-调查中重新运行区分原因的观测，并检查受影响链路。证据只覆盖一种失败模式时，收窄结论。后续开发单元可以复用这些观测，但正式回归覆盖和变更后验证由开发方式及其生命周期支持负责。
+若还需修复，带被违反的需求/契约、修改层和可复用区分性观测回 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md)；后续单元负责正式回归与变更后验证。外部边界不明则拆 [contract-verification](../contract-verification/SKILL.md)。重新运行区分性观测并检查受影响链路；证据只覆盖一种失败模式时收窄结论。

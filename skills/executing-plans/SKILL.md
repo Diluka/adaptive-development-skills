@@ -16,8 +16,8 @@ description: Use when 已有开发任务计划文档需要执行或同步进展�
 3. 每个单元开始前，以最小成本确认相关文件、真实调用方、依赖契约、前置状态和授权边界仍成立。首次准备修改计划未列出的路径时，先按 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md) 判断它是否为本次变更直接影响的既有伴生产物；不是时，再确认保持它不变是否会阻止当前任务正确实现、验证或交付。
 4. 执行下一个依赖就绪的工作单元。主要问题变化时，通过 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md) 重新选法。
 5. 验证单元结果并同步计划。正式实现完成后，按 [writing-plans](../writing-plans/SKILL.md) 的授权边界最小同步本次变更直接影响的既有伴生产物，再验证组合结果和真实运行链路。
-6. 计划或新风险要求独立评审时，根代理通过 [requesting-code-review](../requesting-code-review/SKILL.md) 派发，并使用 [receiving-code-review](../receiving-code-review/SKILL.md) 核验意见。实质修复后只重新验证和复审受影响范围。
-7. 使用 [verification-before-completion](../verification-before-completion/SKILL.md) 核对实现、验证和适用评审证据，再报告未完成事项和未执行操作。
+6. 计划或新风险要求评审时，根代理按 [requesting-code-review](../requesting-code-review/SKILL.md) 派发、按 [receiving-code-review](../receiving-code-review/SKILL.md) 核验；实质修复只重验和复审受影响范围。
+7. 用 [verification-before-completion](../verification-before-completion/SKILL.md) 核对实现、验证和适用评审证据，再报告未完成和未执行事项。
 
 ## 根据新事实修正
 
@@ -31,12 +31,12 @@ description: Use when 已有开发任务计划文档需要执行或同步进展�
 
 用户明确收窄或排除某个工作单元时，立即停止该路径，并从交付差异中移除本任务为它产生的改动。已经投入的时间、已有实现或通过的测试都不是保留理由。只移除自己为本任务产生的内容，保留用户和其他工作的改动。
 
-协调者或单代理写回状态、关键证据、偏差和剩余风险，其他执行者只回报变化，由协调者核验并维护统一计划。当前 Codex 任务内的短小局部委派使用 [subagent-driven-development](../subagent-driven-development/SKILL.md)；粗粒度单元需要持续写入、独立上下文、工作树或恢复生命周期时，使用 [using-git-worktrees](../using-git-worktrees/SKILL.md) 建立或复用独立工作树，并另行分配负责执行上下文。两种方式都不让多个执行者并发编辑计划。
+协调者或单代理维护计划、关键证据、偏差和风险，其他人只回报；短局部委派走 [subagent-driven-development](../subagent-driven-development/SKILL.md)，持续写入、独立上下文/工作树/生命周期的单元走 [using-git-worktrees](../using-git-worktrees/SKILL.md) 并另配上下文，均不得并发改计划。
 
 ## 边界
 
 - 计划不改变任务类型对应的交付结果：开发任务按普通 Git 交付默认值或用户限制完成分支、提交、推送和 MR/PR，非开发任务不自动产生 Git 交付。合并、发布、部署、外部消息、破坏性清理和正式环境数据写入仍遵守各自的明确要求边界。
 - 保留用户的无关改动；编辑重叠文件前重新读取当前内容。
-- lint 与格式化的只读检查可按仓库契约覆盖必要范围；自动修复或格式化改写默认只作用于当前任务修改行。工具不支持行级处理时，依次扩大到最小必要语法单元或受影响文件，并审阅、移除与任务无关且非项目契约所需的差异；不得借机批量修复存量问题。
+- 只读 lint/format 可按仓库覆盖必要范围；自动修复仅改本任务行，不能行级时依次扩大至最小语法单元或受影响文件，审阅并移除无关且非项目契约所需的差异，不借机批量修存量。
 - 不因后续步骤依赖错误假设而继续执行冲突路径。
-- 开发任务默认完成普通 Git 交付，但计划不为形式强制实现子代理或独立评审；一旦为可能产生项目改动的工作创建或检出开发分支，且用户没有指定其他安排，按 [using-git-worktrees](../using-git-worktrees/SKILL.md) 默认绑定独立工作树。纯只读分支审查可由执行者按同一技能判断是否安全使用根路径。
+- 计划不为形式强制实现子代理或独立评审；为项目改动创建或检出开发分支且无另行安排时，按 [using-git-worktrees](../using-git-worktrees/SKILL.md) 绑定独立工作树。纯只读审查按同一技能判断是否可用根路径。
