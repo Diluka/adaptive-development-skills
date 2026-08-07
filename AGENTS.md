@@ -91,7 +91,7 @@
 - Hook 的可写状态只能放在 launcher 从系统临时目录变量拼接出的 Plugin 专属子目录，并通过 `TASK_HANDOFF_DATA` 传给脚本；Deno 只获得该子目录的读写权限。脚本通过 `PLUGIN_ROOT` 定位，不写目标项目临时目录，不硬编码安装路径，不解析未承诺稳定的 transcript 内部格式。通过获准子进程读取项目元数据前，必须核验命令不会触发 Git hook、filter、helper 或其他外部进程；Deno 的 `--allow-run` 不会继续沙箱化子进程。
 - Hook 生产脚本只使用 Deno 2 与 Node 24 共同支持的 Node 内置 API；launcher 优先使用 Deno，只有找不到 `deno` 时才回退 Node，选中的运行时失败后不得再次执行另一运行时。Node fallback 的子进程、环境变量和网络权限比 Deno 更宽，修改入口或权限时必须同步审阅两条路径。Windows 的 `commandWindows` 不假设 Codex 使用哪种会话 shell，必须显式通过 `cmd.exe` 执行 `.cmd` launcher。
 - `hooks/codex-hook-types.ts` 按当前最低核对 Codex 版本的官方生成 schema 约束 stdin 与逐事件 stdout；修改事件、字段或支持版本时先更新该类型边界，并以 `deno check` 作为接口静态检查。执行测试只验证脚本自身设计逻辑，每个已配置 Hook 保留一个代表性测试，不用人工事件镜像重复类型约束，也不把独立脚本测试称为 Codex 集成测试。
-- 正式发布 Plugin 变更时递增 manifest 版本；Git marketplace 用户通过 `codex plugin marketplace upgrade` 获取新快照。本地开发迭代按当前 `plugin-creator` 的 cachebuster 与重装流程验证，不把同版本缓存覆盖当作发行契约。
+- 正式发布 Plugin 变更时只通过 `scripts/bump-version.ts <version>` 递增并同步 Codex、Copilot manifest 与 marketplace 版本；Git marketplace 用户通过 `codex plugin marketplace upgrade` 获取新快照。本地开发迭代按当前 `plugin-creator` 的 cachebuster 与重装流程验证，不把同版本缓存覆盖当作发行契约。
 
 ## 完成检查
 
@@ -110,6 +110,10 @@ git diff --check
 修改 Plugin 或 Hook 时，另运行：
 
 ```bash
+scripts/bump-version.ts --check
+deno fmt --check scripts/bump-version.ts
+deno lint --no-config scripts/bump-version.ts
+deno check --no-config --no-lock --no-npm --no-remote scripts/bump-version.ts
 deno fmt --check hooks/codex-hook-types.ts hooks/task-handoff.ts hooks/tests/task-handoff.test.ts
 deno lint --no-config hooks/codex-hook-types.ts hooks/task-handoff.ts hooks/tests/task-handoff.test.ts
 deno check --no-config --no-lock --no-npm --no-remote hooks/codex-hook-types.ts hooks/task-handoff.ts
