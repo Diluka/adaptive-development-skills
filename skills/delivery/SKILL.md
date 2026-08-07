@@ -17,12 +17,12 @@ description: Use when 需要管理从主干集成、持续保持可发布到正�
 
 集成流程：
 
-1. 确认主干、当前分叉、仓库策略、必要门禁和远端操作授权。
+1. 确认主干、当前分叉、目标 `git remote`、仓库策略和必要门禁。
 2. 按可独立观察的行为与兼容边界切分工作；每个批次都应能单独进入主干并保持系统可工作。
 3. 按仓库策略选择直接提交主干，或使用由单人或结对拥有的短生命周期变更分支。创建或检出项目改动分支时，隔离位置交给 [using-git-worktrees](../using-git-worktrees/SKILL.md)。
 4. 让评审和 CI 紧跟当前小批次，不在等待期间继续把无关工作堆入同一分支。
 5. 在最终集成结果上检查 CI；失败时优先修复或回退，恢复主干健康后再继续。
-6. 具体推送、合并、分支与工作树清理交给 [finishing-a-development-branch](../finishing-a-development-branch/SKILL.md)，只执行已明确授权的动作。
+6. 具体分支、提交、推送和 MR/PR 交给 [finishing-a-development-branch](../finishing-a-development-branch/SKILL.md)，按开发任务的普通 Git 交付默认值或用户限制执行；合并与工作树清理分别按其边界处理。
 
 较大变化需要跨批次时，优先采用向前兼容的接口演进、抽象替换或其他安全切片。只有真实发布或隔离需求存在时才增加功能开关，并为所有者、默认行为和清理条件负责；开关不能替代实现证据。
 
@@ -66,7 +66,7 @@ description: Use when 需要管理从主干集成、持续保持可发布到正�
 ## 方法边界
 
 - 本技能决定集成、交付与受控暴露的节奏，不决定功能工作单元的主要开发或证据方法；实现仍按 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md) 为各工作单元选法。
-- 推送、合并、制品发布、环境变更和部署都是外部状态变化；计划、流水线配置或本技能触发都不扩大授权。
+- 开发任务的分支、提交、推送和 MR/PR 由 [finishing-a-development-branch](../finishing-a-development-branch/SKILL.md) 按普通 Git 交付默认值处理。合并、制品发布、环境变更和部署不在该默认值内；计划、流水线配置或本技能触发都不会把它们纳入范围。
 - 功能开关、金丝雀和 A/B 分流是可选机制，不是独立正确性证据，也不应为了人工测试改变产品设计。
 - 不可逆数据迁移、公共契约破坏或无法按群体隔离的共享副作用不能仅靠缩小流量解决；先建立兼容迁移、状态边界与恢复方案。
 - 完成声明通过 [verification-before-completion](../verification-before-completion/SKILL.md) 核对当前制品、观测、决策与最终状态，不能用开发环境或过时指标代替。

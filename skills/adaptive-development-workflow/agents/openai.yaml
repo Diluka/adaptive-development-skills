@@ -1,4 +1,4 @@
 interface:
   display_name: "Adaptive Development Workflow"
   short_description: "按工作单元区分调查与开发，并叠加交付和生命周期支持"
-  default_prompt: "使用 $adaptive-development-workflow 按独立目标和证据边界拆分工作单元，分别选择调查或开发方法，再按需叠加交付与生命周期支持。"
+  default_prompt: "使用 $adaptive-development-workflow 按独立目标和证据边界拆分工作单元，分别选择调查或开发方法，再按任务类型应用 Git 交付默认值与生命周期支持。"
