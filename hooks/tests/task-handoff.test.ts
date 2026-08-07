@@ -20,7 +20,6 @@ const SCRIPT = fileURLToPath(new URL("../task-handoff.ts", import.meta.url));
 interface Fixture {
   tempDir: string;
   taskHandoffData: string;
-  legacyPluginData: string;
   cwd: string;
   transcriptPath: string;
 }
@@ -36,7 +35,6 @@ async function withFixture(
       "system-temp",
       "adaptive-development-skills-task-handoff",
     ),
-    legacyPluginData: join(tempDir, "plugin-data"),
     cwd: join(tempDir, "workspace"),
     transcriptPath: join(tempDir, "private.jsonl"),
   };
@@ -125,17 +123,14 @@ async function runHook(
       "--no-lock",
       "--no-npm",
       "--no-remote",
-      "--allow-env=TASK_HANDOFF_DATA,PLUGIN_DATA",
+      "--allow-env=TASK_HANDOFF_DATA",
       `--allow-read=${fixture.taskHandoffData}`,
       `--allow-write=${fixture.taskHandoffData}`,
       "--allow-run=git",
       SCRIPT,
     ],
     cwd: fixture.cwd,
-    env: {
-      TASK_HANDOFF_DATA: fixture.taskHandoffData,
-      PLUGIN_DATA: fixture.legacyPluginData,
-    },
+    env: { TASK_HANDOFF_DATA: fixture.taskHandoffData },
     stdin: "piped",
     stdout: "piped",
     stderr: "piped",
@@ -194,10 +189,6 @@ Deno.test("UserPromptSubmit writes the session checkpoint and reminder", async (
     assert.doesNotMatch(checkpoint.text, /session-alpha/);
     assert.doesNotMatch(checkpoint.text, /TRANSCRIPT_SECRET_SENTINEL/);
     assert.match(context, /status=complete/);
-    await assert.rejects(
-      () => Deno.stat(fixture.legacyPluginData),
-      Deno.errors.NotFound,
-    );
     assert.match(
       context,
       new RegExp(path.replace(/[.*+?^$()|[\]\\]/g, "\\$&")),

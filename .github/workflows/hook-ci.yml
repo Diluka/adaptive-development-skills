@@ -106,7 +106,6 @@ jobs:
           priority_bin="$RUNNER_TEMP/deno-priority-bin"
           deno_temp="$RUNNER_TEMP/task-handoff-deno-temp"
           deno_data="$deno_temp/adaptive-development-skills-task-handoff"
-          deno_legacy_data="$RUNNER_TEMP/task-handoff-deno-plugin-data"
           deno_input="$RUNNER_TEMP/task-handoff-deno.json"
           deno_output="$RUNNER_TEMP/task-handoff-deno-output.json"
           mkdir -p "$priority_bin"
@@ -114,16 +113,13 @@ jobs:
           chmod +x "$priority_bin/node"
           write_input "$deno_input" "ci-deno-session"
           test ! -e "$deno_temp"
-          test ! -e "$deno_legacy_data"
-          PATH="$priority_bin:$PATH" TMPDIR="$deno_temp" PLUGIN_DATA="$deno_legacy_data" \
+          PATH="$priority_bin:$PATH" TMPDIR="$deno_temp" \
             hooks/run-task-handoff.sh < "$deno_input" > "$deno_output"
           assert_checkpoint "$deno_data" "ci-deno-session" "$deno_output"
-          test ! -e "$deno_legacy_data"
 
           node_bin="$RUNNER_TEMP/node-fallback-bin"
           node_temp="$RUNNER_TEMP/task-handoff-node-temp"
           node_data="$node_temp/adaptive-development-skills-task-handoff"
-          node_legacy_data="$RUNNER_TEMP/task-handoff-node-plugin-data"
           node_input="$RUNNER_TEMP/task-handoff-node.json"
           node_output="$RUNNER_TEMP/task-handoff-node-output.json"
           mkdir -p "$node_bin"
@@ -133,11 +129,9 @@ jobs:
           ln -s "$real_mkdir" "$node_bin/mkdir"
           write_input "$node_input" "ci-node-session"
           test ! -e "$node_temp"
-          test ! -e "$node_legacy_data"
-          PATH="$node_bin" TMPDIR="$node_temp" PLUGIN_DATA="$node_legacy_data" \
+          PATH="$node_bin" TMPDIR="$node_temp" \
             hooks/run-task-handoff.sh < "$node_input" > "$node_output"
           assert_checkpoint "$node_data" "ci-node-session" "$node_output"
-          test ! -e "$node_legacy_data"
 
       - name: Validate Plugin installation
         shell: bash
@@ -182,7 +176,6 @@ jobs:
           probe_bin="$RUNNER_TEMP/mise-node-probe-bin"
           temp_root="$RUNNER_TEMP/mise-node-temp"
           task_handoff_data="$temp_root/adaptive-development-skills-task-handoff"
-          plugin_data="$RUNNER_TEMP/mise-node-plugin-data"
           input="$RUNNER_TEMP/mise-node-input.json"
           output="$RUNNER_TEMP/mise-node-output.json"
           session="ci-mise-node-session"
@@ -214,7 +207,6 @@ jobs:
           ' "$input" "$session" "$workspace"
 
           test ! -e "$temp_root"
-          test ! -e "$plugin_data"
           test "$(PATH="$probe_bin" command -v node)" = "$probe_bin/node"
           test "$(PATH="$probe_bin" command -v git)" = "$probe_bin/git"
           if PATH="$probe_bin" command -v deno >/dev/null 2>&1; then
@@ -222,7 +214,7 @@ jobs:
             exit 1
           fi
 
-          PATH="$probe_bin" TMPDIR="$temp_root" PLUGIN_DATA="$plugin_data" \
+          PATH="$probe_bin" TMPDIR="$temp_root" \
             hooks/run-task-handoff.sh < "$input" > "$output"
 
           session_hash=$("$mise_node" -e '
@@ -231,7 +223,6 @@ jobs:
           ' "$session")
           state_file="$task_handoff_data/handoffs/$session_hash/state.md"
           test -f "$state_file"
-          test ! -e "$plugin_data"
 
           "$mise_node" -e '
             const fs = require("node:fs");
@@ -311,7 +302,6 @@ jobs:
         env:
           PLUGIN_ROOT: ${{ steps.windows-paths.outputs.plugin_root }}
           TEMP: ${{ runner.temp }}\task-handoff-windows-deno-temp
-          PLUGIN_DATA: ${{ runner.temp }}\task-handoff-windows-deno-plugin-data
         run: |
           $ErrorActionPreference = "Stop"
           if (-not (Get-Command deno -CommandType Application)) {
@@ -372,7 +362,6 @@ jobs:
         env:
           PLUGIN_ROOT: ${{ steps.windows-paths.outputs.plugin_root }}
           TMP: ${{ runner.temp }}\task-handoff-windows-node-temp
-          PLUGIN_DATA: ${{ runner.temp }}\task-handoff-windows-node-plugin-data
         run: |
           set "PATH=${{ steps.windows-paths.outputs.node_dir }};${{ steps.windows-paths.outputs.git_dir }};${{ steps.windows-paths.outputs.system32 }};${{ steps.windows-paths.outputs.windows_dir }}"
           set "TEMP="
@@ -402,13 +391,11 @@ jobs:
             @{
               Session = "ci-windows-deno-session"
               TempRoot = Join-Path $env:RUNNER_TEMP "task-handoff-windows-deno-temp"
-              LegacyData = Join-Path $env:RUNNER_TEMP "task-handoff-windows-deno-plugin-data"
               Output = Join-Path $env:RUNNER_TEMP "task-handoff-windows-deno-output.json"
             },
             @{
               Session = "ci-windows-node-session"
               TempRoot = Join-Path $env:RUNNER_TEMP "task-handoff-windows-node-temp"
-              LegacyData = Join-Path $env:RUNNER_TEMP "task-handoff-windows-node-plugin-data"
               Output = Join-Path $env:RUNNER_TEMP "task-handoff-windows-node-output.json"
             }
           )
@@ -436,10 +423,6 @@ jobs:
             if (-not [IO.File]::Exists($expectedState)) {
               throw "Checkpoint path does not match the session hash"
             }
-            if ([IO.Directory]::Exists($case.LegacyData) -or [IO.File]::Exists($case.LegacyData)) {
-              throw "Legacy PLUGIN_DATA was written for $($case.Session)"
-            }
-
             $lines = [IO.File]::ReadAllLines($expectedState)
             if ($lines[0] -ne "---") {
               throw "Checkpoint metadata header is missing"
