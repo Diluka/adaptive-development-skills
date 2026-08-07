@@ -1,4 +1,4 @@
 interface:
   display_name: "Finishing a Development Branch"
-  short_description: "按当前集成增量核对验证、CI和适用评审，安全交接分支与集成操作"
-  default_prompt: "使用 $finishing-a-development-branch 按当前集成增量核对验证、CI 与适用评审，再安全准备分支、PR/MR、合并或清理交接。"
+  short_description: "核对分支就绪状态并完成默认 Git 交付，分开处理高影响操作"
+  default_prompt: "使用 $finishing-a-development-branch 核对验证、CI 与适用评审，按实际 remote 和仓库约定完成分支、提交、推送与 MR/PR，并把合并、发布和部署留在明确要求边界。"
