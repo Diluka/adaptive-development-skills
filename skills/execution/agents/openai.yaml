@@ -1,0 +1,4 @@
+interface:
+  display_name: 'Execution'
+  short_description: '在工作节点上执行工作单元，有计划时引用计划、无计划时直接执行，并衔接适用的验证与独立评审'
+  default_prompt: '使用 $execution 在当前工作节点上推进并执行工作单元，有计划时引用计划、无计划时直接执行，只衔接当前任务需要的验证与评审。'

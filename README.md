@@ -72,27 +72,32 @@ Codex 当前不能把 `PreCompact` 的普通输出送给模型，所以 Hook 不
 
 | 技能 | 用途 |
 |---|---|
-| `adaptive-development-workflow` | 分级当前增量，拆分并分类工作单元，选择主要方法及正交支持；`resources/terminology.md` 提供术语对照 |
+| `adaptive-development-workflow` | 宏观决策入口：定义工作节点类型、动态编排工作流、处理重编排，进入节点时推荐适用技能集；`resources/` 提供微观决策资源（`node-decisions/` 六节点判据、`verification-selection.md` 验证方式选择、`terminology.md` 术语对照），对应代理按需读取 |
 
-### 工作节点
+### 方法 · 执行与机制
 
 | 技能 | 用途 |
 |---|---|
-| `writing-plans` | 为需要协调、恢复上下文或高风险控制的任务编写共享计划 |
-| `executing-plans` | 执行并同步已有计划，衔接适用验证、评审与必要复审 |
-| `requesting-code-review` | 在独立视角能补充风险证据时准备和执行评审 |
-| `receiving-code-review` | 先核验审查意见，再决定是否以及如何修改 |
-| `subagent-driven-development` | 在同一 Codex 任务内委派短小、局部且无持久开发所有权的工作 |
-| `dispatching-parallel-agents` | 判断局部协作或粗粒度工作树单元能否安全并行且确有收益 |
+| `execution` | 在工作节点上执行工作单元，有计划时引用计划、无计划时直接执行，衔接适用验证、评审与必要复审 |
 | `using-git-worktrees` | 隔离分支与并行写入，维护工作树所有权、共享资源和串行集成边界 |
 | `finishing-a-development-branch` | 核对分支就绪状态，按实际 `git remote` 和仓库约定完成默认 Git 交付，并分开处理合并或清理 |
+| `requesting-code-review` | 在独立视角能补充风险证据时准备和执行评审 |
+| `receiving-code-review` | 先核验审查意见，再决定是否以及如何修改 |
 | `verification-before-completion` | 为当前完成声明匹配最新且直接的验证、CI、观测或评审证据 |
-| `choosing-tests` | 根据任务形状与优先级选择端到端、单元、属性或契约测试等方式 |
 | `evidence-management` | 判断证据充分性、复用既有证据并收敛长期证据组合 |
-| `brainstorming` | 只澄清会实质改变方案的关键歧义 |
-| `project-documentation` | 维护需要长期保存并版本控制的需求、设计、决策和其他正式项目文档 |
+| `brainstorming` | 讨论方法：先发散探索再收敛，澄清会实质改变方案的关键歧义并明确界限 |
+| `maintenance-operations` | 安全执行清理死代码、依赖升级等不改变行为或只改变解析的维护变更 |
 
-### 开发方法
+### 方法 · 合并后
+
+| 技能 | 用途 |
+|---|---|
+| `agent-and-parallel-dispatch` | 选择执行形态，判断委派或并行是否确有收益，管理任务内子代理委派与粗粒度并行编排 |
+| `documentation` | 编写临时实施计划并创建、更新、验证与版本控制正式项目文档（需求、设计、决策、交付对外文档） |
+
+### 方法 · 标准方法
+
+#### 开发
 
 | 技能 | 用途 |
 |---|---|
@@ -100,9 +105,8 @@ Codex 当前不能把 `PreCompact` 的普通输出送给模型，所以 Hook 不
 | `behavior-driven-development` | 通过 Discovery、Formulation、Automation 和真实业务示例形成共享行为 |
 | `test-driven-development` | 仅适用于定义精确、自包含的零件开发；需求模糊或大功能开发不适用 |
 | `type-driven-design` | 把稳定领域不变量编码为类型约束，在可信边界内排除非法表示 |
-| `maintenance-operations` | 安全执行清理死代码、依赖升级等不改变行为或只改变解析的维护变更 |
 
-### 测试方法
+#### 测试
 
 | 技能 | 用途 |
 |---|---|
@@ -110,7 +114,7 @@ Codex 当前不能把 `PreCompact` 的普通输出送给模型，所以 Hook 不
 | `consumer-driven-contract-testing` | 用真实使用方期望、版本化契约和提供方验证持续判断服务兼容 |
 | `baseline-and-eval-testing` | 以可审阅基线或代表任务评估验证复杂、旧行为或概率性主观输出 |
 
-### 调查方法
+#### 调查
 
 | 技能 | 用途 |
 |---|---|
@@ -119,7 +123,7 @@ Codex 当前不能把 `PreCompact` 的普通输出送给模型，所以 Hook 不
 | `systematic-debugging` | 从已观察症状追踪到第一个错误状态和因果链 |
 | `unknown-exploration` | 以最小可丢弃试验或受控探索会话回答技术未知与行为风险 |
 
-### 交付方法
+#### 交付
 
 | 技能 | 用途 |
 |---|---|

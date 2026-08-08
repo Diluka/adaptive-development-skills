@@ -1,0 +1,4 @@
+interface:
+  display_name: 'Agent and Parallel Dispatch'
+  short_description: '选择执行形态，判断委派或并行是否确有收益，并管理任务内子代理与粗粒度并行编排'
+  default_prompt: '使用 $agent-and-parallel-dispatch 判断委派或并行是否确有收益，选择安全执行形态，并在任务内子代理委派与独立会话加工作树的粗粒度并行之间正确编排。'

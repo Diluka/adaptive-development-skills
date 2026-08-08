@@ -11,10 +11,8 @@ BDD 围绕用户视角的具体真实示例，让业务、开发与测试角色�
 
 ## 检查前提
 
-- 预期业务行为、规则边界、异常结果或范围仍有会影响实现的理解差异；
-- 能识别真实用户、业务角色或调用方，并取得领域规则、代表性场景或权威输入；
-- 示例能观察系统产生的业务结果，而非只检查内部字段或协作者调用；
-- 工作能切成一个即将交付的小行为增量，以便快速获得反馈。
+- **采用判据**：需求没有明确具体设计，需以可执行行为表达用户需求时采用 BDD；有 / 会产生规格文档时转 [spec-driven-development](../spec-driven-development/SKILL.md)；行为单一的小功能（bug 修复、函数开发 / 重构）时转 [test-driven-development](../test-driven-development/SKILL.md)。
+- **可行前提**：预期业务行为、规则边界、异常结果或范围存在会影响实现的理解差异；能识别真实用户、业务角色或调用方并取得领域规则或权威输入；示例能在真实系统边界观察业务结果，而非只检查内部字段或协作者调用；工作能切成即将交付的小行为增量。具体做法见下文各节。
 
 行为已明确且不存在共享理解缺口时，直接进入适合的实现方法。不为采用 BDD 组织无助于澄清共享理解的会议、场景文件或自动化。
 
@@ -25,7 +23,7 @@ BDD 围绕用户视角的具体真实示例，让业务、开发与测试角色�
 3. 从示例中识别业务规则、边界、反例、范围外内容和待回答问题。优先暴露理解差异，不急于讨论测试代码。
 4. 推迟当前增量不需要的低优先级行为，保持反馈周期短小。
 
-Discovery 的结果是共享理解和仍待确认的问题，不是越多越好的示例清单。
+Discovery 是「讨论节点」内以具体示例为中心的收敛型对话：头脑风暴（[brainstorming](../brainstorming/SKILL.md)）负责发散生成选项与业务取舍，Discovery 用示例暴露差异并收敛出规则边界，两者衔接而非替代。可用 Example Mapping（规则 / 示例 / 问题卡片）或 Three Amigos（业务、开发、测试三角色）等可选技术组织对话，非必需。Discovery 的结果是共享理解和仍待确认的问题，不是越多越好的示例清单。
 
 ## Formulation
 
@@ -61,4 +59,4 @@ Discovery 与 Formulation 证明团队已形成可审查的共享理解；只有
 - 不自动化所有示例。通过 [evidence-management](../evidence-management/SKILL.md) 按回归风险、失败信号和维护成本选择长期证据。
 - 关键业务取舍尚未决定时使用 [brainstorming](../brainstorming/SKILL.md)。BDD 用示例揭示差异，不替用户决定业务政策。
 - 复杂功能还需要让需求、设计、任务和实现持续可追溯时，把规格链交给独立 [spec-driven-development](../spec-driven-development/SKILL.md) 单元。BDD 只拥有当前行为切片的 Discovery、Formulation 与 Automation；SDD 链接其场景和结果而不重复实现。
-- [writing-plans](../writing-plans/SKILL.md)、[executing-plans](../executing-plans/SKILL.md) 和 [project-documentation](../project-documentation/SKILL.md) 分别负责协调、执行状态和长期文档，不替代 Discovery、Formulation 与 Automation。
+- [documentation](../documentation/SKILL.md) 与 [execution](../execution/SKILL.md) 分别负责文档管理与执行，不替代 Discovery、Formulation 与 Automation。

@@ -13,7 +13,7 @@ description: Use when 需要核验独立评审、代码审查或自动化发现�
 
 收到意见后，先按 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md) 检查它是否指出本次变更使既有伴生产物失真。已经存在并直接描述、演示或指导所改功能的文档、示例或说明，即使不影响运行且需求没有明确点名，最小同步仍属于原任务收尾。
 
-只核验本次变更直接影响的内容，并按 [writing-plans](../writing-plans/SKILL.md) 的授权边界决定直接修改或只暂停该同步路径。
+只核验本次变更直接影响的内容，并按 [documentation](../documentation/SKILL.md) 的授权边界决定直接修改或只暂停该同步路径。
 
 排除上述情况后，再判断：保持意见所述问题不变，是否仍能正确实现、验证和交付当前任务？如果能，只读取足以确认边界的上下文，把意见作为任务外发现报告；不要继续技术核验、写入原计划、建立外部问题单或修改项目产物。
 
@@ -35,8 +35,8 @@ description: Use when 需要核验独立评审、代码审查或自动化发现�
 
 | 结论 | 处理 |
 |---|---|
-| 已确认的既有伴生产物失配 | 在原任务内按 [writing-plans](../writing-plans/SKILL.md) 的授权边界同步最小内容 |
-| 已确认且阻塞当前任务 | 按 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md) 判断是否需要升级；有适用计划时再按 [writing-plans](../writing-plans/SKILL.md) 的阻塞前置条件规则处理 |
+| 已确认的既有伴生产物失配 | 在原任务内按 [documentation](../documentation/SKILL.md) 的授权边界同步最小内容 |
+| 已确认且阻塞当前任务 | 按 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md) 判断是否需要升级；有适用计划时再按 [documentation](../documentation/SKILL.md) 的阻塞前置条件规则处理 |
 | 已确认缺陷 | 报告证据；已授权时实施最小完整修复并验证 |
 | 目标正确但建议方案错误 | 说明约束；已授权时采用符合契约的方案 |
 | 不明确 | 只有仓库证据无法解决时才询问缺失需求 |
@@ -49,7 +49,7 @@ description: Use when 需要核验独立评审、代码审查或自动化发现�
 
 属于当前范围的意见处理是原任务的一部分。有适用计划时由根代理写回结论和状态；任务外发现只写入评审结论或交付报告，取得新授权后才进入计划。非开发任务记录到调查结论或评审报告。
 
-实质修改项目产物后，重新运行受影响验证。任务级别或具体风险仍要求独立评审时，再通过 [requesting-code-review](../requesting-code-review/SKILL.md) 复审失效范围。阻塞前置条件按 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md) 的任务边界处理，有适用计划时再使用 [writing-plans](../writing-plans/SKILL.md)。
+实质修改项目产物后，重新运行受影响验证。任务级别或具体风险仍要求独立评审时，再通过 [requesting-code-review](../requesting-code-review/SKILL.md) 复审失效范围。阻塞前置条件按 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md) 的任务边界处理，有适用计划时再使用 [documentation](../documentation/SKILL.md)。
 
 其他会偏离已授权业务行为、范围或交付结果，扩大权限或新增副作用的修改，先暂停确认。
 
