@@ -2,202 +2,100 @@
 
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import semver from "npm:semver@^7.6.0";
 
-const PLUGIN_NAME = "adaptive-development-skills";
-const SEMVER =
-  /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?$/;
-const USAGE = "Usage: bump-version.ts <version> | --check";
+type Json = Record<string, unknown>;
 
-type JsonObject = Record<string, unknown>;
+type Release = "major" | "minor" | "patch";
+const RELEASES: Release[] = ["major", "minor", "patch"];
 
-interface VersionField {
-  label: string;
-  value: string;
-  set(version: string): void;
+// 本仓库定制：硬编码各 manifest 中需要同步的版本字段路径，不校验文件与格式。
+const FILES: { file: string; paths: string[][] }[] = [
+  { file: ".codex-plugin/plugin.json", paths: [["version"]] },
+  { file: "plugin.json", paths: [["version"]] },
+  {
+    file: ".github/plugin/marketplace.json",
+    paths: [
+      ["metadata", "version"],
+      ["plugins", "0", "version"],
+    ],
+  },
+];
+const USAGE = "Usage: bump-version.ts <major|minor|patch|x.y.z> | --check";
+
+function get(json: Json, path: string[]): string {
+  let value: unknown = json;
+  for (const key of path) value = (value as Json)[key];
+  return value as string;
 }
 
-interface VersionDocument {
-  path: string;
-  content: JsonObject;
-  fields: VersionField[];
+function set(json: Json, path: string[], version: string): void {
+  let value: unknown = json;
+  for (let i = 0; i < path.length - 1; i++) value = (value as Json)[path[i]];
+  (value as Json)[path[path.length - 1]] = version;
 }
 
-function isObject(value: unknown): value is JsonObject {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
-}
-
-function requireObject(value: unknown, label: string): JsonObject {
-  if (!isObject(value)) {
-    throw new Error(`${label} must be an object`);
-  }
-  return value;
-}
-
-function requireVersionField(
-  object: JsonObject,
-  key: string,
-  label: string,
-): VersionField {
-  const value = object[key];
-  if (typeof value !== "string") {
-    throw new Error(`${label} must be a string`);
-  }
-  return {
-    label,
-    value,
-    set(version: string) {
-      object[key] = version;
-    },
-  };
-}
-
-function requirePluginName(document: JsonObject, path: string): void {
-  if (document.name !== PLUGIN_NAME) {
-    throw new Error(`${path}.name must be ${PLUGIN_NAME}`);
-  }
-}
-
-function manifestFields(document: JsonObject, path: string): VersionField[] {
-  requirePluginName(document, path);
-  return [requireVersionField(document, "version", `${path}.version`)];
-}
-
-function marketplaceFields(
-  document: JsonObject,
-  path: string,
-): VersionField[] {
-  requirePluginName(document, path);
-  const metadata = requireObject(document.metadata, `${path}.metadata`);
-  if (!Array.isArray(document.plugins)) {
-    throw new Error(`${path}.plugins must be an array`);
-  }
-
-  const matchingPlugins = document.plugins.filter((plugin) =>
-    isObject(plugin) && plugin.name === PLUGIN_NAME
-  );
-  if (matchingPlugins.length !== 1) {
-    throw new Error(
-      `${path}.plugins must contain exactly one ${PLUGIN_NAME} entry`,
-    );
-  }
-
-  return [
-    requireVersionField(
-      metadata,
-      "version",
-      `${path}.metadata.version`,
-    ),
-    requireVersionField(
-      matchingPlugins[0],
-      "version",
-      `${path}.plugins[${PLUGIN_NAME}].version`,
-    ),
-  ];
-}
-
-function isSemVer(version: string): boolean {
-  const match = SEMVER.exec(version);
-  if (match === null) {
-    return false;
-  }
-  const prerelease = match[4];
-  return prerelease === undefined ||
-    prerelease.split(".").every((identifier) =>
-      !/^\d+$/.test(identifier) || identifier === "0" ||
-      !identifier.startsWith("0")
-    );
-}
-
-async function loadDocument(
-  repositoryRoot: string,
-  relativePath: string,
-  fields: (document: JsonObject, path: string) => VersionField[],
-): Promise<VersionDocument> {
-  const path = resolve(repositoryRoot, relativePath);
-  let parsed: unknown;
-  try {
-    parsed = JSON.parse(await Deno.readTextFile(path));
-  } catch (error) {
-    throw new Error(
-      `failed to read ${relativePath}: ${
-        error instanceof Error ? error.message : String(error)
-      }`,
-    );
-  }
-  const content = requireObject(parsed, relativePath);
-  return { path, content, fields: fields(content, relativePath) };
-}
-
-async function loadVersionDocuments(): Promise<VersionDocument[]> {
-  const repositoryRoot = resolve(
-    dirname(fileURLToPath(import.meta.url)),
-    "..",
-  );
-  return await Promise.all([
-    loadDocument(
-      repositoryRoot,
-      ".codex-plugin/plugin.json",
-      manifestFields,
-    ),
-    loadDocument(repositoryRoot, "plugin.json", manifestFields),
-    loadDocument(
-      repositoryRoot,
-      ".github/plugin/marketplace.json",
-      marketplaceFields,
-    ),
-  ]);
+function isRelease(argument: string): argument is Release {
+  return (RELEASES as string[]).includes(argument);
 }
 
 async function main(): Promise<void> {
-  if (Deno.args.length !== 1) {
+  const [argument] = Deno.args;
+  if (argument === undefined) {
     console.error(USAGE);
     Deno.exitCode = 2;
     return;
   }
 
-  const [argument] = Deno.args;
-  const documents = await loadVersionDocuments();
-  const fields = documents.flatMap((document) => document.fields);
+  const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+  const docs = await Promise.all(
+    FILES.map(async ({ file, paths }) => {
+      const json = JSON.parse(
+        await Deno.readTextFile(resolve(root, file)),
+      ) as Json;
+      return {
+        file,
+        json,
+        paths,
+        values: paths.map((path) => get(json, path)),
+      };
+    }),
+  );
+  const all = docs.flatMap((doc) => doc.values);
 
   if (argument === "--check") {
-    const invalid = fields.filter((field) => !isSemVer(field.value));
-    if (invalid.length > 0) {
-      throw new Error(
-        `invalid plugin versions:\n${
-          invalid.map((field) => `${field.label}: ${field.value}`).join("\n")
-        }`,
-      );
+    if (new Set(all).size !== 1 || !all.every((v) => semver.valid(v))) {
+      throw new Error(`Plugin versions are not aligned:\n${all.join("\n")}`);
     }
-    const versions = new Set(fields.map((field) => field.value));
-    if (versions.size !== 1) {
-      throw new Error(
-        `plugin versions are not aligned:\n${
-          fields.map((field) => `${field.label}: ${field.value}`).join("\n")
-        }`,
-      );
-    }
-    console.log(`Plugin versions are aligned at ${fields[0].value}.`);
+    console.log(`Plugin versions are aligned at ${all[0]}.`);
     return;
   }
 
-  if (!isSemVer(argument)) {
-    console.error(`Invalid SemVer: ${argument}\n${USAGE}`);
+  const current = semver.valid(all[0]);
+  if (current === null) {
+    throw new Error(`Invalid current version: ${all[0]}`);
+  }
+  const target = isRelease(argument)
+    ? semver.inc(current, argument)
+    : semver.valid(argument);
+  if (target === null) {
+    console.error(`Invalid version: ${argument}\n${USAGE}`);
     Deno.exitCode = 2;
     return;
   }
 
-  for (const field of fields) {
-    field.set(argument);
+  for (const { json, paths } of docs) {
+    for (const path of paths) set(json, path, target);
   }
   await Promise.all(
-    documents.map((document) =>
+    docs.map(({ file, json }) =>
       Deno.writeTextFile(
-        document.path,
-        `${JSON.stringify(document.content, null, 2)}\n`,
+        resolve(root, file),
+        `${JSON.stringify(json, null, 2)}\n`,
       )
     ),
   );
-  console.log(`Updated ${fields.length} plugin version fields to ${argument}.`);
+  console.log(`Updated ${all.length} plugin version fields to ${target}.`);
 }
 
 try {

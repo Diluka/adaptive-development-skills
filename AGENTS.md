@@ -94,9 +94,9 @@
 - Hook 仅随可选 Plugin 分发；standalone 不依赖 Plugin、marketplace 或 Hook。改 Plugin/Hook 时保留显式可选安装和独立信任审阅，并证明 Hook 未进入 standalone 安装。
 - 可写状态仅限 launcher 派生的 Plugin 临时子目录，经 `TASK_HANDOFF_DATA` 传递；Deno 仅获该目录读写。脚本用 `PLUGIN_ROOT` 定位，不写项目临时目录、不硬编码安装路径、不解析未承诺的 transcript 格式。
 - 通过获准子进程读项目元数据前，确认命令不会触发 Git hook、filter、helper 或其他外部进程；Deno 的 `--allow-run` 不会继续沙箱化子进程。
-- 生产脚本只用 Deno 2 与 Node 24 共用的 Node 内置 API。launcher 优先 Deno，仅在找不到 `deno` 时回退 Node；选中运行时失败不得再换运行时。Node fallback 的子进程、环境和网络权限更宽；改入口或权限时同时审两条路径。Windows 的 `commandWindows` 显式用 `cmd.exe` 执行 `.cmd`。
+- 生产脚本（仅 `hooks/` 下需在 Deno 与 Node 双运行时运行的脚本）只用 Deno 2 与 Node 24 共用的 Node 内置 API；`scripts/` 下的仓库内部工具不受此限。launcher 优先 Deno，仅在找不到 `deno` 时回退 Node；选中运行时失败不得再换运行时。Node fallback 的子进程、环境和网络权限更宽；改入口或权限时同时审两条路径。Windows 的 `commandWindows` 显式用 `cmd.exe` 执行 `.cmd`。
 - `hooks/codex-hook-types.ts` 以当前最低核对 Codex 版本的生成 schema 约束 stdin 与逐事件 stdout。改事件、字段或支持版本时先更新类型边界，再用 `deno check`；脚本测试只证明自身逻辑，每个已配置 Hook 保留一个代表性测试，不以人工事件镜像重复类型约束，也不称为 Codex 集成测试。
-- 发布 Plugin 仅用 `scripts/bump-version.ts <version>` 同步 Codex、Copilot manifest 与 marketplace。Git marketplace 用户通过 `codex plugin marketplace upgrade` 获取新快照；本地验证按 `plugin-creator` 的 cachebuster 和重装流程，不把同版本缓存覆盖当发行契约。
+- 发布 Plugin 仅用 `scripts/bump-version.ts <major|minor|patch|x.y.z>` 同步 Codex、Copilot manifest 与 marketplace。Git marketplace 用户通过 `codex plugin marketplace upgrade` 获取新快照；本地验证按 `plugin-creator` 的 cachebuster 和重装流程，不把同版本缓存覆盖当发行契约。
 
 ## 完成检查
 
@@ -118,7 +118,7 @@ git diff --check
 scripts/bump-version.ts --check
 deno fmt --check scripts/bump-version.ts
 deno lint --no-config scripts/bump-version.ts
-deno check --no-config --no-lock --no-npm --no-remote scripts/bump-version.ts
+deno check --no-config --no-lock --no-remote scripts/bump-version.ts
 deno fmt --check hooks/codex-hook-types.ts hooks/task-handoff.ts hooks/tests/task-handoff.test.ts
 deno lint --no-config hooks/codex-hook-types.ts hooks/task-handoff.ts hooks/tests/task-handoff.test.ts
 deno check --no-config --no-lock --no-npm --no-remote hooks/codex-hook-types.ts hooks/task-handoff.ts
