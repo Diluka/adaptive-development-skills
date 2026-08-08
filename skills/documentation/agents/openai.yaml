@@ -1,0 +1,4 @@
+interface:
+  display_name: 'Documentation'
+  short_description: '编写临时实施计划并创建、更新、验证与版本控制正式项目文档'
+  default_prompt: '使用 $documentation 按文档类型判定与位置规则编写计划或维护正式项目文档，按当前文档增量选择必要的验证与评审，并按开发任务默认值完成 Git 交付。'

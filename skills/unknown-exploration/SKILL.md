@@ -17,8 +17,8 @@ description: Use when 技术可行性、依赖行为、性能或集成形态真�
 |---|---|
 | 技术可行性、依赖行为、性能或集成形态未知 | 技术探索，见下文“定义与运行试验” |
 | 可运行产品的行为、交互、状态组合或用户风险未知 | 探索性测试，见下文“探索会话” |
-| 已出现明确症状，目标是证明根因 | [systematic-debugging](../systematic-debugging/SKILL.md) |
-| 需要为稳定行为选择长期回归证据 | [evidence-management](../evidence-management/SKILL.md) |
+
+已有症状的根因、外部契约核验、长期回归证据等不是探索形式，按目标条件路由，见下文“边界与转交”。
 
 ## 定义与运行试验（Technical Spike）
 
@@ -36,16 +36,15 @@ description: Use when 技术可行性、依赖行为、性能或集成形态真�
 1. 先检查确切的已安装依赖或现有运行时证据。
 2. 再运行最小命令、请求或独立程序。
 3. 必要时使用可丢弃测试夹具、沙箱、实验分支或工作树；性能问题使用代表性数据。
+4. 每次探测只改变一个变量，用对照或基线隔离非目标因素；性能探索先记录现状基线，再与候选方案对照，避免把无关因素归因到被验证的未知。
 
 只增加回答问题所需的观测，不加入生产架构、通用选项、穷尽测试或无关打磨。
 
-涉及 SDK 或协议而真实契约仍不确定时，把该未知返回 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md)，拆成独立的 [contract-verification](../contract-verification/SKILL.md) 调查单元。取得精确版本和契约证据后，再运行回答未知问题所需的最小安全探测。
-
 临时产物不得覆盖、清理或混入用户已有改动，也不得把临时依赖、锁文件、配置、生成产物或插桩留在最终差异中。使用非敏感代表性数据；正式环境写入、远端修改或额外权限必须取得精确授权，否则报告证据缺口。
 
-试验结束后，按可行、不可行或无法判断记录证据、阻碍、缺失证据和下一个最便宜的试验。删除或明确隔离临时产物，并检查工作区没有遗留准备交付的差异。
+试验结束后，按可行、不可行或无法判断记录证据、阻碍、缺失证据和下一个最便宜的试验。临时产物的清理与隔离见下文“交付与边界”。
 
-决定保留实验内容或把结论整理为版本控制的正式文档时，立即停止把它当临时产物扩展。通过 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md) 按准备保留的实际增量转换和定级；需要落盘计划时再使用 [writing-plans](../writing-plans/SKILL.md)。
+决定保留实验内容或把结论整理为版本控制的正式文档时，立即停止把它当临时产物扩展，按“边界与转交”转交。
 
 ## 探索会话（Exploratory Testing）
 
@@ -64,7 +63,7 @@ description: Use when 技术可行性、依赖行为、性能或集成形态真�
 3. 把已有脚本、自动化检查和工具当作探测手段，不把它们当成限制探索范围的唯一清单。
 4. 追踪与 Charter 相关的新线索。范围外发现只记录必要证据，不静默扩大调查。
 5. 区分直接观察、证据支持的推断和待确认问题。异常出现时，记录环境、前置状态、操作、输出和副作用，争取获得最小可复现条件。
-6. 到达时间盒或停止条件时结束会话，即使仍有未知。不要为了制造“完成”结论而补写未经观察的结果。
+6. 到达时间盒或停止条件时结束会话，即使仍有未知。获得稳定症状或最小可复现条件即结束探索：保留复现证据，转交 [systematic-debugging](../systematic-debugging/SKILL.md) 追因，不在探索内自行诊断。不要为了制造“完成”结论而补写未经观察的结果。
 
 探索不是随意点击。测试者必须能解释当前选择与 Charter、产品模型或新证据的关系；发现数量、执行步数和通过率都不能代替学习价值。
 
@@ -76,9 +75,14 @@ description: Use when 技术可行性、依赖行为、性能或集成形态真�
 
 交付问题或 Charter、适用环境、覆盖说明、关键观察或试验证据、复现证据、剩余未知、结论限制和建议的下一个最小工作单元。复杂功能调研在独立检查能提高目标覆盖或结论准确性时，可以选择评审代理。
 
-- 需要定位已发现症状的原因时，转交 [systematic-debugging](../systematic-debugging/SKILL.md)。
-- 外部契约或第三方边界不确定时，拆成 [contract-verification](../contract-verification/SKILL.md) 调查单元。
-- 发现主观或概率性质量问题需要持续改进时，把代表性发现交给 [baseline-and-eval-testing](../baseline-and-eval-testing/SKILL.md)。
-- 需要正式修改产品时，返回 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md) 重新拆分、定级和选法；调查单元不进入正式实现。
+### 边界与转交
 
-探索可以提出修复建议，但不能把建议、猜测或一次观察描述成已验证实现。调查结束时清理或隔离临时产物，确认没有把探索代码混入项目差异。
+| 目标条件 | 转交技能 | 转交时机 |
+|---|---|---|
+| 已出现明确症状、目标是证明根因；或探索中获得稳定症状 / 最小可复现条件 | [systematic-debugging](../systematic-debugging/SKILL.md) | 保留复现证据后立即转交，不在探索内自行追因 |
+| SDK / 协议等外部契约或第三方边界仍不确定 | [contract-verification](../contract-verification/SKILL.md) | 拆成独立调查单元；先取得精确版本与契约证据，再运行回答未知问题所需的最小安全探测 |
+| 需要为稳定行为选择长期回归证据 | [evidence-management](../evidence-management/SKILL.md) | 已确认稳定不变量、需长期测试时 |
+| 发现主观或概率性质量问题需要持续改进 | [baseline-and-eval-testing](../baseline-and-eval-testing/SKILL.md) | 获得代表性发现时 |
+| 需要正式修改产品，或把探索结论固化为版本控制的正式内容 | [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md) | 停止扩展试验、准备保留或实现时；按准备保留的实际增量重新拆分、定级和选法，需要落盘计划再使用 [documentation](../documentation/SKILL.md) |
+
+调查单元不进入正式实现。探索可以提出修复建议，但不能把建议、猜测或一次观察描述成已验证实现。调查结束时清理或隔离临时产物，确认没有把探索代码混入项目差异，并检查工作区没有遗留准备交付的差异。

@@ -1,4 +1,0 @@
-interface:
-  display_name: "Writing Plans"
-  short_description: "为需要协调、恢复上下文或高风险控制的开发任务编写计划"
-  default_prompt: "使用 $writing-plans 判断当前任务是否需要落盘计划，并在需要时编写与复杂度相称的共享计划。"

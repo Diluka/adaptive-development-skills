@@ -62,6 +62,7 @@
 | acceptance criteria | 验收标准 |
 | non-goal | 非目标 |
 | spec-driven development | 规格驱动开发 |
+| spec chain vs spec document | 规格链 / 规格文档：规格链是需求→设计→任务→实现的可追溯推导链（SDD 的工作对象）；规格文档是承载规格链的高标准正式技术文档（项目附件，可对外交付，如语言规格书）。进入 SDD 的触发信号是「已有或将要产生规格文档」 |
 | behavior-driven development | 行为驱动开发 |
 | Type-Driven Design / Type-Driven Development | 类型驱动设计 / 类型驱动开发；技能名使用 `type-driven-design` |
 | property-based testing | 属性测试 |
