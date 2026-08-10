@@ -7,12 +7,12 @@ description: Use when 任务需求边界模糊，关键歧义、竞争设计选�
 
 ## 定位
 
-本技能承载「讨论节点」如何与用户讨论：把模糊任务先发散再收敛，与用户一起明确需求边界。它是「怎么做」的方法；「何时进入讨论节点、讨论的产出与转换」是讨论节点的微观决策，由入口技能 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md) 定义。
+本技能承载讨论节点如何与用户讨论：把模糊任务先发散再收敛，与用户一起明确需求边界。它是“怎么做”的方法；何时进入讨论节点以及产出如何触发转换属于宏观路由，由 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md) 的 `resources/node-routing.md` 定义。
 
-与相邻方法划界：
+与相邻问题划界；具体方法由 [execution](../execution/SKILL.md) 选择：
 
-- **BDD Discovery**：已有可观察行为但理解不一致时，用具体真实示例收敛出规则边界，见 [behavior-driven-development](../behavior-driven-development/SKILL.md)；头脑风暴负责发散生成选项与业务取舍，两者衔接而非替代。
-- **SDD Requirements**：需求进入规格化、需要成文规格时由 [spec-driven-development](../spec-driven-development/SKILL.md) 承载；头脑风暴只澄清分歧，不承担需求文档化。
+- 已有可观察行为但理解不一致、需要用具体真实示例收敛规则时，不属于本方法的发散目标。
+- 需求进入规格化、需要维护正式规格链时，不属于本方法；头脑风暴只澄清分歧，不承担需求文档化。
 
 ## 核心原则
 
@@ -59,5 +59,5 @@ description: Use when 任务需求边界模糊，关键歧义、竞争设计选�
 
 ## 边界
 
-- 不强制创建设计文档或提交。需要长期保存的内容使用 [documentation](../documentation/SKILL.md)。
+- 不强制创建设计文档或提交。需要长期保存时返回 Workflow 建立正式产物单元，再由 Execution 选法。
 - 不把无关的重新设计带入当前范围。

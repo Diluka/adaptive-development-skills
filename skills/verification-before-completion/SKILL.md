@@ -9,7 +9,7 @@ description: Use when 即将声称工作完成、已修复、通过、安全或�
 
 每项完成声明都要有最新、直接的证据支撑。验证范围应与风险相称；全量测试不一定必要，也未必充分。
 
-验证方式选择（过程选手段）与完成声明核对（收尾核证据）是两件事：前者属验证节点微观决策，见入口 `resources/`（验证方式选择）；本技能只管完成声明核对。验证通过的最低判据与入口一致：至少需求提及的 happy case 通过即算通过，核心或边界敏感处可深入验证。
+验证方式选择（过程选手段）与完成声明核对（收尾核证据）是两件事：前者属于 [execution](../execution/SKILL.md) 的微观决策（见 `resources/verification-selection.md`）；本技能保持独立，只管完成声明和节点转换前的最终核对。验证通过的最低判据与工作流一致：至少需求提及的 happy case 通过即算通过，核心或边界敏感处可深入验证。
 
 ## 映射声明与证据
 
@@ -48,7 +48,7 @@ description: Use when 即将声称工作完成、已修复、通过、安全或�
 
 先按 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md) 判断独立评审是否适用；适用时，再按 [requesting-code-review](../requesting-code-review/SKILL.md) 核对受影响最终差异。
 
-证据失效与再验证规则以 [evidence-management](../evidence-management/SKILL.md) 为准；判定失效后重新核对受影响范围。缺少必要证据时收窄声明。非开发调查没有统一评审门禁，复杂调研只在实际选择了独立检查时报告该证据。
+证据失效与再验证规则见 [execution](../execution/SKILL.md) 的 `resources/evidence.md`；判定失效后重新核对受影响范围。缺少必要证据时收窄声明。非开发调查没有统一评审门禁，复杂调研只在实际选择了独立检查时报告该证据。
 
 ## 启发式结果
 
@@ -56,7 +56,7 @@ description: Use when 即将声称工作完成、已修复、通过、安全或�
 
 明确评估限制，把安装后的真实任务表现和后续具体反馈作为实践验证，并据此继续迭代。
 
-测试本身与需求冲突时使用 [evidence-management](../evidence-management/SKILL.md)，不要削弱真实不变量来追求绿灯。
+测试本身与需求冲突时按 [execution](../execution/SKILL.md) 的 `resources/evidence.md` 处理，不要削弱真实不变量来追求绿灯。
 
 ## 报告
 

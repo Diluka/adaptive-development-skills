@@ -31,13 +31,13 @@ description: Use when 需要确认实际安装或运行的 SDK、框架、协议
 
 ## 契约版本迁移影响
 
-对比目标版本与当前版本的契约差异（发布说明、changelog、类型或传输变化、破坏性变更），把迁移影响面作为可交付事实之一。本技能只交付迁移影响事实，不实施升级；升级执行归 [maintenance-operations](../maintenance-operations/SKILL.md)。
+对比目标版本与当前版本的契约差异（发布说明、changelog、类型或传输变化、破坏性变更），把迁移影响面作为可交付事实之一。本技能只交付迁移影响事实，不实施升级；需要正式迁移时返回 Workflow 建立开发单元，再由 Execution 选择实施方法。
 
 ## 方法边界与衔接
 
-本技能回答既有边界当前是什么。双方共同控制消费者与提供者，且目标是新增或演进消费者期望、契约产物、提供者验证和兼容部署决定时，使用 [consumer-driven-contract-testing](../consumer-driven-contract-testing/SKILL.md)。不要用当前行为探测代替持续契约开发。
+本技能只回答既有边界当前是什么。目标若变为新增或演进消费者期望、契约产物、提供者验证和兼容部署决定，当前调查已结束；把双方控制关系、版本与边界事实返回 Workflow 建立开发单元，再由 Execution 选法。不要用当前行为探测代替持续契约开发。
 
-需要把已核实契约转为正式实现、长期回归测试或契约产物时，停止调查。把确切版本、调用链、观察结果和未决边界返回 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md)，重新选择开发方式和证据支持；本技能不修改实现或新增正式测试。
+需要把已核实契约转为正式实现、长期回归测试或契约产物时，停止调查。把确切版本、调用链、观察结果和未决边界返回 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md) 建立开发单元，再由 [execution](../execution/SKILL.md) 选择开发方式和证据；本技能不修改实现或新增正式测试。
 
 ## 安全边界
 

@@ -59,4 +59,4 @@ description: Use when 已观察到缺陷、失败测试、生产事故、间歇�
 
 报告症状边界、因果链/首错或契约违例、决定性证据、影响、反证、未知和建议修复层；不修改实现或测试。
 
-若还需修复，带被违反的需求/契约、修改层和可复用区分性观测回 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md)；该区分性观测可作为后续 TDD Red 的回归验证素材，由后续单元负责正式回归与变更后验证。外部边界不明则拆 [contract-verification](../contract-verification/SKILL.md)。重新运行区分性观测并检查受影响链路；证据只覆盖一种失败模式时收窄结论。
+若还需修复，带被违反的需求 / 契约、修改层和可复用区分性观测回 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md) 建立开发单元；该观测可作为后续回归素材，具体方法由 [execution](../execution/SKILL.md) 选择。外部边界不明且形成独立证据缺口时，同样返回 Workflow 拆成调查单元，再由 Execution 选法。重新运行区分性观测并检查受影响链路；证据只覆盖一种失败模式时收窄结论。
