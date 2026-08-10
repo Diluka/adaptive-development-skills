@@ -1,6 +1,6 @@
 ---
 name: execution
-description: Use when 需要决定并落实当前工作单元具体怎么做，包括选择开发、调查、文档、验证、评审、交付方法或执行机制，判断证据是否充分，或根据执行结果反馈修正后继续
+description: Use when 需要作为默认微观入口决定并落实当前工作单元具体怎么做，包括选择开发、调查、文档、验证、评审、交付方法或执行机制，判断证据是否充分，或根据执行结果反馈修正后继续；也用于已直接指定的方法执行中需要重选方法、证据或机制
 ---
 
 # Execution：选择并执行具体做法
@@ -10,6 +10,8 @@ description: Use when 需要决定并落实当前工作单元具体怎么做，�
 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md) 决定任务是什么、有哪些工作单元、当前处于哪个节点以及何时转换；本技能是唯一的微观执行决策层，决定当前单元**具体怎么做**并落实执行。
 
 执行面向工作单元要达成的结果，不逐字服从已经过时的计划。需求、不变量、真实调用方、契约和新证据优先；计划（有的话）是可修正的工作依据和共享状态。没有落盘计划不阻塞执行，有计划时引用计划，无计划时直接执行。
+
+**快速路径**：用户已经直接指定标准方法，且不存在跨方法、证据组合或执行机制选择时，可直接加载该方法并由其核验前提，不必先读取本技能的选法资源。方法不适用，或执行中需要重选方法、证据或机制时，再返回本技能。
 
 ## 按需读取资源
 
@@ -24,7 +26,7 @@ description: Use when 需要决定并落实当前工作单元具体怎么做，�
 | 已选定 Characterization / Golden Master / Approval 后如何执行 | [resources/characterization-and-approval.md](resources/characterization-and-approval.md) |
 | 已选定 Eval-Driven Development 后如何执行 | [resources/eval-driven-development.md](resources/eval-driven-development.md) |
 
-标准方法被选中后，读取对应技能并忠实执行其核心循环；用户直接指定标准方法时也由该方法自行核验适用性。没有专项方法能增加独立反馈或证据收益时，直接实现、直接检查或直接操作是一等选择。
+标准方法经本技能选中后，读取对应技能并忠实执行其核心循环。没有专项方法能增加独立反馈或证据收益时，直接实现、直接检查或直接操作是一等选择。
 
 ## 执行循环
 
