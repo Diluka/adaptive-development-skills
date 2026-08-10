@@ -1,4 +1,0 @@
-interface:
-  display_name: "Baseline and Eval Testing"
-  short_description: "以可审阅基线或代表任务评估验证复杂、旧行为或主观概率性输出"
-  default_prompt: "使用 $baseline-and-eval-testing 为复杂或概率性输出建立可审阅基线或代表任务评估，并驱动改进。"

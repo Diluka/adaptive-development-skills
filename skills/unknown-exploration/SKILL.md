@@ -29,7 +29,7 @@ description: Use when 技术可行性、依赖行为、性能或集成形态真�
 - 成功、失败和无法判断时各会观察到什么。
 - 时间或范围边界，以及禁止的副作用和原型的丢弃方式。
 
-预期行为已经明确且只剩实现时，返回 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md) 选择常规方法。
+预期行为已经明确且需要形成正式实现时，返回 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md) 建立开发单元，再由 [execution](../execution/SKILL.md) 选择具体方法。
 
 运行最小探测：
 
@@ -63,7 +63,7 @@ description: Use when 技术可行性、依赖行为、性能或集成形态真�
 3. 把已有脚本、自动化检查和工具当作探测手段，不把它们当成限制探索范围的唯一清单。
 4. 追踪与 Charter 相关的新线索。范围外发现只记录必要证据，不静默扩大调查。
 5. 区分直接观察、证据支持的推断和待确认问题。异常出现时，记录环境、前置状态、操作、输出和副作用，争取获得最小可复现条件。
-6. 到达时间盒或停止条件时结束会话，即使仍有未知。获得稳定症状或最小可复现条件即结束探索：保留复现证据，转交 [systematic-debugging](../systematic-debugging/SKILL.md) 追因，不在探索内自行诊断。不要为了制造“完成”结论而补写未经观察的结果。
+6. 到达时间盒或停止条件时结束会话，即使仍有未知。获得稳定症状或最小可复现条件即结束探索：保留复现证据，不在探索内自行诊断；根因成为新目标或需要新单元时返回 Workflow，工作单元边界不变时返回 Execution 重选方法。不要为了制造“完成”结论而补写未经观察的结果。
 
 探索不是随意点击。测试者必须能解释当前选择与 Charter、产品模型或新证据的关系；发现数量、执行步数和通过率都不能代替学习价值。
 
@@ -73,16 +73,15 @@ description: Use when 技术可行性、依赖行为、性能或集成形态真�
 
 ## 交付与边界
 
-交付问题或 Charter、适用环境、覆盖说明、关键观察或试验证据、复现证据、剩余未知、结论限制和建议的下一个最小工作单元。复杂功能调研在独立检查能提高目标覆盖或结论准确性时，可以选择评审代理。
+交付问题或 Charter、适用环境、覆盖说明、关键观察或试验证据、复现证据、剩余未知、结论限制和建议的下一个最小工作单元。是否需要独立检查以及如何执行，由 [execution](../execution/SKILL.md) 根据证据收益选择。
 
 ### 边界与转交
 
-| 目标条件 | 转交技能 | 转交时机 |
+| 结束条件 | 返回层 | 需要带回的事实 |
 |---|---|---|
-| 已出现明确症状、目标是证明根因；或探索中获得稳定症状 / 最小可复现条件 | [systematic-debugging](../systematic-debugging/SKILL.md) | 保留复现证据后立即转交，不在探索内自行追因 |
-| SDK / 协议等外部契约或第三方边界仍不确定 | [contract-verification](../contract-verification/SKILL.md) | 拆成独立调查单元；先取得精确版本与契约证据，再运行回答未知问题所需的最小安全探测 |
-| 需要为稳定行为选择长期回归证据 | [evidence-management](../evidence-management/SKILL.md) | 已确认稳定不变量、需长期测试时 |
-| 发现主观或概率性质量问题需要持续改进 | [baseline-and-eval-testing](../baseline-and-eval-testing/SKILL.md) | 获得代表性发现时 |
-| 需要正式修改产品，或把探索结论固化为版本控制的正式内容 | [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md) | 停止扩展试验、准备保留或实现时；按准备保留的实际增量重新拆分、定级和选法，需要落盘计划再使用 [documentation](../documentation/SKILL.md) |
+| 已出现明确症状、目标转为证明根因；或探索中获得稳定症状 / 最小可复现条件 | 目标或工作单元变化时返回 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md)；边界不变时返回 [execution](../execution/SKILL.md) | 症状边界、环境、复现步骤、最小条件与尚未解释的因果缺口 |
+| SDK / 协议等外部契约或第三方边界仍不确定 | 需要独立前置调查时返回 Workflow 拆分；否则返回 Execution 重选 | 真实调用位置、确切版本缺口、待核实边界与最小安全探测问题 |
+| 已确认稳定不变量，开始需要长期回归证据；或主观 / 概率性质量需要持续改进 | 返回 Workflow 建立开发单元 | 代表性发现、真实用途、风险边界、可复现性与待保留产物 |
+| 需要正式修改产品，或把探索结论固化为版本控制的正式内容 | 返回 Workflow 建立、拆分和定级开发单元，再由 Execution 选法 | 准备保留的实际增量、授权边界、试验证据、依赖与剩余未知 |
 
 调查单元不进入正式实现。探索可以提出修复建议，但不能把建议、猜测或一次观察描述成已验证实现。调查结束时清理或隔离临时产物，确认没有把探索代码混入项目差异，并检查工作区没有遗留准备交付的差异。

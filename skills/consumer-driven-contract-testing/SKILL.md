@@ -11,7 +11,7 @@ description: Use when 可协作且各自能独立演进或部署的使用方与�
 
 ## 方法内运行前置条件
 
-何时选择本方法（作业节点判据）见入口 `adaptive-development-workflow` 的验证方式选择资源；这里只列运行本方法需要满足的方法内前置条件：
+何时选择本方法见 [execution](../execution/SKILL.md) 的 `resources/verification-selection.md`；这里只列运行本方法需要满足的方法内前置条件：
 
 - 提供方状态能直接建立和清理，不依赖待验证交互串联准备；
 - 契约、使用方版本、提供方版本和验证结果能关联并共享。
@@ -50,7 +50,7 @@ description: Use when 可协作且各自能独立演进或部署的使用方与�
 - 纯内部对象、方法，或同一部署单元内没有独立演进的边界；
 - 仅在一侧存在本地静态类型、生成客户端或共享类型声明。它们不能证明跨进程传输、部署版本和真实提供方兼容；
 - 无法独立准备提供方状态，只能依赖有顺序的长链路测试；
-- 当前任务只是调查确切版本和真实协议行为时，使用 [contract-verification](../contract-verification/SKILL.md)。
+- 当前目标只是调查确切版本和真实协议行为；这不是契约测试开发，结束本方法并把目标边界返回 Workflow，具体调查方法由 Execution 选择。
 
 ## 产出证据
 
@@ -67,4 +67,4 @@ description: Use when 可协作且各自能独立演进或部署的使用方与�
 
 [type-driven-design](../type-driven-design/SKILL.md) 可以改善单个代码库内的可信表示，但不能替代实际消息、提供方状态和版本矩阵。
 
-[evidence-management](../evidence-management/SKILL.md) 决定契约、功能、集成和端到端证据的最终组合，不能用契约测试冒充完整功能覆盖。
+[execution](../execution/SKILL.md) 的 `resources/evidence.md` 决定契约、功能、集成和端到端证据的最终组合，不能用契约测试冒充完整功能覆盖。

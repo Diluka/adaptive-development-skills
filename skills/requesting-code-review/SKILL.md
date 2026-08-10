@@ -1,13 +1,13 @@
 ---
 name: requesting-code-review
-description: Use when 已判定当前增量需要独立评审（判据见入口评审节点资源），需要选择评审执行层、准备证据包、请求无偏评审，或对复杂非开发调研选择独立检查
+description: Use when 工作流已判定当前增量需要独立评审，需要准备证据包、请求无偏评审并选择评审执行层，或对复杂非开发调研执行独立检查
 ---
 
 # 发起独立评审
 
 ## 适用前提
 
-是否需要独立评审由复杂度 / 风险决定，完整判据见 `docs/design.md` §4.2 评审节；判据在入口 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md) 的 `resources/`（重构后），这里只保留精简触发条件：
+是否需要独立评审由工作流按复杂度和风险决定，完整判据见 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md) 的 `resources/node-routing.md`；这里只保留方法内触发条件：
 
 - 复杂或高风险开发任务需要最终独立评审；
 - 常规任务存在定向验证覆盖不到的具体风险；
@@ -17,7 +17,7 @@ description: Use when 已判定当前增量需要独立评审（判据见入口�
 
 ## 决定评审深度
 
-评审深度由复杂度 / 风险决定：常规验证缺口用聚焦受影响差异的独立评审；跨模块契约、依赖迁移、身份、资金、数据或并发等扩大深度并必要时增加专项评审者。完整判据见 `docs/design.md` §4.2 评审节，判据在入口 `resources/`（重构后）。
+评审深度由复杂度和风险决定：常规验证缺口用聚焦受影响差异的独立评审；跨模块契约、依赖迁移、身份、资金、数据或并发等扩大深度并在有独立收益时增加专项评审者。具体执行层和机制选择见 [execution](../execution/SKILL.md) 的 `resources/method-selection.md`。
 
 评审最终准备交付的受影响完整差异，不必逐个评审工作单元或临时调查产物。已有独立评审覆盖相同最终差异、事实和风险面时直接复用；PR/MR 存在评审记录不等于已经覆盖，先检查实际评审范围，不因交付阶段变化重复派发。
 
@@ -67,7 +67,7 @@ git diff --cached
 
 评审者原则上只读且不得继续派生代理。只有根代理可以派发；不要暗示预期结论、预先判定疑点无害或用叙述代替实际差异。
 
-使用 [receiving-code-review](../receiving-code-review/SKILL.md) 核验意见。评审失效与否按实质修改判断：只有改变既有结论或风险面的实质修改才使对应评审失效，此时重新验证受影响范围，并在任务级别仍要求时由未参与该轮实现或修复的独立评审者复审；完整判据见 `docs/design.md` §4.2 评审节，判据在入口 `resources/`（重构后）。
+使用 [receiving-code-review](../receiving-code-review/SKILL.md) 核验意见。评审失效与否按实质修改判断：只有改变既有结论或风险面的实质修改才使对应评审失效，此时重新验证受影响范围，并在任务级别仍要求时由未参与该轮实现或修复的独立评审者复审；节点转换仍按 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md) 判断。
 
 环境无法提供符合上节独立性要求的评审者时，只能阻止本来就要求独立评审的任务声明完成；评审与处理意见都不递归创建新任务。
 

@@ -6,21 +6,21 @@
 
 ### 目标状态（设计思想）
 
-- **结构**：决策（入口技能 `adaptive-development-workflow`：宏观正文 + `resources/` 微观决策资源）+ **方法技能**（其余全部技能）。
+- **结构**：`adaptive-development-workflow` 负责宏观工作流决策，`execution` 负责微观执行决策与落实，标准方法技能 / `execution/resources/` 负责选定后的方法闭环。
 - **任务类型 = 侧重点**：讨论 / 调查 / 作业 / 验证（模糊大分类，可交叉）；**工作节点**：讨论 / 调查 / 设计 / 作业 / 验证 / 评审；技能与节点**多对多**（一技能可服务多节点）。
-- **入口 = 宽泛说明**（定义节点、编排、推荐技能集，所有代理可了解）；**`execution` = 落实具体执行**（干活代理按需研究）。
+- **Workflow = 做什么与何时转换**（分类、拆分、分级、节点编排、范围与授权）；**Execution = 具体怎么做**（开发、调查、验证、评审、文档、交付方法和执行机制选择，证据判断与执行反馈）。
 - **原则**：
   - **命名优先**：技能名（含 `agents/openai.yaml` 的 `display_name`）是对事物最高度的概括，比简介更重要。
   - **独立 / 合并判据**：问题能否清晰定位到该技能——能则独立；不能则合并为「决策 + 方法集合」（被合并方法作 `resources/` 资源）。
   - **加载策略**：简单方法可直接提及；复杂方法经决策确定适用后再按需读取，避免污染上下文。
   - **宁少勿滥**：不过度设计（不预堆砌、不设无收益宽泛技能），但**不用于砍掉已详实完善的内容**。
-  - **分层职责**：宏观决策负责流程编排；方法技能只讲「怎么做」，不承担流程编排。
+  - **分层职责**：Workflow 只负责宏观编排；Execution 是唯一微观选法入口；标准方法只讲选定后「怎么做」，不承担跨方法路由。
 
 ### 实现方法
 
 - 以 `docs/design.md` §5.1 目标技能清单为基准，现有技能**逐个映射**：复用 / 调整 / 拆分 / 合并 / 删除 / 补充。
-- 已决策项（旧名仅作来源，现行技能名以 `docs/design.md` §5.1 为唯一权威源）：`choosing-tests` 拆分并入入口 `resources/`（验证方式选择）；`executing-plans` → `execution`；合并 `subagent-driven-development` + `dispatching-parallel-agents` → `agent-and-parallel-dispatch`；合并 `writing-plans` + `project-documentation` → `documentation`。
-- 微观决策内容**上移入口 `resources/`**，方法正文收敛为「怎么做」。
+- 已决策项（旧名仅作来源，现行结构以 `docs/design.md` §5 为唯一权威源）：`choosing-tests` 的验证选择、`evidence-management` 的证据经验、`baseline-and-eval-testing` 的两个成熟方法迁入 `execution/resources/`；`executing-plans` → `execution`；合并 `subagent-driven-development` + `dispatching-parallel-agents` → `agent-and-parallel-dispatch`；合并 `writing-plans` + `project-documentation` → `documentation`。
+- Workflow 的 `resources/` 只保留宏观节点路由与术语；具体方法、验证、证据和机制选择集中到 `execution/resources/`，独立方法正文收敛为选定后「怎么做」。
 - 依据 `.docs/plans/method-review.md`（42 条改进点 + 二次评审合并判定）与 `.docs/plans/node-skill-allocation.md` 逐技能实施。
 - 分批实施、定向验证、独立评审，按任务复杂度分级。
 
@@ -35,7 +35,7 @@
 ## 开发任务与工作单元
 
 - 需要保留、集成或交付的代码、配置、依赖、测试、脚本、技能、工作流或正式文档变更是开发任务；只交付事实或证据的调查不是，即使使用可丢弃实验。是否写代码、改文件或只读不是判据。
-- 临时产物须隔离且可丢弃；结束时检查依赖、锁文件、配置、生成物和工作区。保留实验或落实调查结论时，停止扩展实验，建立开发单元并重新分级、选法。
+- 临时产物须隔离且可丢弃；结束时检查依赖、锁文件、配置、生成物和工作区。保留实验或落实调查结论时，停止扩展实验，由 Workflow 建立并重新分级开发单元，再由 Execution 选法。
 - 同时要求调查和实现时，整体仍是开发任务。调查只交付证据；正式变更即使已获授权也要新建开发单元、重新路由。只交付既有成果的提交、推送、PR/MR 或部署不另成开发任务。
 - 开发变更默认按实际 `git remote` 和仓库约定完成分支、提交、推送及 GitLab MR/GitHub PR；用户可逐项收窄，非开发任务不产生 Git 交付。
 - 默认交付止于 MR/PR；合并、发布、部署、正式环境写入、权限和其他高影响操作须明确授权。
@@ -77,15 +77,16 @@
 
 ## 技能编写
 
-- **技能包结构**：决策（入口技能 `adaptive-development-workflow`：宏观正文 + `resources/` 微观决策资源）+ **方法技能**（其余全部）；技能↔节点多对多。微观决策内容上移入口 `resources/`，方法正文收敛为「怎么做」。
-- **独立 / 合并判据**：问题能否清晰定位到该技能——能则独立；不能则合并为「决策 + 方法集合」（被合并方法作 `resources/` 资源）。
+- **技能包结构**：`adaptive-development-workflow`（唯一宏观决策入口）+ `execution`（唯一微观决策与执行入口，含按需 `resources/`）+ 独立方法 / 机制技能；技能↔节点多对多。
+- **独立 / 资源判据**：问题可清晰定位、有稳定直接触发和独立闭环，且发现 / 加载收益高于入口成本时独立；跨方法路由、横切经验或需先判断工作单元形状的方法集合归 `execution/resources/`。成熟详实不等于必须独立，资源化不得删减方法内核。
 - **加载策略**：简单方法可直接提及；复杂方法经决策确定适用后再按需读取其说明，避免污染上下文；触发描述应足以判断是否读取全文。
 - 每个技能位于 `skills/<skill-name>/SKILL.md`，目录与 `name` 为相同的英文短横线名；`resources/` 存放随技能安装、按需读取的纯 Markdown 参考。
 - `description` 以 `Use when` 开头，用中英描述触发条件，不概述流程；触发描述应足以让代理判断是否需要读取全文（配合加载策略）。正文以中文为主；术语规则集中在 `skills/adaptive-development-workflow/resources/terminology.md`。
 - **命名优先**：技能命名（含 `agents/openai.yaml` 的 `display_name`）是对事物最高度的概括，比简介更重要——先取一个能涵盖同类能力的好名字，再写简介与正文。
 - 写简洁、正面的决策规则。计划、验证、评审、工作树、TDD、委派和默认交付按单元、风险、证据和授权决定；反面表述仅用于必要禁止。
-- `adaptive-development-workflow` 负责分类、拆分、选法和转换；用户直调标准方法时由该方法自行核验。标准方法技能维护自己的流程和边界。`evidence-management` 只管证据充分性、复用和收敛，不是其他方法的必经门。
-- 只收录通用开发方法；不增加生态、框架或业务手册，也不写托管平台专用 CLI/API/字段。不设宽泛静态验证技能；静态编译/分析归 `evidence-management`，只有实际模型检查或证明需求才考虑形式化验证。
+- `adaptive-development-workflow` 负责分类、拆分、分级、节点编排与转换；`execution` 负责选法、证据与机制并执行。用户直调标准方法时由该方法自行核验，标准方法维护自己的核心循环和边界。
+- `verification-before-completion` 保持独立：它核对完成声明与节点转换就绪状态，不负责选择验证手段。证据充分性、复用、失效与收敛由 `execution/resources/evidence.md` 承担，不是其他方法的必经门。
+- 只收录通用开发方法；不增加生态、框架或业务手册，也不写托管平台专用 CLI/API/字段。不设宽泛静态验证技能；静态编译 / 分析作为 `execution` 的证据类型，只有实际模型检查或证明需求才考虑形式化验证。
 - 修改技能后，用当前 `skill-creator` 的 `scripts/quick_validate.py` 校验；技能链接用相对 Markdown，并运行 `scripts/check-cross-references.ts`。只在 `README.md` 说明思想来源；不追踪、同步上游或承担上游兼容义务。
 
 ## Plugin 与 Hook 发行

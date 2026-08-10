@@ -29,7 +29,7 @@ description: Use when 需要核验独立评审、代码审查或自动化发现�
 4. 把测试作为证据审查，不默认测试或评审解释正确。
 5. 用最小相关检查复现或静态证明问题。
 
-外部行为未知时使用 [contract-verification](../contract-verification/SKILL.md)；意见依赖测试假设时使用 [evidence-management](../evidence-management/SKILL.md)。
+外部行为未知或意见依赖测试假设时，把待核实事实和证据缺口交给 [execution](../execution/SKILL.md) 选择调查或证据手段；形成独立调查目标时先返回 Workflow 拆分工作单元。
 
 ## 决策与行动
 
