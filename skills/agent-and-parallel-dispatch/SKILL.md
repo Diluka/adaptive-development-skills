@@ -1,6 +1,6 @@
 ---
 name: agent-and-parallel-dispatch
-description: Use when 需要在当前任务内委派短小、边界明确的调查/实现/验证单元以节约上下文或获得独立判断，或需要判断多个工作单元能否安全并行并确有收益；Use when delegating short bounded units within the current task, or judging whether multiple work units can safely run in parallel.
+description: Use when 需要在当前任务内委派短小、边界明确的调查/实现/验证单元，判断多个工作单元能否安全并行，或编排独立会话的派发、终态回报与串行集成；Use when delegating bounded units, judging whether work can safely run in parallel, or coordinating dispatch, terminal reporting, and serial integration across independent sessions.
 ---
 
 # 代理与并行编排
@@ -46,6 +46,7 @@ description: Use when 需要在当前任务内委派短小、边界明确的调�
 
 - 协调者（根代理）持有需求、范围、授权、项目写入所有权、跨单元决策、集成和最终验证；执行者只回报新事实、实际差异和验证结果，不并发改计划，也不通过修改另一角色文件自行解决契约分歧。
 - 委派说明固定工作单元、主要方法、相关证据、读写边界、角色产出、停止条件和验证责任，并明确是否授予局部编排权及其边界；该权限不随委派自动转移。有统一计划时提供精确路径和单元标识。
+- 纳入多会话协调流程的工作会话必须向直接投放任务的上级会话回报终态；只有上级明确声明任务管理权已移交且无需回复时例外。临时会话（侧边会话）按用户安排，详细边界见 [resources/parallel-dispatch.md](resources/parallel-dispatch.md)。
 - 协调者读取实际文件、排查隐藏重叠，在所有写入停止后的组合状态重跑验证；不只接受成功摘要。适用时同步计划，按任务级别或具体风险决定最终独立评审。
 - 最终普通 Git 交付由协调者在组合验证后串行完成；执行者不独立持有提交、推送或 PR/MR 交付轨道。合并、发布、部署、正式环境数据变更、权限修改和破坏性操作仍需用户明确要求，不得通过委派扩大边界。
 

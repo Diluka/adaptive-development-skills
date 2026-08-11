@@ -135,4 +135,7 @@
 | root agent / subagent | 根代理 / 子代理 |
 | delegation | 委派 |
 | bounded task | 边界明确的任务 |
+| coordinating session / worker session | 协调会话 / 工作会话；显式派发关系中也可称上级会话 / 子会话，不表示产品中的会话层级 |
+| temporary session / side session | 临时会话（侧边会话）；不因并存就自动加入多会话协调图或回报链 |
+| management handoff | 任务管理权移交；改变对应路径的任务级管理归属，只有同时明确“无需回复”才解除对原上级会话的回报义务 |
 | independent review | 独立评审 |
