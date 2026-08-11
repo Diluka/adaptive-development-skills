@@ -88,6 +88,6 @@
 ## 其他思想来源
 
 - [obra/superpowers](https://github.com/obra/superpowers)
-- [OpenAI Notion Plugin：`notion-research-documentation`](https://github.com/openai/plugins/tree/main/plugins/notion/skills/notion-research-documentation)
-- [lzj960515/codex-workbench](https://github.com/lzj960515/codex-workbench)，其中 Wiki 维护模型参考 [`wiki-maintainer`](https://github.com/lzj960515/codex-workbench/tree/main/skills/wiki-maintainer)
+- [openai/plugins](https://github.com/openai/plugins)
+- [lzj960515/codex-workbench](https://github.com/lzj960515/codex-workbench)
 - [lzj960515/codrive](https://github.com/lzj960515/codrive)
