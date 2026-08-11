@@ -31,7 +31,7 @@
 | `brainstorming` | 讨论方法：先发散探索再收敛，澄清会实质改变方案的关键歧义并明确界限 |
 | `maintenance-operations` | 安全执行清理死代码、依赖升级等不改变行为或只改变解析的维护变更 |
 | `agent-and-parallel-dispatch` | 选择执行形态，判断委派或并行是否确有收益，管理任务内子代理委派与粗粒度并行编排 |
-| `documentation` | 编写临时实施计划并创建、更新、验证与版本控制正式项目文档（需求、设计、决策、交付对外文档） |
+| `documentation` | 按读者任务选择最小充分形态，编写临时计划，并创建、组织和持续维护 README、Wiki 与其他正式项目文档 |
 
 ### 方法 · 标准方法
 
@@ -88,5 +88,6 @@
 ## 其他思想来源
 
 - [obra/superpowers](https://github.com/obra/superpowers)
-- [lzj960515/codex-workbench](https://github.com/lzj960515/codex-workbench)
+- [OpenAI Notion Plugin：`notion-research-documentation`](https://github.com/openai/plugins/tree/main/plugins/notion/skills/notion-research-documentation)
+- [lzj960515/codex-workbench](https://github.com/lzj960515/codex-workbench)，其中 Wiki 维护模型参考 [`wiki-maintainer`](https://github.com/lzj960515/codex-workbench/tree/main/skills/wiki-maintainer)
 - [lzj960515/codrive](https://github.com/lzj960515/codrive)
