@@ -67,7 +67,7 @@ Use when 当前工作节点已经由工作流确定，需要为工作单元选�
 | 情况 | 机制 |
 |---|---|
 | 单元短小、状态集中，切换成本高于收益 | 当前代理直接执行 |
-| 当前任务内有边界清晰、短小、可独立回报的只读或局部单元，或多个单元可安全并行 | [agent-and-parallel-dispatch](../../agent-and-parallel-dispatch/SKILL.md) |
+| 当前任务内有边界清晰、短小、可独立回报的只读或局部单元，多个单元可安全并行，或需要编排独立会话的派发、回报与串行集成 | [agent-and-parallel-dispatch](../../agent-and-parallel-dispatch/SKILL.md) |
 | 项目改动需要分支、根路径被占用、存在重叠改动、高风险 Git 操作或粗粒度并行写入 | [using-git-worktrees](../../using-git-worktrees/SKILL.md) |
 | 需要共享顺序、阻塞前置、证据和恢复点 | [documentation](../../documentation/SKILL.md) 维护唯一计划，按主技能执行 |
 | 操作影响大、难回退且工具支持安全预览 | 在方法内先执行 `dry-run` / `plan` / 预览，再核对精确目标后执行 |

@@ -30,7 +30,7 @@
 | `verification-before-completion` | 独立核对完成声明和节点转换就绪状态，为最终增量匹配最新且直接的验证、CI、观测或评审证据 |
 | `brainstorming` | 讨论方法：先发散探索再收敛，澄清会实质改变方案的关键歧义并明确界限 |
 | `maintenance-operations` | 安全执行清理死代码、依赖升级等不改变行为或只改变解析的维护变更 |
-| `agent-and-parallel-dispatch` | 选择执行形态，判断委派或并行是否确有收益，管理任务内子代理委派与粗粒度并行编排 |
+| `agent-and-parallel-dispatch` | 选择执行形态，判断委派或并行是否确有收益，管理任务内子代理及独立会话的派发、回报与粗粒度并行编排 |
 | `documentation` | 按读者任务选择最小充分形态，编写临时计划，并创建、组织和持续维护 README、Wiki 与其他正式项目文档 |
 
 ### 方法 · 标准方法
