@@ -89,7 +89,7 @@
 - `adaptive-development-workflow` 负责分类、拆分、分级、节点编排与转换；`execution` 负责选法、证据与机制并执行。用户直调标准方法时由该方法自行核验，标准方法维护自己的核心循环和边界。
 - `verification-before-completion` 保持独立：它核对完成声明与节点转换就绪状态，不负责选择验证手段。证据充分性、复用、失效与收敛由 `execution/resources/evidence.md` 承担，不是其他方法的必经门。
 - 只收录通用开发方法；不增加生态、框架或业务手册，也不写托管平台专用 CLI/API/字段。不设宽泛静态验证技能；静态编译 / 分析作为 `execution` 的证据类型，只有实际模型检查或证明需求才考虑形式化验证。
-- 修改技能后，用当前 `skill-creator` 的 `scripts/quick_validate.py` 校验；技能链接用相对 Markdown，并运行 `scripts/check-cross-references.ts`。思想来源只在 `README.md` 底部列出来源链接，不说明具体引用、借鉴或吸收内容；不追踪、同步上游或承担上游兼容义务。
+- 修改技能后，用当前 `skill-creator` 的 `scripts/quick_validate.py` 校验；技能链接用相对 Markdown，并运行 `scripts/check-cross-references.ts`。思想来源只在 `README.md` 底部列出来源链接，不说明具体引用、借鉴或吸收内容；只参考聚合仓库内某个插件、技能或其他独立单元时链接该具体单元，整体作为全面参考对象时链接仓库根；不追踪、同步上游或承担上游兼容义务。
 
 ## Plugin 与 Hook 发行
 
