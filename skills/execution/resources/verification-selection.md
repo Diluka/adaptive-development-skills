@@ -30,7 +30,8 @@ Workflow 已决定验证节点存在及其转换边界。本资源先写清待�
 | 简单确定性规则 | 最低真实接缝上的示例或参数化测试 |
 | 广泛输入空间、状态机或转换不变量 | [property-based-testing](../../property-based-testing/SKILL.md) |
 | 框架绑定、序列化、装饰器或中间件 | 真实框架模块或窄集成测试 |
-| SQL、事务或持久化映射 | 可丢弃的本地 / 测试数据库集成 |
+| 通过约定、注册、扫描、反射、生成描述或运行环境间接激活 | 真实激活入口，或保留相同选择、解释和执行机制的最窄集成路径 |
+| 事务或持久化映射 | 可丢弃的本地 / 测试存储集成 |
 | 独立演进的服务协议兼容 | [consumer-driven-contract-testing](../../consumer-driven-contract-testing/SKILL.md)，再按业务风险补功能或集成证据 |
 | 实际 SDK、框架、协议或 CLI 契约事实 | [contract-verification](../../contract-verification/SKILL.md) 的确切版本和安全探测 |
 | 稳定但逐项断言成本高的旧 / 复杂输出 | [baseline-and-evaluation.md](baseline-and-evaluation.md) 中的 Characterization / Golden Master / Approval |
@@ -40,6 +41,8 @@ Workflow 已决定验证节点存在及其转换边界。本资源先写清待�
 | 正式发布后的剩余风险 | 只读运行观测；受控暴露节奏另由 [delivery](../../delivery/SKILL.md) 执行且不扩大授权 |
 
 通常从能保留待验证行为的最低真实接缝开始；较低层会抹掉目标风险时才上移。明确要求自顶层独立验证时，从与当前声明相称的最高真实调用方入口开始，再按失败定位补低层证据，不自动搭建跨越所有服务和外部依赖的完整环境。
+
+间接激活产物的选择、解释和执行路径共同构成激活契约。验证覆盖产物如何进入真实执行链；产物内容、局部调用、编译和格式分别保留为局部证据。既有 CI 实际经过相同激活路径时才覆盖该契约。
 
 ## 组合与强度
 
