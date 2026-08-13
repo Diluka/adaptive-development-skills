@@ -45,4 +45,4 @@ Use when 需要决定工作单元进入哪个节点、何时退出，以及结�
 
 ## 完成与交付转换
 
-即将从最后一个工作节点转向交付时，保持 [verification-before-completion](../../verification-before-completion/SKILL.md) 独立：它把实现就绪声明映射到最终增量上仍适用的直接证据，并核对适用评审状态。普通 Git 交付创建 MR/PR 后立即回报链接和当前 CI 状态，再等待最终推送提交的自动流水线稳定终态；这一终态也是任务完成声明的直接证据。
+即将从最后一个工作节点转向交付时，保持 [verification-before-completion](../../verification-before-completion/SKILL.md) 独立：它把实现就绪声明映射到最终增量上仍适用的直接证据，并核对适用评审状态。普通 Git 交付创建 MR/PR 后立即回报链接和当前 CI 状态，再等待最终推送提交的自动流水线稳定终态。这一终态证明流水线等待已经结束；必需自动任务均成功时才支持 CI 通过和交付就绪声明，失败或取消时只支撑对应流水线结果的报告。

@@ -36,7 +36,7 @@ description: Use when 需要核验独立评审、代码审查或自动化发现�
 | 结论 | 处理 |
 |---|---|
 | 已确认的既有伴生产物失配 | 在原任务内按 [documentation](../documentation/SKILL.md) 的授权边界同步最小内容 |
-| 已确认且阻塞当前任务 | 按 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md) 判断是否需要升级；有适用计划时再按 [documentation](../documentation/SKILL.md) 的阻塞前置条件规则处理 |
+| 已确认且阻塞当前任务 | 按 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md) 判断是否需要升级；有适用计划时按 [documentation](../documentation/SKILL.md) 的计划修正规则记录结论和暂停点 |
 | 已确认缺陷 | 报告证据；已授权时实施最小完整修复并验证 |
 | 目标正确但建议方案错误 | 说明约束；已授权时采用符合契约的方案 |
 | 不明确 | 只有仓库证据无法解决时才询问缺失需求 |
@@ -49,7 +49,7 @@ description: Use when 需要核验独立评审、代码审查或自动化发现�
 
 属于当前范围的意见处理是原任务的一部分。有适用计划时由根代理写回结论和状态；任务外发现只写入评审结论或交付报告，取得新授权后才进入计划。非开发任务记录到调查结论或评审报告。
 
-实质修改项目产物后，重新运行受影响验证。任务级别或具体风险仍要求独立评审时，再通过 [requesting-code-review](../requesting-code-review/SKILL.md) 复审失效范围。阻塞前置条件按 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md) 的任务边界处理，有适用计划时再使用 [documentation](../documentation/SKILL.md)。
+实质修改项目产物后，重新运行受影响验证。任务级别或具体风险仍要求独立评审时，再通过 [requesting-code-review](../requesting-code-review/SKILL.md) 复审失效范围。任务边界与必要技术前置由 [adaptive-development-workflow](../adaptive-development-workflow/SKILL.md) 和 Execution 判定；有适用计划时按 [documentation](../documentation/SKILL.md) 同步结论与暂停点。
 
 其他会偏离已授权业务行为、范围或交付结果，扩大权限或新增副作用的修改，先暂停确认。
 
