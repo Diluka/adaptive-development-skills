@@ -22,7 +22,7 @@
 | -------------- | ------------------------ | -------------------------------------------------------- |
 | **① 宏观决策** | 任务入口的总路由         | 判断任务侧重点、拆分分级、编排工作流、处理节点转换       |
 | **② 微观决策** | 当前工作单元的执行层     | 各节点进入后具体怎么做、选什么方法 / 证据 / 机制          |
-| **③ 方式方法** | 选定后落地执行的具体方法 | SDD / BDD / TDD / 头脑风暴 / 测试 / 调查 / 验证 / 评审等 |
+| **③ 方式方法** | 选定后落地执行的具体方法 | SDD / BDD / 头脑风暴 / 测试 / 调查 / 验证 / 评审等 |
 
 设计目标：理清「宏观决策 → 微观决策 →
 方式方法」的决策链路与编排逻辑，三者衔接清晰、不打架、不重复、不遗漏。
@@ -184,7 +184,6 @@ flowchart TD
 | ------- | --------------------------------------------- | ----------------------------------------------------------------------- |
 | **BDD** | 需求没有明确具体设计                          | 写实现 + 写测试，最好全链路 e2e，以可执行行为表达用户需求               |
 | **SDD** | 有 / 会产生规格文档（明确触发信号）           | 规格详细 → 利于单元测试；因规格是高标准正式文档，SDD 在自主决策时不常见 |
-| **TDD** | 行为单一的小功能（bug 修复、函数开发 / 重构） | 用例即设计 + 验证，节约设计与验证；大功能会边界重叠、冗余分支           |
 
 - **写文档类作业**：记录 / 总结（内容已存在）→ 直接写 + 事实准确性核对；说明 /
   指南（说明已有系统）→ 先调查后写 + 对照验证；规划 / 设计（内容不存在）→
@@ -265,7 +264,7 @@ flowchart TD
 
 | 类别 | 技能                                                                                                      |
 | ---- | --------------------------------------------------------------------------------------------------------- |
-| 开发 | `spec-driven-development`、`behavior-driven-development`、`test-driven-development`、`type-driven-design` |
+| 开发 | `spec-driven-development`、`behavior-driven-development`、`type-driven-design` |
 | 测试 | `property-based-testing`、`consumer-driven-contract-testing`                                             |
 | 调查 | `system-understanding`、`contract-verification`、`systematic-debugging`、`unknown-exploration`            |
 
@@ -308,7 +307,7 @@ Workflow 决定进入哪个工作节点；进入后由 `execution` 推荐适用�
 | 讨论 | 何时讨论      | `execution`（微观决策）；`brainstorming`（方法 · 主）                                                                                                                                                                                                                                                    |
 | 调查 | 何时调查      | `execution`（微观决策）；system-understanding / contract-verification / systematic-debugging / unknown-exploration（方法 · 主，按问题类型选一）                                                                                                                                                          |
 | 设计 | 何时设计      | `execution`（微观决策）；`documentation`（方法 · 主）                                                                                                                                                                                                                                                    |
-| 作业 | 何时作业      | `execution`（微观决策）；SDD / BDD / TDD / 维护（方法 · 主，默认一种、可拆分）；`type-driven-design`（**设计方式** · 叠加推荐 · 与开发方式正交）；属性 / 契约 / 行为基线或 Eval（方法 · 辅）；`documentation`（方法 · 辅）；`using-git-worktrees` / `agent-and-parallel-dispatch`（机制 · 辅） |
+| 作业 | 何时作业      | `execution`（微观决策）；SDD / BDD / 维护（方法 · 主，默认一种、可拆分）；`type-driven-design`（**设计方式** · 叠加推荐 · 与开发方式正交）；属性 / 契约 / 行为基线或 Eval（方法 · 辅）；`documentation`（方法 · 辅）；`using-git-worktrees` / `agent-and-parallel-dispatch`（机制 · 辅） |
 | 验证 | 何时验证      | `execution`（微观决策）；属性 / 契约 / 行为基线或 Eval（方法 · 主 / 辅）；`verification-before-completion`（完成转换门 · 独立）；`agent-and-parallel-dispatch`（机制 · 辅）                                                                                                                                |
 | 评审 | 何时评审      | `execution`（微观决策）；`requesting-code-review` / `receiving-code-review`（方法 · 主）；`agent-and-parallel-dispatch`（机制 · 评审必须分离）；`using-git-worktrees`（机制 · 辅）                                                                                                                       |
 
