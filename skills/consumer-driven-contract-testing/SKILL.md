@@ -65,6 +65,6 @@ description: Use when 可协作且各自能独立演进或部署的使用方与�
 
 [contract-verification](../contract-verification/SKILL.md) 核实当前边界实际上如何工作；使用方驱动契约测试把双方可管理的最小期望保留为持续兼容证据。
 
-[type-driven-design](../type-driven-design/SKILL.md) 可以改善单个代码库内的可信表示，但不能替代实际消息、提供方状态和版本矩阵。
+[execution](../execution/SKILL.md) 的 `resources/type-driven-design.md` 可以改善单个代码库内的可信表示，但不能替代实际消息、提供方状态和版本矩阵。
 
 [execution](../execution/SKILL.md) 的 `resources/evidence.md` 决定契约、功能、集成和端到端证据的最终组合，不能用契约测试冒充完整功能覆盖。

@@ -1,4 +1,0 @@
-interface:
-  display_name: "Spec-Driven Development"
-  short_description: "用可演进规格衔接需求、设计、任务、实现与持续反馈闭环"
-  default_prompt: "使用 $spec-driven-development 将这个复杂需求整理为可演进、可追溯的规格并推进实现。"

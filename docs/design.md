@@ -22,13 +22,13 @@
 | -------------- | ------------------------ | -------------------------------------------------------- |
 | **① 宏观决策** | 任务入口的总路由         | 判断任务侧重点、拆分分级、编排工作流、处理节点转换       |
 | **② 微观决策** | 当前工作单元的执行层     | 各节点进入后具体怎么做、选什么方法 / 证据 / 机制          |
-| **③ 方式方法** | 选定后落地执行的具体方法 | SDD / BDD / 头脑风暴 / 测试 / 调查 / 验证 / 评审等 |
+| **③ 方式方法** | 选定后落地执行的具体方法 | 独立标准方法与 Execution 按需方法资源 |
 
 设计目标：理清「宏观决策 → 微观决策 →
 方式方法」的决策链路与编排逻辑，三者衔接清晰、不打架、不重复、不遗漏。
 
 宏观决策由 `adaptive-development-workflow` 负责；微观决策与执行统一由
-`execution` 负责；标准方法技能或 `execution/resources/` 中的方法资源只维护选定后的核心循环与边界。
+`execution` 负责；独立标准方法技能或 `execution/resources/` 中的方法资源只维护选定后的核心循环与边界。
 
 ### 1.3 项目产物表达
 
@@ -189,12 +189,13 @@ flowchart TD
 - **判据二：直接作业 vs 设计**
   - 目标、范围、验收、逻辑来源、关键选择和依赖均已就绪，且执行可逆、无需跨会话恢复共享状态 → 直接作业，多步骤最多维护简短清单。
   - 任务内容复杂或高风险，或已选定的稳定架构方向仍需展开 → 进入设计节点并形成相称的依据。
-- **方法选择（看任务、不互斥）**：
+- **方法选择（看任务）**：
 
-| 方法    | 适用场景                                      | 说明                                                                    |
-| ------- | --------------------------------------------- | ----------------------------------------------------------------------- |
-| **BDD** | 需求没有明确具体设计                          | 写实现 + 写测试，最好全链路 e2e，以可执行行为表达用户需求               |
-| **SDD** | 有 / 会产生规格文档（明确触发信号）           | 规格详细 → 利于单元测试；因规格是高标准正式文档，SDD 在自主决策时不常见 |
+| 方法 | 适用场景 | 说明 |
+|---|---|---|
+| **BDD** | 真实业务、开发与测试角色对可观察行为存在会改变实现或验收的理解差异 | 由 Execution 按需加载 Discovery / Formulation / Automation；普通开发不生成 Given / When / Then 仪式 |
+| **SDD** | 已有正式规格被明确选为当前实施依据，且需要维护需求到实现的可追溯规格链 | 由 Execution 按需加载 Requirements / Design / Tasks / Implement / Evolve；规格的存在或复杂度本身不触发 |
+| **类型驱动设计** | 当前类型系统能够清晰排除稳定非法状态 | 作为开发中的强推荐设计原则随所选方法使用，不建立独立工作单元；外部输入仍运行时解析 |
 
 - **写文档类作业**：记录 / 总结（内容已存在）→ 直接写 + 事实准确性核对；说明 /
   指南（说明已有系统）→ 先调查后写 + 对照验证；规划 / 设计（内容不存在）→
@@ -211,8 +212,7 @@ flowchart TD
     Testing）/ 调试；可再按观察视角分**黑盒**（只管外部行为：e2e
     可自动可手动，如 curl 接口）/
     **白盒**（验证内部环节：单元测试、打断点调试）。
-  - **静态检查**（工具静态验证，不运行行为）：build（编译）、lint、format、类型检查。类型驱动设计下，build
-    即可验证类型系统。
+  - **静态检查**（工具静态验证，不运行行为）：build（编译）、lint、format、类型检查。类型驱动设计下，真实严格配置的 build 或类型检查证明类型约束；外部输入和运行行为仍需对应证据。
   - **审视核对**（看，不执行）：直接看内容核对是否符合预期，用于文字类产物（文档、文案）。
 - **手动测试的适用性看项目**：复杂耦合高、外部引用多的项目，某些路径无法自动验证，需手动回归，甚至比自动更有效、更常见。
 - **验证默认组合**：先从真实消费或激活路径直接证明需求明确提及的正常场景，再完成适用于当前增量的仓库强制检查。主手段覆盖不全处，用能拒绝具体未证风险的辅助手段补齐；证据足以支持当前交付声明后停止追加。
@@ -269,13 +269,12 @@ flowchart TD
 | `agent-and-parallel-dispatch` | 代理与并行编排（执行形态分配、并行独立性、实现与验证双轨、派发集成） | 合并 `subagent-driven-development` + `dispatching-parallel-agents` |
 | `documentation`               | 文档写作与管理（临时计划 + 正式文档，含 README / Wiki 知识组织、位置规则与 Git 交付边界） | 合并 `writing-plans` + `project-documentation`                     |
 
-#### 方法 · 标准方法（校对为主）
+#### 方法 · 标准方法（独立入口）
 
-| 类别 | 技能                                                                                                      |
-| ---- | --------------------------------------------------------------------------------------------------------- |
-| 开发 | `spec-driven-development`、`behavior-driven-development`、`type-driven-design` |
-| 测试 | `property-based-testing`、`consumer-driven-contract-testing`                                             |
-| 调查 | `system-understanding`、`contract-verification`、`systematic-debugging`、`unknown-exploration`            |
+| 类别 | 技能 |
+|---|---|
+| 测试 | `property-based-testing`、`consumer-driven-contract-testing` |
+| 调查 | `system-understanding`、`contract-verification`、`systematic-debugging`、`unknown-exploration` |
 
 #### 拆分并入
 
@@ -286,6 +285,11 @@ flowchart TD
   `execution/resources/baseline-and-evaluation.md`；Characterization / Golden Master /
   Approval 与 Eval-Driven Development 两个成熟方法分别完整保留在
   `characterization-and-approval.md` 与 `eval-driven-development.md`，不增加独立技能入口。
+- BDD、SDD 与类型驱动设计取消独立技能入口，完整方法内核分别保留在
+  `execution/resources/behavior-driven-development.md`、
+  `execution/resources/spec-driven-development.md` 与
+  `execution/resources/type-driven-design.md`。BDD 只服务真实跨角色共享理解缺口；
+  SDD 只服务已明确作为实施依据的正式规格；类型驱动设计作为开发中的强推荐设计原则随所选方法应用。
 
 ### 5.2 独立技能设计原则
 
@@ -316,7 +320,7 @@ Workflow 决定进入哪个工作节点；进入后由 `execution` 推荐适用�
 | 讨论 | 何时讨论      | `execution`（微观决策）；`brainstorming`（方法 · 主）                                                                                                                                                                                                                                                    |
 | 调查 | 何时调查      | `execution`（微观决策）；system-understanding / contract-verification / systematic-debugging / unknown-exploration（方法 · 主，按问题类型选一）                                                                                                                                                          |
 | 设计 | 何时设计      | `execution`（微观决策）；`documentation`（方法 · 主）                                                                                                                                                                                                                                                    |
-| 作业 | 何时作业      | `execution`（微观决策）；SDD / BDD / 维护（方法 · 主，默认一种、可拆分）；`type-driven-design`（**设计方式** · 叠加推荐 · 与开发方式正交）；属性 / 契约 / 行为基线或 Eval（方法 · 辅）；`documentation`（方法 · 辅）；`using-git-worktrees` / `agent-and-parallel-dispatch`（机制 · 辅） |
+| 作业 | 何时作业      | `execution`（微观决策）；直接实现 / 维护 / 按需 BDD 或 SDD 资源（方法 · 主，默认一种）；类型驱动设计资源（设计原则 · 强推荐 · 随开发方法应用）；属性 / 契约 / 行为基线或 Eval（方法 · 辅）；`documentation`（方法 · 辅）；`using-git-worktrees` / `agent-and-parallel-dispatch`（机制 · 辅） |
 | 验证 | 何时验证      | `execution`（微观决策）；属性 / 契约 / 行为基线或 Eval（方法 · 主 / 辅）；`verification-before-completion`（完成转换门 · 独立）；`agent-and-parallel-dispatch`（机制 · 辅）                                                                                                                                |
 | 评审 | 何时评审      | `execution`（微观决策）；`requesting-code-review` / `receiving-code-review`（方法 · 主）；`agent-and-parallel-dispatch`（机制 · 评审必须分离）；`using-git-worktrees`（机制 · 辅）                                                                                                                       |
 
@@ -369,6 +373,9 @@ Workflow 是唯一宏观决策入口：正文承载任务分类、拆分分级�
 - `baseline-and-evaluation.md`：可重放行为与概率能力的短分流经验；
 - `characterization-and-approval.md`：Characterization / Golden Master / Approval 核心循环；
 - `eval-driven-development.md`：Eval-Driven Development 核心循环。
+- `behavior-driven-development.md`：真实跨角色共享理解缺口下的 Discovery / Formulation / Automation；
+- `spec-driven-development.md`：以既有正式规格为实施依据的 Requirements / Design / Tasks / Implement / Evolve；
+- `type-driven-design.md`：开发单元内编码稳定不变量的强推荐设计原则与静态证明边界。
 
 结果只改变当前动作、方法、证据组合或计划细节时，Execution 在原节点内修正后继续；
 改变任务或节点宏观边界时，返回 Workflow 重新编排。

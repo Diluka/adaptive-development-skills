@@ -55,6 +55,6 @@ description: Use when 算法、解析器、序列化、状态机或数据转换�
 
 属性测试用独立属性、生成和收缩探索广泛输入空间。单个回归示例可以固化已发现的最小反例，但广泛输入不变量仍由本技能拥有；只有示例行为与广泛输入不变量具有独立目标和失败边界时，才返回 Workflow 拆成两个单元。行为单一且只有确定性示例判据时，本方法不适用，返回 Execution 重选。
 
-[type-driven-design](../type-driven-design/SKILL.md) 排除类型层面的非法表示；属性测试继续验证可信运行时值上的算法、变形关系和状态机不变量，不能因为算法使用类型就改走类型建模。
+[execution](../execution/SKILL.md) 的 `resources/type-driven-design.md` 在开发单元内排除类型层面的非法表示；属性测试继续验证可信运行时值上的算法、变形关系和状态机不变量，不能因为算法使用类型就改走类型建模。
 
 [execution](../execution/SKILL.md) 的 `resources/baseline-and-evaluation.md` 从真实执行中记录当前行为或评价概率能力，不能替代独立属性；整体证据组合按其 `resources/evidence.md` 收敛。

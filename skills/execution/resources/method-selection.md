@@ -31,17 +31,18 @@ Workflow 的直接作业判据成立时直接执行，多步骤最多维护简�
 | 当前主要目标 | 首选做法 |
 |---|---|
 | 微小任务，或需求、调用方、契约和影响实现结构的架构决定已清楚且专项方法不增加独立反馈 | 直接实现，并按 `verification-selection.md` 补最小充分证据 |
-| 已有或将产生高标准、可演进规格，需要贯通需求、设计、任务与实现 | [spec-driven-development](../../spec-driven-development/SKILL.md) |
-| 跨业务与技术角色需要以真实示例共同发现、表述和自动化可观察行为 | [behavior-driven-development](../../behavior-driven-development/SKILL.md) |
+| 已有高标准正式规格被明确选为当前实施依据，需要贯通需求、设计、任务、实现与证据 | 读取 [spec-driven-development.md](spec-driven-development.md) 维护规格链 |
+| 真实业务、开发与测试角色对可观察行为存在会改变实现或验收的理解差异 | 读取 [behavior-driven-development.md](behavior-driven-development.md)，以具体示例完成 Discovery / Formulation / Automation |
 | 删除、依赖变更或其他行为保持维护，需要证明调用方、加载面与解析边界 | [maintenance-operations](../../maintenance-operations/SKILL.md) |
-| 稳定领域状态、公共 API、协议阶段、权限或单位值得由类型排除非法状态 | 把 [type-driven-design](../../type-driven-design/SKILL.md) 作为独立或正交设计单元；不可信外部输入仍运行时解析 |
 | 广泛输入空间的独立不变量本身是主要风险 | [property-based-testing](../../property-based-testing/SKILL.md) 可作为开发单元的主要验证方法，具体证据选择见 `verification-selection.md` |
 | 独立演进的 consumer / provider 需要持续证明版本兼容 | [consumer-driven-contract-testing](../../consumer-driven-contract-testing/SKILL.md) |
 | 复杂旧行为需在改动前建立可审阅行为基线，或概率性能力需由代表任务驱动 | 读取 [baseline-and-evaluation.md](baseline-and-evaluation.md)，按结果形状选择两个不同方法之一 |
 
+**开发中的强推荐设计原则**：当前语言能够排除稳定领域状态、公共 API、协议阶段、权限或单位的非法表示时，在所选开发方法内采用 [type-driven-design.md](type-driven-design.md)。它不成为第二个主要方法或独立工作单元；不可信外部输入仍运行时解析。
+
 数据或状态转换先确定事实来源、转换规则、失败边界和执行生命周期，再选择实现机制。实现机制消费既有权威，把规则的唯一维护边界保留在其权威来源。
 
-用户直接要求某个标准方法时读取该方法，并先核验其方法内前提。不存在独立属性、真实 consumer 不可识别或规格并非正式项目依据时，方法名称不能替代适用性。
+用户直接要求某个标准方法时读取对应技能或资源，并先核验方法内前提：属性测试需要独立属性，使用方驱动契约测试需要真实 consumer，BDD 需要跨角色理解差异，SDD 需要已被明确选为实施依据的正式规格。方法名称不能替代适用性。类型驱动设计是开发中的推荐设计原则，只有稳定不变量与当前类型能力相匹配时才展开其完整资源。
 
 ## 写作与操作作业
 
@@ -61,7 +62,7 @@ Workflow 的直接作业判据成立时直接执行，多步骤最多维护简�
 | 当前节点内的具体目标 | 首选做法 |
 |---|---|
 | 落盘计划以协调、恢复上下文或控制风险，或维护正式项目文档 | [documentation](../../documentation/SKILL.md)；文档类型和位置由其资源判断 |
-| 按可演进规格贯通复杂实现 | [spec-driven-development](../../spec-driven-development/SKILL.md)，并用 `documentation` 管理文档位置与生命周期 |
+| 以已选定的正式规格贯通实现 | [spec-driven-development.md](spec-driven-development.md) 维护规格链，并用 `documentation` 管理文档位置与生命周期 |
 | 发起独立评审或处理评审意见 | [requesting-code-review](../../requesting-code-review/SKILL.md) / [receiving-code-review](../../receiving-code-review/SKILL.md) |
 | 管理主干集成、持续可发布或渐进暴露节奏 | [delivery](../../delivery/SKILL.md) |
 | 交接开发分支、提交、推送、PR/MR、同步或清理 | [finishing-a-development-branch](../../finishing-a-development-branch/SKILL.md) |

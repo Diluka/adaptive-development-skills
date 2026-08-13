@@ -1,4 +1,0 @@
-interface:
-  display_name: "Type-Driven Design"
-  short_description: "用类型建模稳定不变量、排除非法状态并保留必要运行时证据"
-  default_prompt: "使用 $type-driven-design 将稳定领域不变量编码为类型约束，并明确仍需运行时验证的边界。"

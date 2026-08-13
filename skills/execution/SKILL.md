@@ -11,7 +11,7 @@ description: Use when 需要作为默认微观入口决定并落实当前工作�
 
 执行面向工作单元要达成的结果，不逐字服从已经过时的计划。需求、不变量、真实调用方、契约和新证据优先；计划（有的话）是可修正的工作依据和共享状态。没有落盘计划不阻塞执行，有计划时引用计划，无计划时直接执行。
 
-**快速路径**：用户已经直接指定标准方法，且不存在跨方法、证据组合或执行机制选择时，可直接加载该方法并由其核验前提，不必先读取本技能的选法资源。方法不适用，或执行中需要重选方法、证据或机制时，再返回本技能。
+**快速路径**：用户已经直接指定一个独立标准方法，且不存在跨方法、证据组合或执行机制选择时，可直接加载该方法并由其核验前提，不必先读取本技能的选法资源。BDD、SDD 与类型驱动设计由本技能按下表加载对应资源。方法不适用，或执行中需要重选方法、证据或机制时，再返回本技能。
 
 ## 按需读取资源
 
@@ -20,13 +20,16 @@ description: Use when 需要作为默认微观入口决定并落实当前工作�
 | 当前问题 | 资源 |
 |---|---|
 | 调查、开发、文档、评审、交付或执行机制怎么选 | [resources/method-selection.md](resources/method-selection.md) |
+| 已确认存在跨业务与技术角色的共享行为理解缺口 | [resources/behavior-driven-development.md](resources/behavior-driven-development.md) |
+| 已有正式规格被明确选为当前实施依据，需要维护可追溯规格链 | [resources/spec-driven-development.md](resources/spec-driven-development.md) |
+| 稳定不变量可由当前类型系统排除，或需明确静态与运行时边界 | [resources/type-driven-design.md](resources/type-driven-design.md) |
 | 进入验证节点后，选什么验证手段或专项测试方法 | [resources/verification-selection.md](resources/verification-selection.md) |
 | 证据是否充分、能否复用、何时失效、如何收敛 | [resources/evidence.md](resources/evidence.md) |
 | 复杂旧行为与主观、多解或概率性能力之间如何分流 | [resources/baseline-and-evaluation.md](resources/baseline-and-evaluation.md) |
 | 已选定 Characterization / Golden Master / Approval 后如何执行 | [resources/characterization-and-approval.md](resources/characterization-and-approval.md) |
 | 已选定 Eval-Driven Development 后如何执行 | [resources/eval-driven-development.md](resources/eval-driven-development.md) |
 
-标准方法经本技能选中后，读取对应技能并忠实执行其核心循环。没有专项方法能增加独立反馈或证据收益时，直接实现、直接检查或直接操作是一等选择。
+标准方法经本技能选中后，读取对应技能或资源并忠实执行其核心循环。没有专项方法能增加独立反馈或证据收益时，直接实现、直接检查或直接操作是一等选择。开发使用可靠静态类型时，优先在当前单元内用类型表达稳定不变量；这项设计原则不要求建立独立方法单元。
 
 ## 执行循环
 

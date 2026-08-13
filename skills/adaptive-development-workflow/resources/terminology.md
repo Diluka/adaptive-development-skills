@@ -27,7 +27,7 @@
 | RFD | Reflected File Download | 反射型文件下载；Web 安全漏洞语境 |
 | DoR | Definition of Ready | 就绪定义 |
 | DoD | Definition of Done | 完成定义 |
-| SDD | Spec-Driven Development | 规格驱动开发；不要与单纯编写规格或实施计划混同 |
+| SDD | Spec-Driven Development | 规格驱动开发；以明确作为实施依据的正式规格维护可追溯规格链 |
 | BDD | Behavior-Driven Development | 行为驱动开发；核心实践为 Discovery、Formulation、Automation |
 | PBT | Property-Based Testing | 属性测试；缩写没有上下文时优先写完整方法名 |
 | CDC | Consumer-Driven Contract Testing | 使用方驱动契约测试；也可能表示 Change Data Capture，必须结合语境判断 |
@@ -61,9 +61,9 @@
 | acceptance criteria | 验收标准 |
 | non-goal | 非目标 |
 | spec-driven development | 规格驱动开发 |
-| spec chain vs spec document | 规格链 / 规格文档：规格链是需求→设计→任务→实现的可追溯推导链（SDD 的工作对象）；规格文档是承载规格链的高标准正式技术文档（项目附件，可对外交付，如语言规格书）。进入 SDD 的触发信号是「已有或将要产生规格文档」 |
+| spec chain vs spec document | 规格链 / 规格文档：规格链是需求→设计→任务→实现的可追溯推导链（SDD 的工作对象）；规格文档是承载规格链的高标准正式技术文档（项目附件，可对外交付，如语言规格书）。只有已有正式规格被明确选为当前实施依据时，才由 Execution 加载 SDD 资源 |
 | behavior-driven development | 行为驱动开发 |
-| Type-Driven Design / Type-Driven Development | 类型驱动设计 / 类型驱动开发；技能名使用 `type-driven-design` |
+| Type-Driven Design / Type-Driven Development | 类型驱动设计 / 类型驱动开发；在开发单元内用类型排除稳定非法状态的设计原则 |
 | property-based testing | 属性测试 |
 | consumer-driven contract testing | 使用方驱动契约测试 |
 | characterization testing | 特征测试；描述系统当前实际行为，不自动代表正确需求 |

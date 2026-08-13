@@ -17,7 +17,7 @@
 | `adaptive-development-workflow` | 宏观决策入口：判断任务侧重点与交付意图，拆分和分级工作单元，编排节点与转换；`resources/` 只保留宏观节点路由和术语 |
 | `execution` | 微观决策与执行入口：选择开发、调查、文档、验证、评审、交付方法与执行机制，判断证据充分性，落实动作并根据结果反馈 |
 
-`execution/resources/` 按需提供 `method-selection.md`、`verification-selection.md`、`evidence.md`、`baseline-and-evaluation.md`、`characterization-and-approval.md` 和 `eval-driven-development.md`。其中 `baseline-and-evaluation.md` 只按结果形状分流；后两个资源分别完整保留 Characterization / Golden Master / Approval 与 Eval-Driven Development 的成熟方法循环，不再把它们包装成一个独立复合技能。
+`execution/resources/` 按需提供方法选择、验证与证据经验，也完整保留无需独立发现入口的方法内核：BDD、SDD、类型驱动设计、Characterization / Golden Master / Approval 与 Eval-Driven Development。`method-selection.md` 只在前提成立时加载对应资源；没有额外反馈或证据收益时直接执行。
 
 ### 方法 · 执行与机制
 
@@ -33,15 +33,17 @@
 | `agent-and-parallel-dispatch` | 选择执行形态，判断委派或并行是否确有收益，管理任务内子代理及独立会话的派发、回报与粗粒度并行编排 |
 | `documentation` | 按读者任务选择最小充分形态，编写临时计划，并创建、组织和持续维护 README、Wiki 与其他正式项目文档 |
 
-### 方法 · 标准方法
+### 方法 · 按需资源
 
 #### 开发
 
-| 技能 | 用途 |
+| 资源 | 用途 |
 |---|---|
-| `spec-driven-development` | 以可演进规格贯通 Requirements、Design / Plan、Tasks 与 Implement |
-| `behavior-driven-development` | 通过 Discovery、Formulation、Automation 和真实业务示例形成共享行为 |
-| `type-driven-design` | 把稳定领域不变量编码为类型约束，在可信边界内排除非法表示 |
+| [`spec-driven-development.md`](skills/execution/resources/spec-driven-development.md) | 已有正式规格被明确选为实施依据时，以 Requirements、Design / Plan、Tasks、Implement、Evolve 维护可追溯规格链 |
+| [`behavior-driven-development.md`](skills/execution/resources/behavior-driven-development.md) | 真实业务与技术角色存在共享理解差异时，通过 Discovery、Formulation、Automation 和具体示例形成共享行为 |
+| [`type-driven-design.md`](skills/execution/resources/type-driven-design.md) | 作为开发中的强推荐设计原则，把稳定领域不变量编码为类型约束，并保留不可信输入的运行时解析 |
+
+### 方法 · 独立标准方法
 
 #### 测试
 
