@@ -44,7 +44,7 @@ description: Use when 需要管理从主干集成、持续保持可发布，到�
 ## 方法边界
 
 - 本技能决定集成、交付与受控暴露方法内部的节奏，不决定功能工作单元的主要开发或证据方法；后者由 [execution](../execution/SKILL.md) 为各工作单元选择。
-- 本技能管交付节奏决策；分支、提交、推送和 MR/PR 等 Git 交接机械执行由 [finishing-a-development-branch](../finishing-a-development-branch/SKILL.md) 按普通 Git 交付默认值处理。合并、制品发布、环境变更和部署不在该默认值内；计划、流水线配置或本技能触发都不会把它们纳入范围。主干健康检查是节奏层检查，不重复该技能的就绪核对。
+- 本技能管交付节奏决策；分支、提交、推送、MR/PR 及其自动流水线终态等待由 [finishing-a-development-branch](../finishing-a-development-branch/SKILL.md) 按普通 Git 交付默认值处理。观察并等待流水线自动 review 环境任务属于该交接流程；合并、制品发布、主动环境变更和正式环境部署属于单独授权范围。主干健康检查是节奏层检查，不重复该技能的就绪核对。
 - 功能开关、金丝雀和 A/B 分流是可选机制，不是独立正确性证据，也不应为了人工测试改变产品设计。
 - 不可逆数据迁移、公共契约破坏或无法按群体隔离的共享副作用不能仅靠缩小流量解决；先建立兼容迁移、状态边界与恢复方案。
 - 完成声明通过 [verification-before-completion](../verification-before-completion/SKILL.md) 核对当前制品、观测、决策与最终状态，不能用开发环境或过时指标代替。
