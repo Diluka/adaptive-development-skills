@@ -1,7 +1,7 @@
 {
   "name": "adaptive-development-skills",
   "metadata": {
-    "description": "Risk-adaptive development workflow skills",
+    "description": "Problem-specific development method skills",
     "version": "0.3.0"
   },
   "owner": {
@@ -10,7 +10,7 @@
   "plugins": [
     {
       "name": "adaptive-development-skills",
-      "description": "Risk-adaptive development workflow skills for GitHub Copilot.",
+      "description": "Problem-specific development method skills for GitHub Copilot.",
       "version": "0.3.0",
       "source": "./"
     }

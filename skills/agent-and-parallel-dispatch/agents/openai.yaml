@@ -1,4 +1,0 @@
-interface:
-  display_name: 'Agent and Parallel Dispatch'
-  short_description: '选择执行形态，管理任务内子代理与独立会话的派发、回报和串行集成'
-  default_prompt: '使用 $agent-and-parallel-dispatch 判断委派或并行是否确有收益，选择安全执行形态，并正确编排任务内子代理及独立会话的派发、终态回报与串行集成。'

@@ -1,4 +1,4 @@
 interface:
   display_name: "Delivery"
   short_description: "管理主干集成、持续交付与渐进式受控发布的交付节奏"
-  default_prompt: "使用 $delivery 按主干集成、持续交付与渐进式发布管理交付，并把普通 Git 交付与需明确要求的合并、发布和部署分开处理。"
+  default_prompt: "使用 $delivery 按主干集成、持续交付或渐进式发布设计交付节奏，并分别核对 Git、发布、部署和正式环境操作的授权。"

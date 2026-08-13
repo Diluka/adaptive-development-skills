@@ -1,0 +1,4 @@
+interface:
+  display_name: "Eval-Driven Development"
+  short_description: "用代表任务、grader、基线和重复试验改进概率性能力"
+  default_prompt: "使用 $eval-driven-development 为这个概率性能力建立任务集、grader 与基线，并通过重复试验衡量改进和回归。"

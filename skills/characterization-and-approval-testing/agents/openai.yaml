@@ -1,0 +1,4 @@
+interface:
+  display_name: "Characterization and Approval Testing"
+  short_description: "从真实执行建立可审阅的遗留行为基线并发现意外漂移"
+  default_prompt: "使用 $characterization-and-approval-testing 从真实入口建立稳定、可审阅的行为基线，并核对修改前后的差异。"

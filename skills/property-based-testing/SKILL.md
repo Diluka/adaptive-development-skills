@@ -45,7 +45,7 @@ description: Use when 算法、解析器、序列化、状态机或数据转换�
 - 输入集合小且封闭，参数化示例能更清楚地覆盖全部风险；
 - 结果主要是主观评价、概率分布或多种合理答案；
 - 外部副作用昂贵、不可逆或无法隔离，生成执行会造成真实风险；
-- 属性、输入域或工具可行性仍未知；本方法尚不具备前提，返回 Execution 重选，未知形成独立目标时返回 Workflow 拆分调查单元。
+- 属性、输入域或工具可行性仍未知；本方法尚不具备前提，先用最小试验回答对应未知。
 
 ## 产出证据
 
@@ -53,8 +53,8 @@ description: Use when 算法、解析器、序列化、状态机或数据转换�
 
 ## 相邻方法
 
-属性测试用独立属性、生成和收缩探索广泛输入空间。单个回归示例可以固化已发现的最小反例，但广泛输入不变量仍由本技能拥有；只有示例行为与广泛输入不变量具有独立目标和失败边界时，才返回 Workflow 拆成两个单元。行为单一且只有确定性示例判据时，本方法不适用，返回 Execution 重选。
+属性测试用独立属性、生成和收缩探索广泛输入空间。单个回归示例可以固化已发现的最小反例，但广泛输入不变量仍由本技能拥有；示例行为与广泛输入不变量具有独立目标和失败边界时分别验证。行为单一且只有确定性示例判据时，直接使用示例测试。
 
 [type-driven-design](../type-driven-design/SKILL.md) 排除类型层面的非法表示；属性测试继续验证可信运行时值上的算法、变形关系和状态机不变量，不能因为算法使用类型就改走类型建模。
 
-[execution](../execution/SKILL.md) 的 `resources/baseline-and-evaluation.md` 从真实执行中记录当前行为或评价概率能力，不能替代独立属性；整体证据组合按其 `resources/evidence.md` 收敛。
+[characterization-and-approval-testing](../characterization-and-approval-testing/SKILL.md) 从真实执行记录当前行为，[eval-driven-development](../eval-driven-development/SKILL.md) 评价概率性能力；二者都不能替代独立属性。

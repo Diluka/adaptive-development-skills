@@ -1,47 +1,22 @@
-# 通过工作树并行开发
+# Parallel Development with Worktrees
 
-本资源说明与代理产品无关的工作树并行开发模型。
+Use when multiple writers will work in the same repository at the same time.
 
-## 所有权
+## Isolation contract
 
-粗粒度、持续写入且并发执行的项目工作单元，各自需要一个负责执行上下文和一个独立工作树。工作单元只拥有自己的目标、文件、分支或分离 HEAD、生成产物与运行资源；协调者拥有整体需求、依赖、共享契约、跨单元决策、最终集成、验证和完成声明。
+Before dispatch, record for each writer:
 
-同一执行上下文内的短小只读调查、信息收集，或不需要持久写入所有权和独立生命周期的局部协作，可以使用临时辅助执行者。它们不拥有独立开发轨道，也不称为并行开发任务。一旦单元需要持续并发修改项目、独立长上下文或跨协调者停启恢复，就为它分配独立工作树和负责执行上下文。已有上下文可以转入或继续复用该工作树，不要求每次创建新上下文。
+- goal and expected result;
+- worktree path and branch;
+- owned files or modules;
+- shared generated files, schemas, lockfiles, migrations, ports, processes, databases and services;
+- dependency on other work and the integration order;
+- validation and reporting responsibility.
 
-每个工作树有独立目录、索引和检出状态，但不会自动隔离以下共享状态：
+Two branches can proceed concurrently when each has a stable input contract and neither changes an assumption the other must discover during implementation. Shared lockfiles, schemas, generated outputs and mutable services need one owner or a serial integration step.
 
-- Git 公共目录中的对象、refs、远端引用、仓库配置、钩子、`refs/stash` 和工作树注册信息；
-- 同一逻辑文件、锁文件、生成规则、迁移序列与共享接口；
-- 端口、进程、数据库、缓存、消息系统、外部服务、凭据和其他运行资源。
+## Integration
 
-为各单元分配不重叠的写入面和运行资源。不能证明隔离时，缩小单元、把一方改为只读或顺序执行；不同工作树本身不是并行安全的充分证据。
+Each writer reports its exact commit or diff, validation, remaining risks and shared-resource changes. The coordinator verifies those facts, integrates dependent changes in order, resolves conflicts from domain intent rather than text position, and runs the smallest combined check that exercises the interaction.
 
-## 依赖与协调状态
-
-协调者用一份唯一账本维护有向无环依赖图。工作任务只读取对应单元或不可变快照并回报变化，不复制或并发编辑全局计划。账本至少记录：
-
-| 字段 | 作用 |
-|---|---|
-| `run_id`、`unit_id`、`attempt` | 关联一次协调运行、稳定工作单元和本次尝试 |
-| 目标、完成判据、范围、授权 | 限定单元行为和外部副作用 |
-| `depends_on`、就绪条件 | 表达真实串行依赖 |
-| 输入、写入与运行资源所有权 | 排除并发冲突 |
-| 负责执行上下文标识与状态定位信息 | 维持单一写入所有者并在恢复时对账 |
-| 工作树、分支或基点 | 定位实际项目状态 |
-| 状态、产物与验证 | 区分任务自报与协调者接收 |
-
-使用 `blocked`、`ready`、`provisioning`、`running`、`attention`、`reported`、`accepted`、`failed`、`cancelled` 等可区分状态。只有同时满足以下条件，单元才进入 `ready`：前置单元已 `accepted`、必要输入可见、没有待决选择，并且与同时运行单元在信息、写入、契约、顺序和集成上独立。
-
-## 派发、回收与串行集成
-
-派发说明必须自包含：目标与判据、范围与授权、已确认事实、精确输入、依赖状态、工作树与写入所有权、共享契约、验证责任、会话角色、上级回报目标、回报格式和停止条件。执行者不得擅自创建或转派同层级工作单元，也不替协调者改变全局计划或交付授权；获授局部编排权时，只在原单元内派发更小的执行单元。
-
-每轮只派发当前 `ready` 前沿。并发上限取执行工具、工作树冲突、机器资源与验证成本允许值中的最小值；空闲容量不是填满前沿的理由。同一单元同一次尝试已经在准备或运行时，不重复派发。
-
-纳入协调流程并明确收到派发任务的工作会话必须主动向直接上级会话回报终态；只有上级明确声明任务管理权已移交且无需回复时例外，局部编排权不免除该义务。临时会话（侧边会话）的回报关系按用户安排。
-
-工作会话报告成功完成后，单元只进入 `reported`。协调者读取真实文件、工作树状态、产物和验证证据后，才把它标记为 `accepted` 并解锁后继；失败、受阻或取消按实际状态记录且不解锁后继。回报失败、重复或顺序不确定时，按 `run_id + unit_id + attempt` 对账；确认旧尝试不可继续且重试不会重复副作用后，再增加 `attempt`。
-
-协调者拥有最终普通 Git 交付；工作任务只执行派发快照明确分配的 Git 操作。并行拓扑不改变开发任务原有的分支、提交、推送和 PR/MR 默认值或用户限制，也不把合并、发布、部署、正式环境写入、权限修改或其他高影响操作纳入授权。
-
-同一仓库的合并、冲突处理、组合验证和最终交付保持串行。所有写入者停止后，在最终组合状态重新运行验证；并行期间的移动中间状态不作为完成证据。需要进程崩溃恢复、持久消息、租约、周期巡检或严格无人值守保证时，使用外部控制器，不把普通任务消息描述为这些能力。
+Worktree isolation does not make reviews independent and does not isolate runtime state. Assign those responsibilities explicitly when the task needs them.
