@@ -1,6 +1,6 @@
 {
   "name": "adaptive-development-skills",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Risk-adaptive development workflow skills with an optional task handoff hook.",
   "author": {
     "name": "Diluka",
