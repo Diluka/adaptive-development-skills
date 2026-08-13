@@ -9,7 +9,7 @@
 以下内容保留原始英文：
 
 - 产品、项目、语言、框架和包的正式名称；
-- API、SDK、CLI、HTTP、SQL、TDD、PR/MR、APM 等通行缩写；
+- API、SDK、CLI、HTTP、SQL、PR/MR、APM 等通行缩写；
 - 命令、参数、环境变量、路径、文件名、配置键、符号、类型和错误信息；
 - 技能名、Git 引用、协议标记和传输字段等必须精确匹配的值。
 
@@ -29,7 +29,6 @@
 | DoD | Definition of Done | 完成定义 |
 | SDD | Spec-Driven Development | 规格驱动开发；不要与单纯编写规格或实施计划混同 |
 | BDD | Behavior-Driven Development | 行为驱动开发；核心实践为 Discovery、Formulation、Automation |
-| TDD | Test-Driven Development | 测试驱动开发；只表示该方法本身，不代指一般测试，一般测试直接写“测试” |
 | PBT | Property-Based Testing | 属性测试；缩写没有上下文时优先写完整方法名 |
 | CDC | Consumer-Driven Contract Testing | 使用方驱动契约测试；也可能表示 Change Data Capture，必须结合语境判断 |
 | RCA | Root Cause Analysis | 根因分析 |

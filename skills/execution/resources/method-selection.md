@@ -33,7 +33,6 @@ Use when 当前工作节点已经由工作流确定，需要为工作单元选�
 | 微小任务，或需求、调用方、契约和影响实现结构的架构决定已清楚且专项方法不增加独立反馈 | 直接实现，并按 `verification-selection.md` 补最小充分证据 |
 | 已有或将产生高标准、可演进规格，需要贯通需求、设计、任务与实现 | [spec-driven-development](../../spec-driven-development/SKILL.md) |
 | 跨业务与技术角色需要以真实示例共同发现、表述和自动化可观察行为 | [behavior-driven-development](../../behavior-driven-development/SKILL.md) |
-| 精确、自包含、确定性零件具有独立稳定判据和真实接缝，Red-first 有设计反馈 | [test-driven-development](../../test-driven-development/SKILL.md) |
 | 删除、依赖变更或其他行为保持维护，需要证明调用方、加载面与解析边界 | [maintenance-operations](../../maintenance-operations/SKILL.md) |
 | 稳定领域状态、公共 API、协议阶段、权限或单位值得由类型排除非法状态 | 把 [type-driven-design](../../type-driven-design/SKILL.md) 作为独立或正交设计单元；不可信外部输入仍运行时解析 |
 | 广泛输入空间的独立不变量本身是主要风险 | [property-based-testing](../../property-based-testing/SKILL.md) 可作为开发单元的主要验证方法，具体证据选择见 `verification-selection.md` |
@@ -42,7 +41,7 @@ Use when 当前工作节点已经由工作流确定，需要为工作单元选�
 
 数据或状态转换先确定事实来源、转换规则、失败边界和执行生命周期，再选择实现机制。实现机制消费既有权威，把规则的唯一维护边界保留在其权威来源。
 
-用户直接要求某个标准方法时读取该方法，并先核验其方法内前提。不能得到合法 Red、不存在独立属性、真实 consumer 不可识别或规格并非正式项目依据时，方法名称不能替代适用性。
+用户直接要求某个标准方法时读取该方法，并先核验其方法内前提。不存在独立属性、真实 consumer 不可识别或规格并非正式项目依据时，方法名称不能替代适用性。
 
 ## 写作与操作作业
 
