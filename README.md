@@ -24,7 +24,7 @@
 | 技能 | 用途 |
 |---|---|
 | `using-git-worktrees` | 隔离分支与并行写入，维护工作树所有权、共享资源和串行集成边界 |
-| `finishing-a-development-branch` | 核对分支就绪状态，按实际 `git remote` 和仓库约定完成默认 Git 交付，并分开处理合并或清理 |
+| `finishing-a-development-branch` | 核对分支就绪状态，按实际 `git remote` 完成默认 Git 交付，先回报 MR/PR 与 CI，再等待自动流水线终态 |
 | `requesting-code-review` | 在独立视角能补充风险证据时准备和执行评审 |
 | `receiving-code-review` | 先核验审查意见，再决定是否以及如何修改 |
 | `verification-before-completion` | 独立核对完成声明和节点转换就绪状态，为最终增量匹配最新且直接的验证、CI、观测或评审证据 |
