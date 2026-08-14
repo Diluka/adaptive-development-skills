@@ -61,7 +61,9 @@ Workflow 的直接作业判据成立时直接执行，多步骤最多维护简�
 
 | 当前节点内的具体目标 | 首选做法 |
 |---|---|
-| 落盘计划以协调、恢复上下文或控制风险，或维护正式项目文档 | [documentation](../../documentation/SKILL.md)；文档类型和位置由其资源判断 |
+| 落盘计划以协调当前任务、恢复其上下文或控制风险 | [documentation](../../documentation/SKILL.md) 的临时计划方法 |
+| 长期目标跨独立工作单元、上下文、MR/PR、发布或环境推进，需要恢复当前阶段与下一合法工作单元 | [documentation](../../documentation/SKILL.md) 的持续项目执行状态方法 |
+| 维护其他正式项目文档 | [documentation](../../documentation/SKILL.md)；文档类型和位置由其资源判断 |
 | 以已选定的正式规格贯通实现 | [spec-driven-development.md](spec-driven-development.md) 维护规格链，并用 `documentation` 管理文档位置与生命周期 |
 | 发起独立评审或处理评审意见 | [requesting-code-review](../../requesting-code-review/SKILL.md) / [receiving-code-review](../../receiving-code-review/SKILL.md) |
 | 管理主干集成、持续可发布或渐进暴露节奏 | [delivery](../../delivery/SKILL.md) |
@@ -76,7 +78,8 @@ Workflow 的直接作业判据成立时直接执行，多步骤最多维护简�
 | 单元短小、状态集中，切换成本高于收益 | 当前代理直接执行 |
 | 当前任务内有边界清晰、短小、可独立回报的只读或局部单元，多个单元可安全并行，或需要编排独立会话的派发、回报与串行集成 | [agent-and-parallel-dispatch](../../agent-and-parallel-dispatch/SKILL.md) |
 | 项目改动需要分支、根路径被占用、存在重叠改动、高风险 Git 操作或粗粒度并行写入 | [using-git-worktrees](../../using-git-worktrees/SKILL.md) |
-| Workflow 已判定需要跨单元协调、跨会话恢复或高风险控制 | [documentation](../../documentation/SKILL.md) 维护唯一计划，按主技能执行 |
+| Workflow 已判定当前任务需要跨单元协调、跨会话恢复或高风险控制 | [documentation](../../documentation/SKILL.md) 维护唯一临时计划，按主技能执行 |
+| Workflow 已判定长期目标需要跨独立工作单元恢复 | [documentation](../../documentation/SKILL.md) 维护唯一持续项目执行状态，按主技能执行 |
 | 操作影响大、难回退且工具支持安全预览 | 在方法内先执行 `dry-run` / `plan` / 预览，再核对精确目标后执行 |
 
 委派和并行只有在节省上下文、提供独立判断或缩短关键路径的收益高于交接成本时使用。代理数、会话数和工作树不改变任务级别，也不单独触发落盘计划。计划、实现、自查、独立评审、CI 和运行时验证是不同机制，不能互相冒充。
