@@ -1,4 +1,4 @@
 interface:
   display_name: "System Understanding"
-  short_description: "理解现有系统结构、运行路径与历史演进，并审查架构决策依据"
-  default_prompt: "使用 $system-understanding 建立可追溯的系统事实模型，或审查架构职责、所有权与状态边界并交付决策依据。"
+  short_description: "还原现有系统结构、运行路径、状态所有权与历史演进"
+  default_prompt: "使用 $system-understanding 从当前源码、装配、调用方和运行证据还原具体系统事实。"
