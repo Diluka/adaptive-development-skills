@@ -56,7 +56,7 @@
 
 | 技能 | 用途 |
 |---|---|
-| `system-understanding` | 理解现有系统的结构、运行路径、历史演进与架构决策 |
+| `system-understanding` | 理解现有系统的结构、运行路径、状态所有权与历史演进 |
 | `contract-verification` | 核验确切版本下已安装或运行的 SDK、协议、框架与外部边界事实 |
 | `systematic-debugging` | 从已观察症状追踪到第一个错误状态和因果链 |
 | `unknown-exploration` | 以最小可丢弃试验或受控探索会话回答技术未知与行为风险 |
