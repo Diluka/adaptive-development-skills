@@ -1,43 +1,83 @@
 ---
 name: execution
-description: Use when 需要作为默认微观入口决定并落实当前工作单元具体怎么做，包括选择开发、调查、文档、验证、评审、交付方法或执行机制，判断证据是否充分，或根据执行结果反馈修正后继续；也用于已直接指定的方法执行中需要重选方法、证据或机制
+description: Use when 需要决定并落实当前工作单元具体怎么做——选择调查、开发、验证、文档、评审或交付方法，判断证据是否充分，或根据执行结果反馈修正后继续
 ---
 
 # Execution：选择并执行具体做法
 
-## 职责
+[adaptive-development-workflow](../adaptive-development-workflow/SKILL.md) 决定任务是什么、有哪些工作单元、当前处于哪个节点；本技能决定当前单元**具体怎么做**并落实执行。
 
-[adaptive-development-workflow](../adaptive-development-workflow/SKILL.md) 决定工作单元、级别和节点；本技能只处理当前单元下一步怎么做。以用户选定结果、真实调用方和已核验契约为边界，直接完成足以交付该结果的最小实现与证据。
-
-用户已指定独立标准方法，且无需组合其他方法、证据或机制时，直接加载该方法并核验其前提。否则只读取当前决定需要的资源：
-
-| 当前决定 | 资源 |
-|---|---|
-| 选择调查、开发、文档、评审、交付方法或执行机制 | [resources/method-selection.md](resources/method-selection.md) |
-| 已确认存在跨业务与技术角色的共享行为理解缺口 | [resources/behavior-driven-development.md](resources/behavior-driven-development.md) |
-| 已有正式规格被明确选为实施依据 | [resources/spec-driven-development.md](resources/spec-driven-development.md) |
-| 稳定不变量适合由当前类型系统表达 | [resources/type-driven-design.md](resources/type-driven-design.md) |
-| 选择验证手段或判断证据是否充分 | [resources/verification-selection.md](resources/verification-selection.md) / [resources/evidence.md](resources/evidence.md) |
-| 复杂旧行为或主观、概率性结果需要专项方法 | [resources/baseline-and-evaluation.md](resources/baseline-and-evaluation.md) |
-
-专项方法没有额外反馈或证据收益时，直接实现、直接检查或直接操作。
+执行面向工作单元要达成的结果，不逐字服从已经过时的计划。需求、不变量、真实调用方、契约和新证据优先；计划（有的话）是可修正的工作依据和共享状态。没有落盘计划不阻塞执行，有计划时引用计划，无计划时直接执行。
 
 ## 执行循环
 
-1. **确认当前边界**：读取仓库说明、相关计划和工作状态；确认用户选定结果、真实调用方、适用契约、授权与仍会改变行动的证据缺口。复用条件未变的已有证据。
-2. **选择下一步**：有真实缺口时选择一个主要方法；目标和做法已经清楚时直接执行。验证与机制只覆盖当前增量的具体需要。
-3. **执行并核对**：修改完成选定结果所需的最小范围，经真实消费或激活路径核对需求明确提及的场景，并运行仓库对该增量要求的检查。
-4. **反馈**：动作、方法或证据需要调整时在当前节点继续；工作单元、级别、节点、范围、授权、交付结果或副作用变化时返回 Workflow。
+每个工作单元遵循同一循环，但步骤轻重按任务实际情况调整：
 
-计划是共享状态，不产生额外需求或批准状态。用户收窄范围时，停止对应路径并移除本任务为其产生的改动；已投入时间和已有实现不是保留理由。
+1. **明确边界与缺口**：确认工作单元、当前节点、目标、范围、授权与待拒绝的合理错误。盘点当前上下文（包括同一会话）已有结论、证据与适用条件；已有事实足以回答就直接执行或回答，不为动作词建立方法循环。
+2. **选择做法并执行**：按主要不确定性或风险从下方方法名录选择一个主要方法；不存在待补缺口时直接实现、直接检查或直接操作是一等选择。使用标准方法时保留其核心闭环；普通实现取舍选最简单方案并简要说明。
+3. **核对结果并同步**：用所选证据核对动作结果；有计划时同步状态、关键证据和偏差。
+4. **反馈、重选或转换**：结果只改变当前动作、方法或证据组合时，在原节点内修正后继续；改变工作单元、级别、节点、范围、授权、交付结果或副作用时，返回工作流重新编排。即将声称完成时使用独立的 [verification-before-completion](../verification-before-completion/SKILL.md) 核对最终声明。
 
-当前实现遇到事实性阻塞时，先证明它确实阻止选定结果。局部、可逆且不改变既定行为和契约的实现细节由当前单元直接解决；需要新增产品行为、公共接口、架构层、配置开关、权限、风险或外部副作用时，回到 Workflow 重新选择范围。
+## 方法名录
 
-即将声称完成时，使用 [verification-before-completion](../verification-before-completion/SKILL.md) 核对最终增量与已有证据。
+方法都是可选的，按任务实际情况临场选择；选中就要按该方法规矩办事。复杂方法先确定适用再读取全文；简单方法提及名字即可。
+
+缩写约定：下表每个方法首次出现处保留完整中文名与英文全称，并给出括号内缩写（如「规格驱动开发（Spec-Driven Development，SDD）」）；本文档后续内容直接使用该缩写。其他文件各自独立声明，不跨文件继承。
+
+### 调查方法
+
+| 方法 | 用途 |
+|---|---|
+| 系统理解（System Understanding） | 梳理仓库结构、真实运行路径、历史演进与架构职责，交付事实模型与决策输入 |
+| 契约核验（Contract Verification） | 核实实际安装版本的真实契约事实；声明版本与实际安装版本冲突时以实际为准并报告差异 |
+| 系统化调试（Systematic Debugging） | 从已观察症状追踪到第一个错误状态与因果链；证据足以解释因果链即停止 |
+| 未知探索（Unknown Exploration） | 技术可行性、依赖行为、性能或集成形态真实未知时的可丢弃试验；探索中获得稳定症状即转交调试，不在探索内追因 |
+
+### 开发方法
+
+| 方法 | 用途 |
+|---|---|
+| 安全维护变更（Maintenance Operations） | 行为保持或仅依赖解析变化的删除、升级；删除前先查反射、DI、插件等动态调用方 |
+| 规格驱动开发（Spec-Driven Development，SDD） | 已有正式规格被明确选为实施依据时，维护需求 → 设计 → 任务 → 实现 → 证据的可追溯规格链 |
+| 行为驱动开发（Behavior-Driven Development，BDD） | 真实业务、开发与测试角色对可观察行为存在会改变实现或验收的理解差异时，围绕具体示例形成共享规则：Discovery 发现共享理解 → Formulation 表述示例 → Automation 自动化验证 |
+| 类型驱动设计（Type-Driven Design） | 当前类型系统能清晰排除稳定非法状态时的强推荐设计原则；外部输入仍运行时解析 |
+
+### 验证方法
+
+| 方法 | 用途 |
+|---|---|
+| 基于属性的测试（Property-Based Testing） | 广泛输入空间的独立不变量、变形关系或参考模型，用生成、执行与收缩反例验证行为 |
+| 消费者驱动契约测试（Consumer-Driven Contract Testing） | 可独立演进的 consumer / provider 由真实使用方声明最小期望，提供方持续验证版本兼容 |
+| 特征化 / 黄金主 / 批准测试（Characterization / Golden Master / Approval Testing） | 从真实执行记录可稳定重放的现有行为，用可审阅基线发现行为保持型变更造成的漂移 |
+| 评估驱动开发（Eval-Driven Development） | 主观、多解或概率性能力用代表任务、评价标准和重复试验定义并持续改进 |
+
+### 文档、评审与交付方法
+
+| 方法 | 用途 |
+|---|---|
+| 文档（Documentation） | 临时计划与正式项目文档的写作、组织与维护；位置规则与 Git 交付边界见其正文 |
+| 发起评审 / 接收评审（Requesting / Receiving Code Review） | 发起独立评审与核验处理评审意见；评审必须独立于实现者 |
+| 交付（Delivery） | 主干集成、持续保持可发布、正式环境受控暴露的交付节奏 |
+| 分支收尾（Finishing a Development Branch） | 开发分支的提交、推送、PR/MR 与清理 |
+| 代理与并行编排（Agent and Parallel Dispatch） | 委派短小边界明确的单元、判断并行独立性、编排独立会话的派发与集成 |
+
+### 执行机制
+
+| 机制 | 用途 |
+|---|---|
+| Git 工作树（Using Git Worktrees） | 开发分支隔离、根路径被占用、并行开发或高风险 Git 操作时的隔离环境 |
+| 完成前核验（Verification Before Completion） | 完成声明与节点转换前的最终证据核对，独立承担 |
+
+## 资源
+
+- [resources/verification-selection.md](resources/verification-selection.md)：进入验证节点后验证手段与证据组合。
+- [resources/evidence.md](resources/evidence.md)：证据充分性、独立性、复用、失效与收敛。
+- [resources/baseline-and-evaluation.md](resources/baseline-and-evaluation.md)：行为基线与评估方法分流。
 
 ## 执行边界
 
-- 方法、工具和交付机制不扩大原任务授权；合并、发布、部署、外部消息、破坏性清理和正式环境写入仍需相应授权。
+- 选择方法、工具或交付机制不扩大原任务授权；合并、发布、部署、外部消息、流量调整、破坏性清理和正式环境写入仍需对应明确授权。
 - 保留用户与其他任务的改动；编辑重叠文件前重新读取当前内容。
-- 只读 lint / format 可覆盖必要范围；自动修复限制在本任务改动的最小语法单元。
-- 需要分支或隔离写入时，再按 [using-git-worktrees](../using-git-worktrees/SKILL.md) 处理工作树。
+- 只读 lint / format 可覆盖必要范围；自动修复只改本任务行，不能行级时扩大到最小语法单元或受影响文件，并移除无关差异。
+- 不为测试增加真实调用方不需要的生产开关、包装、回退、分支或公共接口；替身只用于时钟、网络、进程等真实外部边界。
+- 为项目改动创建或检出开发分支且无另行安排时，使用 [using-git-worktrees](../using-git-worktrees/SKILL.md) 判断并落实隔离；纯只读工作按同一技能判断是否可留在稳定基线。

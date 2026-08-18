@@ -1,4 +1,4 @@
 interface:
   display_name: 'Execution'
-  short_description: '为当前工作单元选择方法、证据和执行机制，并根据结果反馈推进'
-  default_prompt: '使用 $execution 为当前工作单元选择最合适的方法、验证证据和执行机制，落实执行并根据结果反馈修正；有计划时引用计划，无计划时直接推进。'
+  short_description: '按方法名录选择并落实当前工作单元的具体做法，核对证据并反馈推进'
+  default_prompt: '使用 $execution 按方法名录为当前工作单元选择做法并落实执行，用证据核对结果并根据反馈修正；有计划时引用计划，无计划时直接推进。'

@@ -1,4 +1,4 @@
 interface:
   display_name: "Adaptive Development Workflow"
-  short_description: "按当前增量拆分和分级工作单元，编排工作节点与转换"
-  default_prompt: "使用 $adaptive-development-workflow 判断任务侧重点和交付意图，按目标与证据边界拆分、分级工作单元，并编排工作节点和转换。"
+  short_description: "工作节点是什么、各自规矩，以及串起全部节点的完整工作流参考"
+  default_prompt: "使用 $adaptive-development-workflow 理解工作节点（讨论 / 调查 / 设计 / 作业 / 验证 / 评审）与各自规矩，参考完整工作流例子，按任务实际情况临场编排节点。"
