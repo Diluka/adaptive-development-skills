@@ -21,7 +21,7 @@ description: Use when 需要确认实际安装或运行的 SDK、框架、协议
 | 失败 | 精确错误、响应、序列化结果或状态转换 |
 | 安全探测 | 本地夹具、沙箱、只读请求或可丢弃环境 |
 
-本地类型、生成声明和领域模型只表达当前代码期望，不能证明外部 JSON、HTTP、数据库、CLI 或第三方运行时；[execution](../execution/SKILL.md) 的 `resources/type-driven-design.md` 所建可信表示在进入前仍须核验边界。
+本地类型、生成声明和领域模型只表达当前代码期望，不能证明外部 JSON、HTTP、数据库、CLI 或第三方运行时；类型驱动设计（Type-Driven Design，见 [execution](../execution/SKILL.md) 方法名录）所建可信表示在进入前仍须核验边界。
 
 ## 核验既有边界
 

@@ -1,4 +1,0 @@
-interface:
-  display_name: "Brainstorming"
-  short_description: "只澄清会实质改变实现方案的关键设计歧义、约束和必要决策"
-  default_prompt: "使用 $brainstorming 解决会实质改变实现方案的设计选择。"

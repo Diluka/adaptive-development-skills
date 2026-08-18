@@ -1,4 +1,0 @@
-interface:
-  display_name: "Property-Based Testing"
-  short_description: "用独立属性、领域生成器、反例收缩和回归样例验证广泛输入空间"
-  default_prompt: "使用 $property-based-testing 为这个确定性行为定义独立属性、领域生成器、收缩规则和回归样例。"
