@@ -2,8 +2,7 @@
 
 > 状态：**v2** 本文件是 adaptive-development-skills
 > 的设计文档，描述技能包的目标状态与设计规则。
-> 历史演进与重构过程记录见 `.docs/plans/refactor-design.md` 与
-> `.docs/plans/remove-decision-presets.md`。
+> 历史演进与重构过程记录见 `.docs/plans/` 下的临时计划文件。
 
 ## 1. 目的与设计原则
 
