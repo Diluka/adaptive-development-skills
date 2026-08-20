@@ -4,7 +4,7 @@
 
 ## 安装
 
-支持 standalone Skills、Codex Plugin、VS Code Copilot 插件三种安装方式。详见 [安装文档](docs/installation.md)。
+支持 standalone Skills、Codex Plugin、VS Code Copilot 插件三种安装方式。三个渠道都先安装第三方 [Ponytail](#第三方依赖)，再安装本技能包；完整顺序见 [安装文档](docs/installation.md)。
 
 ## 技能目录
 
@@ -48,6 +48,10 @@
 | 系统化调试（Systematic Debugging） | 从已观察症状追踪到第一个错误状态和因果链 |
 | 基于属性的测试（Property-Based Testing） | 以独立属性、生成器、执行、收缩和回归反例验证广泛输入空间 |
 | 消费者驱动契约测试（Consumer-Driven Contract Testing） | 用真实使用方期望、版本化契约和提供方验证持续判断服务兼容 |
+
+## 第三方依赖
+
+- [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail)
 
 ## 参考文献
 

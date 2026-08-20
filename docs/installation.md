@@ -1,34 +1,40 @@
 # 安装
 
 以下三种方式是替代渠道。同一个 Codex 运行环境不要同时安装 Plugin Skills 与同名
-standalone Skills，以免重复发现并形成分开的更新状态。
+standalone Skills，以免重复发现并形成分开的更新状态。每种方式都先安装 Ponytail，
+再安装本技能包；两个项目保持各自的安装与更新来源。
 
 ## 只安装 Skills
 
-现有 `npx skills` 安装方式保持不变，也不会安装 Hook：
+两个项目都只安装 Skills，不安装 Hook；Ponytail 只选择代码简化所需的核心 skill：
 
 ```bash
+npx skills add DietrichGebert/ponytail --skill ponytail
 npx skills add Diluka/adaptive-development-skills
 ```
 
 ## 安装 Codex Plugin
 
-Plugin 复用仓库根目录的同一份 `skills/`，并额外提供可选的 `task-handoff` Hook：
+两个 Plugin 使用各自的 marketplace 与插件身份。本仓库的 Plugin 复用根目录的同一份
+`skills/`，并额外提供可选的 `task-handoff` Hook：
 
 ```bash
+codex plugin marketplace add DietrichGebert/ponytail
+codex plugin add ponytail@ponytail
 codex plugin marketplace add Diluka/adaptive-development-skills --ref main
 codex plugin add adaptive-development-skills@adaptive-development-skills
 ```
 
 ### 启动与信任
 
-安装后启动新任务，让 Codex 载入 Plugin Skills。Plugin 安装不会自动信任携带的命令
-Hook；通过 `/hooks` 审阅当前定义后，可以选择信任、保持未信任或单独禁用。
+安装后通过 `/hooks` 分别审阅两个 Plugin 携带的命令 Hook，再启动新任务，让 Codex
+载入 Plugin Skills。Ponytail 的模式、运行时和 Hook 行为以其
+[上游文档](https://github.com/DietrichGebert/ponytail) 为准。
 
 未信任或禁用 Hook 不影响 Plugin Skills。marketplace 也使用
 `AVAILABLE`，不会默认安装 Plugin。
 
-### 运行时与权限
+### task-handoff 运行时与权限
 
 Hook launcher 优先使用 Deno 2；只有找不到 `deno` 可执行文件时，才使用 Node 24 的
 TypeScript type stripping 运行同一脚本。选中的运行时执行失败时，launcher
@@ -73,10 +79,12 @@ Skills，不提供 Hook。VS Code 中 Copilot 插件的 Hook
 
 两种安装方式：
 
-- 从源码安装：命令面板运行 `Chat: Install Plugin From Source`，输入
+- 从源码安装：命令面板分别运行 `Chat: Install Plugin From Source`，依次输入
+  `https://github.com/DietrichGebert/ponytail` 和
   `https://github.com/Diluka/adaptive-development-skills`。
 - 作为 marketplace：在用户 `settings.json` 中设置
-  `"chat.plugins.marketplaces": ["Diluka/adaptive-development-skills"]`，然后在扩展视图搜索
-  `@agentPlugins` 安装 `adaptive-development-skills`。
+  `"chat.plugins.marketplaces": ["DietrichGebert/ponytail", "Diluka/adaptive-development-skills"]`，
+  然后在扩展视图搜索 `@agentPlugins`，依次安装 `ponytail` 和
+  `adaptive-development-skills`。
 
 确保 VS Code 已启用 Agent plugins（设置 `chat.plugins.enabled`，默认开启）。
