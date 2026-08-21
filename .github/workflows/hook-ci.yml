@@ -416,7 +416,7 @@ jobs:
               throw "Hook stdout is empty for $($case.Session)"
             }
             $output = $outputText | ConvertFrom-Json
-            if ($output.PSObject.Properties.Count -ne 0) {
+            if (@($output.PSObject.Properties).Count -ne 0) {
               throw "Expected empty Hook JSON for $($case.Session): $outputText"
             }
 
