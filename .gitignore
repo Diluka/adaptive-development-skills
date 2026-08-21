@@ -3,3 +3,6 @@
 .worktrees/
 __pycache__/
 *.pyc
+# npx skills 项目级安装产物
+.agents/skills/
+skills-lock.json
