@@ -159,7 +159,7 @@ function jsonOutput(result: Deno.CommandOutput): Record<string, unknown> {
 
 function additionalContext(
   result: Deno.CommandOutput,
-  eventName: "UserPromptSubmit" | "SessionStart",
+  eventName: "SessionStart",
 ): string {
   const output = jsonOutput(result);
   const specific = output.hookSpecificOutput;
@@ -181,14 +181,13 @@ function assertPrivateStateNotExposed(
   assert.doesNotMatch(context, /state\.md/i);
 }
 
-Deno.test("UserPromptSubmit writes the session checkpoint and reminder", async () => {
+Deno.test("UserPromptSubmit writes the session checkpoint", async () => {
   await withFixture(async (fixture) => {
     await Deno.writeTextFile(
       fixture.transcriptPath,
       "TRANSCRIPT_SECRET_SENTINEL",
     );
-    const result = await runHook(fixture, userPromptEvent(fixture));
-    const context = additionalContext(result, "UserPromptSubmit");
+    await runHook(fixture, userPromptEvent(fixture));
     const path = await statePath(fixture.taskHandoffData, "session-alpha");
     const checkpoint = await loadCheckpoint(path, "session-alpha");
 
@@ -198,9 +197,6 @@ Deno.test("UserPromptSubmit writes the session checkpoint and reminder", async (
     assert.match(checkpoint.currentRequest, /optional plugin/);
     assert.doesNotMatch(checkpoint.text, /session-alpha/);
     assert.doesNotMatch(checkpoint.text, /TRANSCRIPT_SECRET_SENTINEL/);
-    assertPrivateStateNotExposed(context, fixture.taskHandoffData, path);
-    assert.match(context, /automatically captures/i);
-    assert.match(context, /intermediate progress[^.]*not captured/i);
     if (Deno.build.os !== "windows") {
       assert.equal((await Deno.stat(path)).mode! & 0o777, 0o600);
       assert.equal((await Deno.stat(dirname(path))).mode! & 0o777, 0o700);
