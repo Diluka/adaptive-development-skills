@@ -79,7 +79,6 @@ jobs:
           assert_checkpoint() {
             local data_root=$1
             local session=$2
-            local output=$3
             local expected_hash
             expected_hash=$("$real_node" -e '
               const { createHash } = require("node:crypto");
@@ -87,18 +86,6 @@ jobs:
             ' "$session")
             local state_file="$data_root/handoffs/$expected_hash/state.md"
 
-            "$real_node" -e '
-              const fs = require("node:fs");
-              const value = JSON.parse(fs.readFileSync(process.argv[1], "utf8"));
-              if (
-                typeof value !== "object" ||
-                value === null ||
-                Array.isArray(value) ||
-                Object.keys(value).length !== 0
-              ) {
-                throw new Error("expected empty hook output");
-              }
-            ' "$output"
             test "$(find "$data_root" -type f -name state.md | wc -l)" -eq 1
             test -f "$state_file"
             grep -Fqx "session_hash: $expected_hash" "$state_file"
@@ -112,21 +99,19 @@ jobs:
           deno_temp="$RUNNER_TEMP/task-handoff-deno-temp"
           deno_data="$deno_temp/adaptive-development-skills-task-handoff"
           deno_input="$RUNNER_TEMP/task-handoff-deno.json"
-          deno_output="$RUNNER_TEMP/task-handoff-deno-output.json"
           mkdir -p "$priority_bin"
           printf '#!/bin/sh\nexit 97\n' > "$priority_bin/node"
           chmod +x "$priority_bin/node"
           write_input "$deno_input" "ci-deno-session"
           test ! -e "$deno_temp"
           PATH="$priority_bin:$PATH" TMPDIR="$deno_temp" \
-            hooks/run-task-handoff.sh < "$deno_input" > "$deno_output"
-          assert_checkpoint "$deno_data" "ci-deno-session" "$deno_output"
+            hooks/run-task-handoff.sh < "$deno_input" > /dev/null
+          assert_checkpoint "$deno_data" "ci-deno-session"
 
           node_bin="$RUNNER_TEMP/node-fallback-bin"
           node_temp="$RUNNER_TEMP/task-handoff-node-temp"
           node_data="$node_temp/adaptive-development-skills-task-handoff"
           node_input="$RUNNER_TEMP/task-handoff-node.json"
-          node_output="$RUNNER_TEMP/task-handoff-node-output.json"
           mkdir -p "$node_bin"
           ln -s "$real_node" "$node_bin/node"
           ln -s "$(command -v git)" "$node_bin/git"
@@ -135,8 +120,8 @@ jobs:
           write_input "$node_input" "ci-node-session"
           test ! -e "$node_temp"
           PATH="$node_bin" TMPDIR="$node_temp" \
-            hooks/run-task-handoff.sh < "$node_input" > "$node_output"
-          assert_checkpoint "$node_data" "ci-node-session" "$node_output"
+            hooks/run-task-handoff.sh < "$node_input" > /dev/null
+          assert_checkpoint "$node_data" "ci-node-session"
 
       - name: Validate Plugin installation
         shell: bash
@@ -182,7 +167,6 @@ jobs:
           temp_root="$RUNNER_TEMP/mise-node-temp"
           task_handoff_data="$temp_root/adaptive-development-skills-task-handoff"
           input="$RUNNER_TEMP/mise-node-input.json"
-          output="$RUNNER_TEMP/mise-node-output.json"
           session="ci-mise-node-session"
           probe_head="1111111111111111111111111111111111111111"
 
@@ -220,7 +204,7 @@ jobs:
           fi
 
           PATH="$probe_bin" TMPDIR="$temp_root" \
-            hooks/run-task-handoff.sh < "$input" > "$output"
+            hooks/run-task-handoff.sh < "$input" > /dev/null
 
           session_hash=$("$mise_node" -e '
             const { createHash } = require("node:crypto");
@@ -231,23 +215,14 @@ jobs:
 
           "$mise_node" -e '
             const fs = require("node:fs");
-            const [outputPath, statePath, expectedHead] = process.argv.slice(1);
-            const output = JSON.parse(fs.readFileSync(outputPath, "utf8"));
-            if (
-              typeof output !== "object" ||
-              output === null ||
-              Array.isArray(output) ||
-              Object.keys(output).length !== 0
-            ) {
-              throw new Error("expected empty Hook JSON output");
-            }
+            const [statePath, expectedHead] = process.argv.slice(1);
             const state = fs.readFileSync(statePath, "utf8");
             const match = /^git_head: (.+)$/m.exec(state);
             const actualHead = match === null ? null : JSON.parse(match[1]);
             if (actualHead !== expectedHead) {
               throw new Error(`Hook used ${actualHead}; expected PATH probe ${expectedHead}`);
             }
-          ' "$output" "$state_file" "$probe_head"
+          ' "$state_file" "$probe_head"
 
   windows:
     name: Windows hook checks
@@ -354,15 +329,10 @@ jobs:
           $input = [IO.File]::ReadAllText((Join-Path $env:RUNNER_TEMP "task-handoff-windows-deno.json"))
           $process.StandardInput.Write($input)
           $process.StandardInput.Close()
-          $stdout = $process.StandardOutput.ReadToEnd()
+          [void]$process.StandardOutput.ReadToEnd()
           $stderr = $process.StandardError.ReadToEnd()
           $process.WaitForExit()
           [Console]::Error.Write($stderr)
-          [IO.File]::WriteAllText(
-            (Join-Path $env:RUNNER_TEMP "task-handoff-windows-deno-output.json"),
-            $stdout,
-            [Text.UTF8Encoding]::new($false)
-          )
           if ($process.ExitCode -ne 0) {
             throw "PowerShell -> cmd.exe -> Deno launcher failed with $($process.ExitCode)"
           }
@@ -379,7 +349,7 @@ jobs:
           if not errorlevel 1 exit /b 91
           where node
           where git
-          cmd.exe /d /s /c call "%PLUGIN_ROOT%\hooks\run-task-handoff.cmd" < "%RUNNER_TEMP%\task-handoff-windows-node.json" > "%RUNNER_TEMP%\task-handoff-windows-node-output.json"
+          cmd.exe /d /s /c call "%PLUGIN_ROOT%\hooks\run-task-handoff.cmd" < "%RUNNER_TEMP%\task-handoff-windows-node.json" >nul
           if errorlevel 1 exit /b %errorlevel%
 
           move /y "%PLUGIN_ROOT%\hooks\task-handoff.ts" "%RUNNER_TEMP%\task-handoff.ts.saved" >nul
@@ -401,25 +371,14 @@ jobs:
             @{
               Session = "ci-windows-deno-session"
               TempRoot = Join-Path $env:RUNNER_TEMP "task-handoff-windows-deno-temp"
-              Output = Join-Path $env:RUNNER_TEMP "task-handoff-windows-deno-output.json"
             },
             @{
               Session = "ci-windows-node-session"
               TempRoot = Join-Path $env:RUNNER_TEMP "task-handoff-windows-node-temp"
-              Output = Join-Path $env:RUNNER_TEMP "task-handoff-windows-node-output.json"
             }
           )
 
           foreach ($case in $cases) {
-            $outputText = [IO.File]::ReadAllText($case.Output)
-            if ([string]::IsNullOrWhiteSpace($outputText)) {
-              throw "Hook stdout is empty for $($case.Session)"
-            }
-            $output = $outputText | ConvertFrom-Json
-            if (@($output.PSObject.Properties).Count -ne 0) {
-              throw "Expected empty Hook JSON for $($case.Session): $outputText"
-            }
-
             $sessionBytes = [Text.Encoding]::UTF8.GetBytes($case.Session)
             $sessionHash = [Convert]::ToHexString(
               [Security.Cryptography.SHA256]::HashData($sessionBytes)

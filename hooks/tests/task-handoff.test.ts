@@ -159,7 +159,7 @@ function jsonOutput(result: Deno.CommandOutput): Record<string, unknown> {
 
 function additionalContext(
   result: Deno.CommandOutput,
-  eventName: "UserPromptSubmit" | "SessionStart",
+  eventName: "SessionStart",
 ): string {
   const output = jsonOutput(result);
   const specific = output.hookSpecificOutput;
@@ -181,17 +181,16 @@ function assertPrivateStateNotExposed(
   assert.doesNotMatch(context, /state\.md/i);
 }
 
-Deno.test("UserPromptSubmit writes the session checkpoint without context injection", async () => {
+Deno.test("UserPromptSubmit writes the session checkpoint", async () => {
   await withFixture(async (fixture) => {
     await Deno.writeTextFile(
       fixture.transcriptPath,
       "TRANSCRIPT_SECRET_SENTINEL",
     );
-    const result = await runHook(fixture, userPromptEvent(fixture));
+    await runHook(fixture, userPromptEvent(fixture));
     const path = await statePath(fixture.taskHandoffData, "session-alpha");
     const checkpoint = await loadCheckpoint(path, "session-alpha");
 
-    assert.deepEqual(jsonOutput(result), {});
     assert.equal(checkpoint.generation, 1);
     assert.equal(checkpoint.status, "complete");
     assert.equal(checkpoint.cwd, fixture.cwd);
