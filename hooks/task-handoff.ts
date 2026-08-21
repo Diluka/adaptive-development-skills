@@ -13,14 +13,12 @@ import {
   type TaskHandoffCommandOutput,
   type TaskHandoffCommandOutputFor,
   type UserPromptSubmitCommandInput,
-  type UserPromptSubmitCommandOutput,
 } from "./codex-hook-types.ts";
 
 export const FORMAT = "task-handoff/v1";
 export const GIT_COMMAND_TIMEOUT_MS = 1_000;
 export const MAX_REQUEST_BYTES = 6_000;
 export const MAX_RESPONSE_BYTES = 6_000;
-export const MAX_REMINDER_CONTEXT_BYTES = 4_000;
 export const MAX_RECOVERY_CONTEXT_BYTES = 16_000;
 
 const SESSION_HASH_RE = /^[0-9a-f]{64}$/;
@@ -407,20 +405,6 @@ async function saveCheckpoint(
   return await loadCheckpoint(path, sessionId);
 }
 
-function userPromptReminder(): UserPromptSubmitCommandOutput {
-  const context = [
-    "Task handoff is active for this session.",
-    "The hook automatically captures the current request and the last completed assistant message for recovery after context compaction.",
-    "Intermediate progress that is not available in lifecycle events is not captured.",
-  ].join("\n");
-  return {
-    hookSpecificOutput: {
-      hookEventName: "UserPromptSubmit",
-      additionalContext: limitUtf8(context, MAX_REMINDER_CONTEXT_BYTES),
-    },
-  };
-}
-
 function invalidRecovery(): SessionStartCommandOutput {
   const context = [
     "No valid task handoff checkpoint is available after context compaction.",
@@ -532,9 +516,7 @@ export async function processEvent(
         options.now ?? utcNow(),
         currentSnapshot,
       );
-      return userPromptReminder() satisfies TaskHandoffCommandOutputFor<
-        typeof event
-      >;
+      return {} satisfies TaskHandoffCommandOutputFor<typeof event>;
     }
     case "Stop": {
       const currentSnapshot = options.snapshot ??

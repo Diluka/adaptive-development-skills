@@ -90,8 +90,13 @@ jobs:
             "$real_node" -e '
               const fs = require("node:fs");
               const value = JSON.parse(fs.readFileSync(process.argv[1], "utf8"));
-              if (value?.hookSpecificOutput?.hookEventName !== "UserPromptSubmit") {
-                throw new Error("unexpected hook output");
+              if (
+                typeof value !== "object" ||
+                value === null ||
+                Array.isArray(value) ||
+                Object.keys(value).length !== 0
+              ) {
+                throw new Error("expected empty hook output");
               }
             ' "$output"
             test "$(find "$data_root" -type f -name state.md | wc -l)" -eq 1
@@ -228,8 +233,13 @@ jobs:
             const fs = require("node:fs");
             const [outputPath, statePath, expectedHead] = process.argv.slice(1);
             const output = JSON.parse(fs.readFileSync(outputPath, "utf8"));
-            if (output?.hookSpecificOutput?.hookEventName !== "UserPromptSubmit") {
-              throw new Error("unexpected Hook JSON output");
+            if (
+              typeof output !== "object" ||
+              output === null ||
+              Array.isArray(output) ||
+              Object.keys(output).length !== 0
+            ) {
+              throw new Error("expected empty Hook JSON output");
             }
             const state = fs.readFileSync(statePath, "utf8");
             const match = /^git_head: (.+)$/m.exec(state);
@@ -406,8 +416,8 @@ jobs:
               throw "Hook stdout is empty for $($case.Session)"
             }
             $output = $outputText | ConvertFrom-Json
-            if ($output.hookSpecificOutput.hookEventName -ne "UserPromptSubmit") {
-              throw "Unexpected Hook JSON for $($case.Session): $outputText"
+            if ($output.PSObject.Properties.Count -ne 0) {
+              throw "Expected empty Hook JSON for $($case.Session): $outputText"
             }
 
             $sessionBytes = [Text.Encoding]::UTF8.GetBytes($case.Session)
