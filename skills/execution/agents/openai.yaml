@@ -1,4 +1,4 @@
 interface:
   display_name: 'Execution'
-  short_description: '按方法名录选择并落实当前工作单元的具体做法，核对证据并反馈推进'
-  default_prompt: '使用 $execution 按方法名录为当前工作单元选择做法并落实执行，用证据核对结果并根据反馈修正；有计划时引用计划，无计划时直接推进。'
+  short_description: '按当前事实缺口辨别相邻方法与最小充分证据'
+  default_prompt: '使用 $execution 区分根因、真实契约、可行性或验证缺口；事实足够时直接实施，不为选择方法生造规格或计划。'

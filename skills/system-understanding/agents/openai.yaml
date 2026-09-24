@@ -1,4 +1,4 @@
 interface:
   display_name: "System Understanding"
   short_description: "还原现有系统结构、运行路径、状态所有权与历史演进"
-  default_prompt: "使用 $system-understanding 从当前源码、装配、调用方和运行证据还原具体系统事实。"
+  default_prompt: "使用 $system-understanding 只追踪会改变当前判断的真实入口、调用方和状态边界；已获授权的实施可直接复用事实。"

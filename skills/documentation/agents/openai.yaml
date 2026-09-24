@@ -1,4 +1,4 @@
 interface:
   display_name: "Documentation & Wiki"
-  short_description: "编写与持续维护计划、README、Wiki 和正式项目文档"
-  default_prompt: "使用 $documentation 选择最小充分的文档形态，编写或维护计划、README、Wiki 与其他正式项目文档，并核对来源、链接和受影响的权威内容。"
+  short_description: "文档确为交付物或共享状态时按读者问题维护"
+  default_prompt: "使用 $documentation 维护用户或仓库真正需要的文档；从读者问题、事实来源与现有权威位置选择形态，不为普通代码任务预造规格。"
