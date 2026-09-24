@@ -1,4 +1,4 @@
 interface:
   display_name: "Adaptive Development Workflow"
-  short_description: "从一句话需求按事实缺口选择直接行动、澄清或调查"
-  default_prompt: "使用 $adaptive-development-workflow 从当前事实、授权与关键缺口判断下一步；事实充分时直接做，业务决定缺失才澄清，可查事实缺失才调查。"
+  short_description: "从短需求与事实缺口选择行动，必要时再选具体方法"
+  default_prompt: "使用 $adaptive-development-workflow 判断直接行动、澄清或调查；事实充分时直接做，具体方法或证据有真实选择缺口时才读取按需方法资源。"

@@ -19,7 +19,7 @@
 
 ## 节点与方法的分工
 
-`adaptive-development-workflow` 从请求决定当前要做的事及其边界；讨论、调查、设计、作业、验证、评审都是可选的工作视角，不是一条固定流水线。`execution` 在当前边界内区分具体调查、开发、验证与文档方法；缺口不存在时直接行动也是完整选择。复杂机制（工作树、独立评审、交付、文档等）在实际选择后再加载。
+`adaptive-development-workflow` 是从请求到当前行动的唯一根入口；讨论、调查、设计、作业、验证、评审都是可选的工作视角，不是一条固定流水线。事实充分时直接行动；具体调查、开发或验证方法仍有选择缺口时，才读取 `resources/method-selection.md`，复杂机制在选中后读取。边界与方法已明确的委派子代理只加载相应叶子技能，不因根入口存在而读完整选路目录。
 
 | 当前障碍 | 最小有效动作与停止信号 |
 |---|---|
@@ -60,7 +60,7 @@
 
 ## 当前技能分工
 
-- **选路**：`adaptive-development-workflow` 管从请求到工作边界，`execution` 管当前缺口与具体方法。
+- **选路**：`adaptive-development-workflow` 处理请求、工作边界及必要的方法选择；其按需 `resources/method-selection.md` 与证据资源承接原独立 `execution` 的判据。
 - **调查**：`system-understanding`、`contract-verification`、`unknown-exploration` 分别处理现有系统事实、真实边界契约和可丢弃试验。
 - **机制**：`maintenance-operations`、`using-git-worktrees`、`agent-and-parallel-dispatch`、`documentation`、`requesting-code-review`、`receiving-code-review` 承担选定后的特殊约束。
 - **收尾**：`verification-before-completion` 核对完成声明，`finishing-a-development-branch` 处理普通 Git 交付，`delivery` 处理主干集成、可发布性和受控暴露；方法本身不扩大操作授权。

@@ -1,4 +1,0 @@
-interface:
-  display_name: 'Execution'
-  short_description: '按当前事实缺口辨别相邻方法与最小充分证据'
-  default_prompt: '使用 $execution 区分根因、真实契约、可行性或验证缺口；事实足够时直接实施，不为选择方法生造规格或计划。'
