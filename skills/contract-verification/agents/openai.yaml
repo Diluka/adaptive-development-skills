@@ -1,4 +1,4 @@
 interface:
   display_name: "Contract Verification"
   short_description: "根据真实调用方、运行版本和可观察结果准确核验依赖契约"
-  default_prompt: "使用 $contract-verification 按真实依赖契约核验这个集成。"
+  default_prompt: "使用 $contract-verification 从真实调用方核验实际安装或部署版本；旧证据仍适用则复用，但用户明确要求当前读回或独立观测时取得新证据。"

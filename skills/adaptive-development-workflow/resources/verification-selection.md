@@ -1,6 +1,6 @@
 # 验证方式选择
 
-Use when 已进入验证节点，需要为当前工作单元选择验证手段并形成最小充分组合。
+Use when 已明确要证明的结果与尚未覆盖的风险，需要从动态观测、静态检查和审视中选择最小充分证据。
 
 ## 从声明和反证开始
 
@@ -28,4 +28,4 @@ Use when 已进入验证节点，需要为当前工作单元选择验证手段�
 - 构建通过、mock 调用次数、无关测试和格式检查只能证明各自范围，不能冒充业务行为、框架装配、传输或正式运行证据。
 - 测试与更高优先级需求、真实调用方或契约冲突时修正测试或实现，不削弱真实不变量只求绿灯。
 
-完成手段选择后，用 [evidence.md](evidence.md) 判断组合是否充分；即将声称完成时再由 [verification-before-completion](../../verification-before-completion/SKILL.md) 在最终增量上核对声明与证据。
+证据的复用、失效或充分性仍有缺口时按需读取 [evidence.md](evidence.md)；即将声称完成时由 [verification-before-completion](../../verification-before-completion/SKILL.md) 核对最终增量的声明与证据。
