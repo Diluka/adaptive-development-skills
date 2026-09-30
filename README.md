@@ -28,7 +28,7 @@
 | `receiving-code-review` | 先核验审查意见，再决定是否以及如何修改 |
 | `verification-before-completion` | 独立核对完成声明和节点转换就绪状态，为最终增量匹配最新且直接的验证、CI、观测或评审证据 |
 | `maintenance-operations` | 安全执行清理死代码、依赖升级等不改变行为或只改变解析的维护变更 |
-| `agent-and-parallel-dispatch` | 选择执行形态，判断委派或并行是否确有收益，管理任务内子代理及独立会话的派发、回报与粗粒度并行编排 |
+| `agent-and-parallel-dispatch` | 选择协作形态，判断并行独立性，管理子代理、代理团队及独立会话的派发、任务所有权、回报与集成 |
 | `documentation` | 按读者任务选择最小充分形态，编写临时计划，并创建、组织和持续维护 README、Wiki 与其他正式项目文档 |
 | `delivery` | 通过主干集成、持续保持可发布到正式环境受控暴露管理交付节奏 |
 
@@ -64,3 +64,6 @@
 - [openai/plugins：`notion-research-documentation`](https://github.com/openai/plugins/tree/main/plugins/notion/skills/notion-research-documentation)
 - [lzj960515/codex-workbench](https://github.com/lzj960515/codex-workbench)
 - [lzj960515/codrive](https://github.com/lzj960515/codrive)
+- [Claude Code：Orchestrate teams of Claude Code sessions](https://code.claude.com/docs/en/agent-teams)
+- [Anthropic：How we built our multi-agent research system](https://www.anthropic.com/engineering/multi-agent-research-system)
+- [OpenAI Agents SDK：Agent orchestration](https://openai.github.io/openai-agents-python/multi_agent/)

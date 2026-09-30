@@ -1,6 +1,6 @@
 ---
 name: agent-and-parallel-dispatch
-description: Use when 需要在当前任务内委派短小、边界明确的调查/实现/验证单元，判断多个工作单元能否安全并行，或编排独立会话的派发、终态回报与串行集成；Use when delegating bounded units, judging whether work can safely run in parallel, or coordinating dispatch, terminal reporting, and serial integration across independent sessions.
+description: Use when 需要委派边界明确的工作单元、判断并行独立性、创建代理团队并管理成员协作，或协调独立会话的派发与集成；Use when delegating bounded units, checking parallel independence, coordinating agent teams, or dispatching and integrating independent sessions.
 ---
 
 # 代理与并行编排
@@ -15,8 +15,11 @@ description: Use when 需要在当前任务内委派短小、边界明确的调�
 |---|---|
 | 根代理直接做 | 改动很小且根代理已掌握上下文；交接成本高于收益；步骤会持续修改共享状态、关键产品决策未解决，或需频繁处理全局问题 |
 | 当前任务内子代理委派 | 短小、只读或根代理能立即检查接管的边界局部修改；委派能节约主代理上下文或提供独立判断 |
+| 代理团队 | 成员需要围绕明确产物多轮沟通、共享任务状态和交接；当前环境支持相应能力，创建成员符合用户授权与环境约束 |
 | 独立会话 + 工作树粗粒度并行 | 单元需持续写入、独立长上下文、工作树或可恢复生命周期；经 [using-git-worktrees](../using-git-worktrees/SKILL.md) 隔离并另配负责执行上下文 |
 | 顺序执行 | 单元间存在信息、写入、契约、顺序或集成依赖，无法安全隔离 |
+
+按协作依赖而非代理数量区分子代理与代理团队；成员可互发消息本身不是团队判据。团队协作与工作树隔离可以组合，仍按下方五要素判断哪些单元能同时执行。已选团队形态时按需读取 [代理团队协议](resources/agent-team-protocol.md)。
 
 委派与并行的动机是**保护主代理上下文**（局部搜索、日志、依赖或实现细节明显占用上下文时）和**防止多次上下文压缩后指挥跑偏**（独立判断能提供实现者自证之外的证据）。并行收益来自缩短等待时间，或在不互相锚定下形成独立实现或证据；收益低于交接与协调成本时不委派、不并行。工作数量多不代表适合派发；缺失成功标准会改变用户意图时先澄清，不能让多个代理投票替用户决定。任务内委派细节见 [resources/subagent-protocol.md](resources/subagent-protocol.md)。
 
@@ -60,4 +63,5 @@ description: Use when 需要在当前任务内委派短小、边界明确的调�
 ## 资源
 
 - [resources/subagent-protocol.md](resources/subagent-protocol.md)：任务内子代理委派协议。
+- [resources/agent-team-protocol.md](resources/agent-team-protocol.md)：代理团队的创建、任务所有权、通信、交接与收尾。
 - [resources/parallel-dispatch.md](resources/parallel-dispatch.md)：并行独立性检查清单与派发/回收/串行集成规则。
