@@ -8,13 +8,13 @@
 
 ## 技能目录
 
-先问哪项缺口会改变下一步：缺用户拥有的业务决定才澄清；缺可查的事实先取证；目标、接缝和授权足够时直接实施或回答。计划、规格、专项方法与独立评审各自只在能拒绝当前合理错误时加入；最终结论仍需与证据相称。
+先问哪项缺口会改变下一步：缺用户拥有的业务决定才澄清；缺可查的事实先取证；目标、接缝和授权足够时直接实施或回答。流程机制按 `resources/process-levels.md` 的三项可观察事实（不可逆、跨边界、有未证风险）归入 L0–L3，级别决定计划、独立评审、隔离工作树与交付动作；同一类增量每次落到同一级别，作为比较会话效果与技能改动的合规基线。
 
 ### 选择入口
 
 | 技能 | 用途 |
 |---|---|
-| `adaptive-development-workflow` | 唯一根入口：从短需求选择下一步；确有方法或证据缺口时读取其 `resources/method-selection.md` 等按需资源 |
+| `adaptive-development-workflow` | 唯一根入口：从短需求选择下一步；其 `resources/process-levels.md` 是全部流程机制的唯一级别定义，方法或证据缺口见 `resources/method-selection.md` |
 
 原独立 `$execution` 入口已并入 `$adaptive-development-workflow`；明确方法的委派子代理仍可只读选中的机制技能。显式调用旧技能名的用户需要改用新入口。
 
@@ -22,9 +22,9 @@
 
 | 技能 | 用途 |
 |---|---|
-| `using-git-worktrees` | 隔离分支与并行写入，维护工作树所有权、共享资源和串行集成边界 |
-| `finishing-a-development-branch` | 核对分支就绪状态，按实际 `git remote` 完成默认 Git 交付，先回报 MR/PR 与 CI，再等待自动流水线终态 |
-| `requesting-code-review` | 在独立视角能补充风险证据时准备和执行评审 |
+| `using-git-worktrees` | 在存在并发写入者或 L2 以上增量时隔离分支与并行写入，维护工作树所有权、共享资源和串行集成边界 |
+| `finishing-a-development-branch` | 按流程级别核对分支就绪状态：L0/L1 本地提交并报告差异，L2/L3 按实际 `git remote` 完成 Git 交付、回报 MR/PR 与 CI 并等待自动流水线终态 |
+| `requesting-code-review` | 在流程级别要求独立评审时准备和执行评审 |
 | `receiving-code-review` | 先核验审查意见，再决定是否以及如何修改 |
 | `verification-before-completion` | 独立核对完成声明和节点转换就绪状态，为最终增量匹配最新且直接的验证、CI、观测或评审证据 |
 | `maintenance-operations` | 安全执行清理死代码、依赖升级等不改变行为或只改变解析的维护变更 |
