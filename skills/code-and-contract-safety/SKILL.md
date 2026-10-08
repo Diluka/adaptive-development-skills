@@ -1,6 +1,6 @@
 ---
 name: code-and-contract-safety
-description: Use when 改动涉及外部 SDK、第三方契约、删除代码、依赖变更、正式环境数据或评审独立性，需要避免这些场景中最常见的判断错误。
+description: Use when 改动涉及外部 SDK、第三方契约、删除代码、依赖变更、正式环境数据或评审独立性。
 ---
 
 # 代码与契约安全
