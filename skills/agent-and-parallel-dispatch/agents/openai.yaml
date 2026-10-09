@@ -1,4 +1,0 @@
-interface:
-  display_name: 'Agent and Parallel Dispatch'
-  short_description: '选择协作形态，管理子代理、代理团队与独立会话的派发和集成'
-  default_prompt: '使用 $agent-and-parallel-dispatch 选择安全协作形态，明确子代理、代理团队或独立会话的任务所有权，并完成派发、回报与串行集成。'

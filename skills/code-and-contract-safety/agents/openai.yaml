@@ -1,0 +1,4 @@
+interface:
+  display_name: "Code and Contract Safety"
+  short_description: "外部契约、死代码判定、正式环境与评审独立性上的常见错误"
+  default_prompt: "使用 $code-and-contract-safety 核对外部运行版本、删除前的调用方证据、正式环境禁写与评审独立性，避免静态搜索和常识推断得出错误结论。"

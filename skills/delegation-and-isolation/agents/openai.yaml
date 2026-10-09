@@ -1,0 +1,4 @@
+interface:
+  display_name: "Delegation and Isolation"
+  short_description: "委派、并行独立性与工作树隔离的边界"
+  default_prompt: "使用 $delegation-and-isolation 判断多个写入单元能否安全并行、是否需要工作树隔离，并核验子代理的实际差异回报。"
