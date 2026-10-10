@@ -1,0 +1,4 @@
+interface:
+  display_name: "需求讨论与收敛"
+  short_description: "按需讨论并收敛需求，分清探讨与决定，将已定部分交回现有流程"
+  default_prompt: "使用 $requirements-discussion 澄清当前待定需求与关键取舍，区分探讨、偏好和已定决定；需要反馈时交还对话，让已明确且获授权的部分回到现有流程。"
