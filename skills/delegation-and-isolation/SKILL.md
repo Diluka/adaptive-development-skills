@@ -1,6 +1,6 @@
 ---
 name: delegation-and-isolation
-description: Use when 需要委派子代理、开代理团队或用工作树隔离并行工作，判断多个写入单元能否安全并行，或核对子代理回报。
+description: Use when 需要委派子代理、用工作树隔离并行工作，判断多个写入单元能否安全并行，或核对子代理回报。
 ---
 
 # 委派与隔离

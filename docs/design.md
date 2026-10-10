@@ -56,9 +56,11 @@
 
 ## 技能分工
 
-- `adaptive-development-workflow`：唯一根入口，从请求选择下一步并按可逆性决定交付动作。
+- `adaptive-development-workflow`：常规开发的唯一根入口，默认直接执行或委派子代理，从请求选择下一步并按可逆性决定交付动作。
+- [`requirements-discussion`](../skills/requirements-discussion/SKILL.md)：按需收敛需求与关键取舍，形成共识与未决点后交回现有流程，不默认产出规格文档。
 - `code-and-contract-safety`：外部契约、死代码判定、正式环境禁写、评审独立性与证据独立性。
-- `delegation-and-isolation`：委派、并行独立性判断与工作树隔离边界。
+- [`delegation-and-isolation`](../skills/delegation-and-isolation/SKILL.md)：子代理委派、并行独立性判断与工作树隔离边界。
+- [`development-team-composition`](../skills/development-team-composition/SKILL.md)：用户明确要求代理团队协作且运行时许可时的显式开团入口，覆盖组建到协作。团队职责、协作与工作区策略只由本技能、同目录协议和入口元数据承载，其他技能不介绍或引用团队入口；共用技能中的子代理职责只在该团队上下文由入口侧适配，不要求下游反向适配。它可引用通用质量与授权机制，但不以子代理委派技能作为团队策略权威。
 - `finishing-a-development-branch`：提交、推送、MR/PR 与 CI 等待的交付边界。
 - `documentation`：文档确为交付物时按读者问题维护。
 

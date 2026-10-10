@@ -7,7 +7,7 @@
 ### 目标状态（设计思想）
 
 - **从需求选路**：用户通常从一句话需求开始。技能帮助代理从已有事实、关键缺口、风险与授权选择下一步：直接实施、澄清用户决定、核实真实契约或根因、有限探索，再用相称证据结束；不从任务动词或方法名推导固定流程，也不预设正式规格存在。
-- **结构**：`adaptive-development-workflow` 是唯一根入口；`code-and-contract-safety`、`delegation-and-isolation`、`finishing-a-development-branch`、`documentation` 在对应场景按需读取，承载模型容易判断错的专门约束。
+- **结构**：`adaptive-development-workflow` 是唯一根入口；`requirements-discussion`、`code-and-contract-safety`、`delegation-and-isolation`、`development-team-composition`、`finishing-a-development-branch`、`documentation` 在对应场景按需读取，承载模型容易判断错的专门约束。
 - **存在理由**：公开标准方法只保留完整名字和辨别相邻方法的一句话；仓库经验与红线（动态调用方、实际安装版本、评审独立、正式环境禁写等）必须保留。能否让相同事实下的选择更可靠、事实变化时及时改路，是内容取舍的依据。
 - **缩写规则**：方法名 / 技能名一律全称，不写歧义缩写；有歧义时在每个文件首次出现处独立写全称与缩写并说明后续用法，无歧义的通用技术词无需声明。
 
@@ -67,7 +67,7 @@
 
 ## 技能编写
 
-- **技能包结构**：`adaptive-development-workflow` 是唯一根入口；`code-and-contract-safety`、`delegation-and-isolation`、`finishing-a-development-branch`、`documentation` 在对应场景按需读取。
+- **技能包结构**：`adaptive-development-workflow` 是唯一根入口；`requirements-discussion`、`code-and-contract-safety`、`delegation-and-isolation`、`development-team-composition`、`finishing-a-development-branch`、`documentation` 在对应场景按需读取。
 - **选择判据优先**：写出当前事实中哪种缺口会改变下一步，什么时候可以直接做、需要澄清、该取哪类证据、何时停止或改路；不把用户动词、文档有无或固定级别当决策规则。完整标准方法流程由模型已有知识承担，技能保留不可替代的失败经验和安全红线。
 - **加载策略**：简单方法直接引用，复杂机制选中后按需读取；`description` 以 `Use when` 开头，描述真实用户问题与独有缺口，避免泛化触发使多个入口在普通任务中同时加载。
 - 每个技能位于 `skills/<skill-name>/SKILL.md`，目录与 `name` 为相同英文短横线名；`resources/` 存放随技能安装、按需读取的纯 Markdown 参考，正文以中文为主。

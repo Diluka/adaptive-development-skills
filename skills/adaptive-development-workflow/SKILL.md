@@ -35,5 +35,5 @@ description: Use when 从简短开发请求与已知事实决定直接实施、�
 
 - 验证从真实消费或激活路径取证，执行当前仓库的强制检查；证据足以支撑声明后停止追加。测试期望独立来自需求、调用方或契约，不从待写实现镜像断言。
 - 涉及外部契约、删除代码、正式环境数据或评审独立性时，按需读取 [代码与契约安全](../code-and-contract-safety/SKILL.md)。
-- 需要委派、开代理团队或用工作树并行时，按需读取 [委派与隔离](../delegation-and-isolation/SKILL.md)。
+- 需要委派或用工作树并行时，按需读取 [委派与隔离](../delegation-and-isolation/SKILL.md)。
 - 交付由 [finishing-a-development-branch](../finishing-a-development-branch/SKILL.md) 处理；保留用户和其他任务的改动。
