@@ -1,4 +1,4 @@
 interface:
   display_name: "Finishing a Development Branch"
-  short_description: "核对分支就绪状态，完成 Git 交付并等待自动流水线终态"
-  default_prompt: "使用 $finishing-a-development-branch 核对验证、CI 与适用评审，按实际 `git remote` 和仓库约定完成分支、提交、推送与 MR/PR；先回报链接和当前 CI，再等待最终提交的自动流水线稳定终态。"
+  short_description: "按用户当前任务要求与仓库默认核对分支就绪状态并完成 Git 交付"
+  default_prompt: "使用 $finishing-a-development-branch 核对适用的验证、CI 与评审证据后，按用户当前任务的明确交付要求完成工作；未指定的部分沿用仓库约定与技能默认，并准确报告实际交付状态。"
