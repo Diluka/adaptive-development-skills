@@ -1,0 +1,4 @@
+interface:
+  display_name: "Task Contract"
+  short_description: "开发任务的范围、约束、授权、证据与清理完整性"
+  default_prompt: "使用 $task-contract 明确开发任务的范围、约束、授权与证据，并核对契约、安全边界和清理完整性。"

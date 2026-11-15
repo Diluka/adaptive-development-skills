@@ -12,11 +12,8 @@
 
 | 技能 | 用途 |
 |---|---|
-| `adaptive-development-workflow` | 常规开发的唯一根入口：从短需求选择下一步，按实际缺口选择工作机制 |
 | [`requirements-discussion`](skills/requirements-discussion/SKILL.md) | 按需讨论待定需求与取舍，将共识交回现有流程 |
-| `code-and-contract-safety` | 外部契约、死代码判定、正式环境禁写、评审独立性与证据独立性 |
-| `delegation-and-isolation` | 子代理委派、并行独立性判断与工作树隔离边界 |
-| `finishing-a-development-branch` | 提交、推送、MR/PR 与 CI 等待的交付边界 |
+| [`task-contract`](skills/task-contract/SKILL.md) | 开发任务范围、约束、授权、验证、退役清理与交付 |
 | `documentation` | 文档作为交付物时按读者问题维护，规格文档按明确需求建设 |
 
 ## 其他思想来源

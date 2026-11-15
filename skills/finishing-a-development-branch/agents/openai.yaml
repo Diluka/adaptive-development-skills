@@ -1,4 +1,0 @@
-interface:
-  display_name: "Finishing a Development Branch"
-  short_description: "按用户当前任务要求与仓库默认核对分支就绪状态并完成 Git 交付"
-  default_prompt: "使用 $finishing-a-development-branch 核对适用的验证、CI 与评审证据后，按用户当前任务的明确交付要求完成工作；未指定的部分沿用仓库约定与技能默认，并准确报告实际交付状态。"
