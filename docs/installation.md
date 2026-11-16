@@ -1,11 +1,10 @@
 # 安装
 
-以下三种方式是替代渠道。同一个 Codex 运行环境不要同时安装 Plugin Skills 与同名
-standalone Skills，以免重复发现并形成分开的更新状态。
+以下三种方式是替代渠道。每个 Codex 运行环境为同名 Skills 选择一种安装来源，以保持发现与更新状态一致。
 
 ## 只安装 Skills
 
-现有 `npx skills` 安装方式保持不变，也不会安装 Hook：
+此命令安装 standalone Skills；Hook 由 Codex Plugin 渠道提供：
 
 ```bash
 npx skills add Diluka/adaptive-development-skills
@@ -22,28 +21,17 @@ codex plugin add adaptive-development-skills@adaptive-development-skills
 
 ### 启动与信任
 
-安装后启动新任务，让 Codex 载入 Plugin Skills。Plugin 安装不会自动信任携带的命令
-Hook；通过 `/hooks` 审阅当前定义后，可以选择信任、保持未信任或单独禁用。
+安装后启动新任务，让 Codex 载入 Plugin Skills。安装的命令 Hook 由用户通过 `/hooks` 审阅当前定义后决定信任状态：可以信任、保持未信任或单独禁用。
 
-未信任或禁用 Hook 不影响 Plugin Skills。marketplace 也使用
-`AVAILABLE`，不会默认安装 Plugin。
+Plugin Skills 在 Hook 的不同信任状态下均可使用。marketplace 将 Plugin 标记为 `AVAILABLE`，由用户按需选择安装。
 
 ### 运行时与权限
 
-Hook launcher 优先使用 Deno 2；只有找不到 `deno` 可执行文件时，才使用 Node 24 的
-TypeScript type stripping 运行同一脚本。选中的运行时执行失败时，launcher
-原样返回退出码，不会换另一个运行时重试；两者都不存在时，只向 stderr 提示并以 0
-退出，不阻止可选 Hook、用户回合或压缩。
+Hook launcher 优先使用 Deno 2；当系统找不到 `deno` 可执行文件时，使用 Node 24 的 TypeScript type stripping 运行同一脚本。选定运行时的退出码原样返回；两种运行时均不可用时，launcher 向 stderr 提示并以 0 退出，让可选 Hook、用户回合或压缩继续运行。
 
-Deno 分支禁用远程与 npm 依赖解析。业务代码只读取 `TASK_HANDOFF_DATA`；Deno 的
-Node 兼容层可读取 `NODE_V8_COVERAGE`，并在 launcher 拼接出的 Plugin
-专属临时子目录内读写检查点和启动 `git`。读写权限不覆盖整个系统临时目录。
+Deno 分支禁用远程与 npm 依赖解析。业务代码只读取 `TASK_HANDOFF_DATA`；Deno 的 Node 兼容层读取 `NODE_V8_COVERAGE`，并在 launcher 拼接出的 Plugin 专属临时子目录内读写检查点和启动 `git`。该目录限定了读写权限范围。
 
-Node fallback 使用同一子目录，但只能整体开放 `child_process`，不能限制为仅执行
-`git`，其权限模型也不限制环境变量或网络，因此 Deno 始终优先。两条路径都只用
-`git rev-parse` 读取 HEAD，不执行会扫描工作区内容的
-`git status`。环境不满足时也可以保持 Hook 未信任或禁用，Plugin Skills
-仍可独立使用。
+Node fallback 使用同一子目录，并以整体权限开放 `child_process`；其权限模型同时允许读取环境变量和访问网络，因此默认优先使用 Deno。两条路径都通过 `git rev-parse` 读取 HEAD 元数据，以保持工作区内容在检查点流程之外。环境条件不满足时，Hook 可保持未信任或禁用，Plugin Skills 仍可独立使用。
 
 ### 检查点与恢复
 
@@ -53,23 +41,13 @@ Node fallback 使用同一子目录，但只能整体开放 `child_process`，�
 `%TEMP%\adaptive-development-skills-task-handoff\handoffs\<sha256(session_id)>\state.md`
 维护会话检查点；Windows 在 `TEMP` 缺失时回退 `TMP`。
 
-它不写目标项目，也不读取 transcript 的内部 JSONL 格式。每个会话只维护一个
-`state.md`；会话不再恢复后 Hook
-不会再次读取，文件由系统临时目录的清理策略回收，不另设 TTL
-或清理器。检查点包含当前用户请求、最后一次完成的代理回复和 Git
-HEAD，因此可能包含任务上下文；请在信任 Hook 前审阅实现。
+检查点写入系统临时目录，项目目录保持独立；Hook 输入依据 Codex Hook 事件 schema 解析，状态使用事件中的适用字段构建，每个会话保留一个 `state.md`。transcript JSONL 格式处于实现读取范围之外。会话不再恢复后，Hook 停止读取该文件，生命周期交由系统临时目录的清理策略管理；Hook 未配置额外 TTL 或专用清理器。检查点包含当前用户请求、最后一次完成的代理回复和 Git HEAD，可能承载任务上下文；信任 Hook 前请审阅实现。
 
-Codex 当前不能把 `PreCompact` 的普通输出送给模型，所以 Hook
-不声称能在压缩瞬间要求代理再总结一次。它会在用户回合开始时提前提醒，在限定的代表性事件上刷新已有状态，由
-`PreCompact` 完成压缩前的最后一次状态刷新，再通过 `SessionStart` 的 `compact`
-恢复入口把同一会话文件送回模型。`status=complete`
-只表示检查点保存流程完成，不表示任务已经完成。
+Codex 的 `PreCompact` 普通输出通道不会把内容送入模型上下文；Hook 因此在用户回合开始时提前提醒，并在限定的代表性事件上刷新已有状态。`PreCompact` 完成压缩前的最后一次状态刷新，`SessionStart` 的 `compact` 恢复入口将同一会话文件送回模型。`status=complete` 表示检查点保存流程完成，任务完成状态应以任务结果判断。
 
 ## 在 VS Code 中安装 Copilot 插件
 
-仓库以 VS Code Agent plugins（预览）格式复用同一份 `skills/`，只提供
-Skills，不提供 Hook。VS Code 中 Copilot 插件的 Hook
-执行存在已知问题：远程会话会误用本地路径，当前不进行适配。
+仓库以 VS Code Agent plugins（预览）格式复用同一份 `skills/`，提供 Skills。远程会话中的 Copilot Hook 执行可能误用本地路径，因此当前 Hook 适配范围聚焦于本地会话；Skills 可独立使用。
 
 两种安装方式：
 
