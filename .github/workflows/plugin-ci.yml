@@ -1,0 +1,55 @@
+name: Plugin CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  plugin:
+    name: Plugin checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install Deno 2.9.4
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.9.4
+
+      - name: Install Node 24.15.0
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24.15.0
+
+      - name: Check Plugin versions and skill references
+        shell: bash
+        run: |
+          set -euo pipefail
+          scripts/bump-version.ts --check
+          deno fmt --check scripts/bump-version.ts
+          deno lint --no-config scripts/bump-version.ts
+          deno check --no-config --no-lock --no-remote scripts/bump-version.ts
+          deno check scripts/check-cross-references.ts
+          scripts/check-cross-references.ts
+          git diff --check
+
+      - name: Validate Plugin installation
+        shell: bash
+        env:
+          PLUGIN_CHECK_HOME: ${{ runner.temp }}/codex-home
+        run: |
+          set -euo pipefail
+          mkdir -p "$PLUGIN_CHECK_HOME"
+          env CODEX_HOME="$PLUGIN_CHECK_HOME" npx --yes @openai/codex@0.169.0 plugin marketplace add . --json
+          env CODEX_HOME="$PLUGIN_CHECK_HOME" npx --yes @openai/codex@0.169.0 plugin add adaptive-development-skills@adaptive-development-skills --json
+          plugin_version=$(node -p "require('./.codex-plugin/plugin.json').version")
+          cached_root="$PLUGIN_CHECK_HOME/plugins/cache/adaptive-development-skills/adaptive-development-skills/$plugin_version"
+          diff -qr skills "$cached_root/skills"
+          test ! -e "$cached_root/hooks"
