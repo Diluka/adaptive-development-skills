@@ -57,7 +57,7 @@
 
 - [`requirements-discussion`](../skills/requirements-discussion/SKILL.md)：按需收敛需求与关键取舍，形成共识与未决点后交回现有流程，规格文档依明确需求生成。
 - [`task-contract`](../skills/task-contract/SKILL.md)：开发任务范围、约束、授权、证据与高代价误判边界。
-- `documentation`：文档作为交付物时按读者问题维护。
+- `documentation`：项目文本作为交付物时按载体与事实来源维护，涵盖项目文档、产品文案、代码注释、协作记录与沟通，并区分草拟与对外发布授权。
 
 ## 已知限制
 
