@@ -6,3 +6,6 @@ __pycache__/
 # npx skills 项目级安装产物
 .agents/skills/
 skills-lock.json
+# 本地代理配置
+.dsh/
+.serena/
