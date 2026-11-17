@@ -1,7 +1,7 @@
 {
   "name": "adaptive-development-skills",
-  "version": "0.5.0",
-  "description": "Risk-adaptive development workflow skills with an optional task handoff hook.",
+  "version": "0.6.0",
+  "description": "Risk-adaptive development workflow skills for Codex.",
   "author": {
     "name": "Diluka",
     "url": "https://github.com/Diluka"
@@ -11,19 +11,17 @@
   "license": "MIT",
   "keywords": [
     "development-workflow",
-    "skills",
-    "task-handoff"
+    "skills"
   ],
   "skills": "./skills/",
   "interface": {
     "displayName": "Adaptive Development Skills",
     "shortDescription": "Risk-adaptive development workflows",
-    "longDescription": "Install the repository's development workflow skills together, with an optional Codex task handoff hook for context compaction.",
+    "longDescription": "Install the repository's development workflow skills together for Codex.",
     "developerName": "Diluka",
     "category": "Productivity",
     "capabilities": [
-      "Skills",
-      "Hooks"
+      "Skills"
     ],
     "websiteURL": "https://github.com/Diluka/adaptive-development-skills",
     "defaultPrompt": [

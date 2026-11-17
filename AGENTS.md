@@ -77,15 +77,10 @@
 - 技能内容聚焦通用开发方法与仓库特有机制；生态、框架、业务手册及托管平台专属 CLI/API/字段由各自产品文档承载。静态编译或分析作为证据类型；实际需要形式化模型检查时，再选相应专门方法。
 - 修改技能后，用当前 `skill-creator` 的 `scripts/quick_validate.py` 校验；技能链接用相对 Markdown，并运行 `scripts/check-cross-references.ts`。思想来源在 `README.md` 底部以来源链接呈现；聚合仓库中，单个插件、技能或独立单元链接至该单元，整体作为全面参考对象时链接仓库根。与上游的关系保持为来源归属与链接说明。
 
-## Plugin 与 Hook 发行
+## Plugin 发行
 
-- `skills/` 是 standalone `npx skills` 与可选 Codex Plugin 共用的唯一源码，两个渠道复用同一份 Skill。Skills 承载可复用方法，Hook 承载运行时交接机制，两者职责分明。
-- standalone 发行 Skills；Hook 作为可选 Codex Plugin 内容分发。维护 Plugin/Hook 时保留显式可选安装与独立信任审阅，并验证 standalone 安装内容聚焦于 Skills。
-- 可写状态限定于 launcher 派生的 Plugin 临时子目录，经 `TASK_HANDOFF_DATA` 传递；Deno 获得该目录的读写权限。脚本通过 `PLUGIN_ROOT` 定位安装位置，在约定范围内读写并采用已承诺的数据格式。
-- 通过获准子进程读取项目元数据时，选用只读取所需元数据的精确命令，并确认其执行路径不会触发 Git hook、filter、helper 或其他外部进程。Deno 的 `--allow-run` 仅授予启动子进程的权限；子进程使用当前操作系统用户权限运行，Deno 权限只约束 Deno 进程本身。
-- 生产脚本（仅 `hooks/` 下需在 Deno 与 Node 双运行时运行的脚本）采用 Deno 2 与 Node 24 共用的 Node 内置 API；`scripts/` 下的仓库内部工具使用各自适用的能力。launcher 优先 Deno，并在找不到 `deno` 时启动 Node；选定运行时的退出码原样返回。Node fallback 拥有较宽的子进程、环境和网络权限；改入口或权限时同时审阅两条路径。Windows 的 `commandWindows` 显式通过 `cmd.exe` 执行 `.cmd`。
-- `hooks/codex-hook-types.ts` 以当前最低核对 Codex 版本的生成 schema 约束 stdin 与逐事件 stdout。改事件、字段或支持版本时先更新类型边界，再用 `deno check`；每个已配置 Hook 保留一个代表性脚本逻辑测试，Codex 集成场景由相应的集成证据覆盖。
-- 发布 Plugin 使用 `scripts/bump-version.ts <major|minor|patch|x.y.z>` 同步 Codex、Copilot manifest 与 marketplace。Git marketplace 用户通过 `codex plugin marketplace upgrade` 获取新快照；本地验证按 `plugin-creator` 的 cachebuster 和重装流程进行，版本缓存更新遵循各自平台的发行机制。
+- `skills/` 是 standalone `npx skills`、Codex Plugin 与 VS Code Copilot 插件共用的唯一源码，各渠道复用同一份 Skill。
+- 发布 Plugin 使用 `scripts/bump-version.ts <major|minor|patch|x.y.z>` 同步 Codex、Copilot manifest 与 marketplace。Git marketplace 用户通过 `codex plugin marketplace upgrade` 获取新快照；本地安装验证使用独立临时目录作为 `CODEX_HOME`，版本缓存更新遵循各自平台的发行机制。
 
 ## 完成检查
 
@@ -101,25 +96,13 @@ scripts/check-cross-references.ts
 git diff --check
 ```
 
-修改 Plugin 或 Hook 时，另运行：
+修改 Plugin 时，另运行：
 
 ```bash
 scripts/bump-version.ts --check
 deno fmt --check scripts/bump-version.ts
 deno lint --no-config scripts/bump-version.ts
 deno check --no-config --no-lock --no-remote scripts/bump-version.ts
-deno fmt --check hooks/codex-hook-types.ts hooks/task-handoff.ts hooks/tests/task-handoff.test.ts
-deno lint --no-config hooks/codex-hook-types.ts hooks/task-handoff.ts hooks/tests/task-handoff.test.ts
-deno check --no-config --no-lock --no-npm --no-remote hooks/codex-hook-types.ts hooks/task-handoff.ts
-node --check hooks/codex-hook-types.ts && node --check hooks/task-handoff.ts
-sh -n hooks/run-task-handoff.sh
-test -x hooks/run-task-handoff.sh
-deno test --no-config --no-lock --no-npm --no-remote --allow-read --allow-write --allow-run=deno hooks/tests/task-handoff.test.ts
-python3 "${CODEX_HOME:-$HOME/.codex}/skills/.system/plugin-creator/scripts/validate_plugin.py" .
 ```
 
-Hook CI 固定使用 Deno 2.9.4、Node 24.15.0 和 Codex CLI 0.146.1。
-
-- Ubuntu 运行上述静态检查、现有四个 Hook 测试、真实 Deno/Node launcher 冒烟和一次临时 `CODEX_HOME` Plugin 安装校验。
-- Windows 同时从 PowerShell 外层和 `cmd.exe` 外层执行 `.cmd`，覆盖 Deno 优先、Node fallback、stdin/stdout、检查点以及 `.cmd` 退出码透传。
-- 这些检查覆盖脚本与 Plugin 的运行时冒烟；Codex 压缩集成需要独立的集成证据。
+Plugin CI 覆盖静态检查与临时 `CODEX_HOME` 中的插件安装验证。
