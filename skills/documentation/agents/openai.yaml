@@ -2,3 +2,6 @@ interface:
   display_name: "Project Writing"
   short_description: "按事实与授权维护项目文档、产品文案、代码注释及协作正文与评论"
   default_prompt: "使用 $documentation 撰写或维护项目文本，包括文档、产品文案、代码注释及协作平台正文与评论；区分草拟与对外发布授权。"
+
+policy:
+  allow_implicit_invocation: true
