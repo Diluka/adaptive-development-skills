@@ -1,4 +1,4 @@
 interface:
-  display_name: "Documentation & Wiki"
-  short_description: "文档确为交付物或共享状态时按读者问题维护"
-  default_prompt: "使用 $documentation 维护用户或仓库真正需要的文档；从读者问题、事实来源与现有权威位置选择形态，不为普通代码任务预造规格。"
+  display_name: "Project Documentation"
+  short_description: "覆盖产品、工程、指南与运维等项目文档，依据读者目标和证据维护"
+  default_prompt: "使用 $documentation 编写或维护项目文档；按文档领域确认读者目标、事实来源、权威位置与适用范围，不为普通代码任务预造规格。"
