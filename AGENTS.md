@@ -92,18 +92,8 @@ skill_creator_dir="${CODEX_HOME:-$HOME/.codex}/skills/.system/skill-creator"
 for skill_dir in skills/*; do
   python3 "$skill_creator_dir/scripts/quick_validate.py" "$skill_dir" || exit 1
 done
-deno check scripts/check-cross-references.ts
 scripts/check-cross-references.ts
 git diff --check
 ```
 
-修改 Plugin 时，另运行：
-
-```bash
-scripts/bump-version.ts --check
-deno fmt --check scripts/bump-version.ts
-deno lint --no-config scripts/bump-version.ts
-deno check --no-config --no-lock --no-remote scripts/bump-version.ts
-```
-
-Plugin CI 覆盖静态检查与临时 `CODEX_HOME` 中的插件安装验证。
+修改插件版本或清单时，本地运行 `scripts/bump-version.ts --check` 核对版本一致性。Plugin CI 在临时 `CODEX_HOME` 中通过 marketplace 安装插件，并对比已安装的 `skills/` 与仓库源码。
