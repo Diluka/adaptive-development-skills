@@ -19,6 +19,6 @@
 ## 其他思想来源
 
 - [obra/superpowers](https://github.com/obra/superpowers)
-- [lzj960515/codex-workbench](https://github.com/lzj960515/codex-workbench)
+- [lzj960515/codex-workbench](https://github.com/lzj960515/codex-workbench)（项目文本写作参考：[`plain-writing`](https://github.com/lzj960515/codex-workbench/blob/main/skills/plain-writing/SKILL.md)）
 - [lzj960515/codrive](https://github.com/lzj960515/codrive)
 - [Claude Code Worktrees](https://code.claude.com/docs/en/worktrees)
