@@ -1,6 +1,6 @@
 ---
 name: requirements-discussion
-description: Use when the user is still exploring requirements, comparing approaches, or resolving consequential trade-offs through discussion before an executable scope is clear.
+description: 需求尚未定下来时，和用户比较方案、厘清取舍，确定哪些部分可以开工。
 ---
 
 # 需求讨论与收敛
