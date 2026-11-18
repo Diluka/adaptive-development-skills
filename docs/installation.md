@@ -2,6 +2,8 @@
 
 以下三种方式是替代渠道。每个 Codex 运行环境为同名 Skills 选择一种安装来源，以保持发现与更新状态一致。
 
+从旧版升级到 0.7.0 时，将提示词和仓库指令中的 `$documentation` 改为 `$writing-style`；直接读取技能源码的相对路径也随目录名更新。
+
 ## 安装 standalone Skills
 
 ```bash

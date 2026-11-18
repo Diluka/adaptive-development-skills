@@ -1,0 +1,7 @@
+interface:
+  display_name: "Writing Style"
+  short_description: "面向读者组织措辞，写清结论、依据和可以照做的指令"
+  default_prompt: "使用 $writing-style，围绕读者的目标组织这段表达，写清结论、依据或下一步。"
+
+policy:
+  allow_implicit_invocation: true

@@ -14,7 +14,7 @@
 |---|---|
 | [`requirements-discussion`](skills/requirements-discussion/SKILL.md) | 按需讨论待定需求与取舍，将共识交回现有流程 |
 | [`task-contract`](skills/task-contract/SKILL.md) | 开发任务范围、约束、授权、验证、退役清理与交付 |
-| `documentation` | 项目文本作为交付物时按载体与事实来源维护，涵盖文档、产品文案、代码注释、协作记录与沟通 |
+| [`writing-style`](skills/writing-style/SKILL.md) | 为读者组织措辞：在对话中解释决定，编写可照做的技能指令与配套指南，或改写项目文本 |
 
 ## 其他思想来源
 
