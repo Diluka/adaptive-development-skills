@@ -7,7 +7,7 @@
 ### 目标状态（设计思想）
 
 - **从需求选路**：用户通常从一句话需求开始。技能帮助代理从已有事实、关键缺口、风险与授权选择下一步：直接实施、澄清用户决定、核实真实契约或根因、有限探索，再用相称证据结束。工作路径由事实与需求缺口决定，正式规格依实际需要维护。
-- **结构**：`requirements-discussion`、`task-contract`、`documentation` 在对应场景按需读取，承载模型容易判断错的专门约束。
+- **结构**：`requirements-discussion`、`task-contract`、`writing-style` 在对应场景按需读取，承载模型容易判断错的专门约束。
 - **存在理由**：公开标准方法只保留完整名字和辨别相邻方法的一句话；仓库经验与红线（动态调用方、实际安装版本、评审独立、正式环境禁写等）必须保留。能否让相同事实下的选择更可靠、事实变化时及时改路，是内容取舍的依据。
 - **缩写规则**：方法名 / 技能名一律全称，不写歧义缩写；有歧义时在每个文件首次出现处独立写全称与缩写并说明后续用法，无歧义的通用技术词无需声明。
 
@@ -25,7 +25,8 @@
 
 ## 文本内容维护
 
-- 创建、组织、改写、修订或维护本仓库文本内容前，必须完整读取并遵循源码 [`skills/documentation/SKILL.md`](skills/documentation/SKILL.md)，并按文档形态读取其指向的资源。至少包括根 `README.md`、`AGENTS.md`、`docs/` 与 `skills/` 中的 Markdown 正文。
+- 会话答复先回应读者最关心的问题，保留影响判断或行动的依据和限制。需要组织解释、建议或指令的措辞时，使用 `writing-style`；简短事实直接回答。
+- 创建、组织、改写、修订或维护本仓库文本内容前，必须完整读取并遵循 [`writing-style` 源码](skills/writing-style/SKILL.md)，并按文档形态读取其指向的资源。至少包括根 `README.md`、`AGENTS.md`、`docs/` 与 `skills/` 中的 Markdown 正文。
 
 ## 开发任务与工作单元
 
@@ -67,9 +68,9 @@
 
 ## 技能编写
 
-- **技能包结构**：`requirements-discussion`、`task-contract`、`documentation` 在对应场景按需读取。
+- **技能包结构**：`requirements-discussion`、`task-contract`、`writing-style` 在对应场景按需读取。
 - **选择判据优先**：明确当前事实中会改变下一步的缺口、直接行动条件、澄清时机、所需证据与停止信号；工作选择由事实与需求缺口引导，用户动词和文档状态作为上下文信息。完整标准方法流程由模型已有知识承担，技能保留不可替代的失败经验和安全红线。
-- **加载策略**：简单方法直接引用，复杂机制选中后按需读取；`description` 以 `Use when` 开头，精准描述真实用户问题与独有缺口，使各入口在对应场景清晰触发。
+- **加载策略**：简单方法直接引用，复杂机制选中后按需读取。技能描述写清它适合解决什么问题。
 - 每个技能位于 `skills/<skill-name>/SKILL.md`，目录与 `name` 为相同英文短横线名；`resources/` 存放随技能安装、按需读取的纯 Markdown 参考，正文以中文为主。
 - **缩写规则**：方法和技能名用全称；有歧义的方法缩写在每个文件首次出现处独立声明中文名、英文全称和后续用法；通用技术词不需声明。
 - 项目产物以读者要完成的事为主体，范围、事实、授权与有决策价值的取舍准确表达；安全限制和真实负向行为照实保留，长度由内容决定。
@@ -91,18 +92,8 @@ skill_creator_dir="${CODEX_HOME:-$HOME/.codex}/skills/.system/skill-creator"
 for skill_dir in skills/*; do
   python3 "$skill_creator_dir/scripts/quick_validate.py" "$skill_dir" || exit 1
 done
-deno check scripts/check-cross-references.ts
 scripts/check-cross-references.ts
 git diff --check
 ```
 
-修改 Plugin 时，另运行：
-
-```bash
-scripts/bump-version.ts --check
-deno fmt --check scripts/bump-version.ts
-deno lint --no-config scripts/bump-version.ts
-deno check --no-config --no-lock --no-remote scripts/bump-version.ts
-```
-
-Plugin CI 覆盖静态检查与临时 `CODEX_HOME` 中的插件安装验证。
+修改插件版本或清单时，本地运行 `scripts/bump-version.ts --check` 核对版本一致性。Plugin CI 在临时 `CODEX_HOME` 中通过 marketplace 安装插件，并对比已安装的 `skills/` 与仓库源码。

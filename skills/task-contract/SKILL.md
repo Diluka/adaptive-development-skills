@@ -1,6 +1,6 @@
 ---
 name: task-contract
-description: Use when 执行开发任务，需要明确变更边界、兼容性、验证证据、授权或清理完整性；Use when establishing a task contract for implementation.
+description: 明确开发改动的范围、授权和兼容要求，用证据判断实现或退役清理是否完成。
 ---
 
 # 开发任务契约
